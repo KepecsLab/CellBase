@@ -14,3 +14,6 @@ cellid = char(cellid);
 [tetrodeunit] = sscanf(remain(2:end),'%d.%d');
 tetrode = tetrodeunit(1);
 unit = tetrodeunit(2);
+
+[p1,p2]=strtok(session,'.');
+session = strcat(p1,'_',p2(2:end));
