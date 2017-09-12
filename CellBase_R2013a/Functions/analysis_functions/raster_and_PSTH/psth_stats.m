@@ -69,7 +69,7 @@ addRequired(prs,'dt',@isnumeric)   % time resolution of the binraster and PSTH, 
 addRequired(prs,'win',@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event, in seconds
 addParamValue(prs,'baselinewin',[-0.25 0],@(s)isnumeric(s)&isequal(length(s),2))  % baseline time window relative to the event for stat. testing, in seconds
 addParamValue(prs,'testwin',[0 0.1],@(s)isnumeric(s)&isequal(length(s),2))  % test time window relative to the event for stat. testing, in seconds
-addParamValue(prs,'relative_threshold',0.5,@(s)isnumeric(s)&s>=-1&s<=1)   % threshold used to assess interval limits; negative thresholds selects the full window
+addParamValue(prs,'relative_threshold',0.5,@(s)isnumeric(s)&s>0&s<1)   % threshold used to assess interval limits
 addParamValue(prs,'display',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying rasters and PSTHs
 parse(prs,spt,psth,dt,win,varargin{:})
 g = prs.Results;

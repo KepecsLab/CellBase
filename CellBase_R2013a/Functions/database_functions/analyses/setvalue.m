@@ -9,10 +9,7 @@ function  status = setvalue(cellid,property,value)
 %   Edit log: BH 4/16/2013
 
 % Load CellBase
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+load(getpref('cellbase','fname')); 
 
 % Get the position of the searched property
 [pos pos0] = findanalysis(property);  %#ok<NASGU>
@@ -26,7 +23,7 @@ end
 cellpos = findcellpos(cellid);
 
 % Edit TheMatrix
-if iscell(TheMatrix(cellpos,pos)) && ~iscell(value)
+if iscell(TheMatrix(cellpos,pos)) && ~iscell(value) %#ok<NODEF>
     value = {value};   % convert to cell if necessary
 end
 TheMatrix(cellpos,pos) = value;

@@ -34,9 +34,6 @@ default_args={...
     'usemedian',       false;... % if output is smoothed, either mean or median is applied
     };
 [g, error] = parse_args(default_args,varargin{:});
-if nargin < 2 || isempty(SpikeTimes) || isequal(SpikeTimes,'all')
-    SpikeTimes = loadcb(cellid);   % waveform for all spikes
-end
 
 % Load waveform data (Ntt file)
 Nttfile = cellid2fnames(cellid,'ntt');

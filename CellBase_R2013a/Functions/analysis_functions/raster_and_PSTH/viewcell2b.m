@@ -47,7 +47,7 @@ default_args={...
     'SortEvent',            'PulseOn';...
     'eventtype',             'stim';... % 'behav'
     'ShowEvents',           {{'PulseOn'}};...
-    'ShowEventsColors',     {{[0 0.8 0] [0.8 0.8 0] [0 0.8 0.8]}};...
+    'ShowEventsColors',     {{'r'}};...
     'Num2Plot',             'all';...
     'PlotDashedEvent',      '';...
     'PlotDashedCondition',  'min';...
@@ -135,14 +135,6 @@ else
     binraster = stimes2binraster(stimes,time,g.dt);
 end
 
-% For variable windows, change padding to NaN to ensure correct averaging - BH
-if ~isempty(g.LastEvents)
-    for iT = 1:NUMtrials    % loop through trials
-        inx = time > ev_windows(iT,2);
-        binraster(iT,inx) = NaN;
-    end
-end
-
 % Partition trials
 [COMPTRIALS, TAGS] = partition_trials(TE,g.Partitions);
 vinx = cellfun(@(s)(~isempty(s)),COMPTRIALS);
@@ -156,13 +148,10 @@ else
 end
 
 % Calculate PSTH
-switch g.isadaptive
-    case {false,0}
-        [psth, spsth, spsth_se] = binraster2psth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);
-    case {true, 1}
-        [psth, spsth, spsth_se] = binraster2apsth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);   % adaptive PSTH
-    case 2
-        [psth, spsth, spsth_se] = binraster2dapsth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);   % adaptive PSTH
+if ~g.isadaptive
+    [psth, spsth, spsth_se] = binraster2psth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);
+else
+    [psth, spsth, spsth_se] = binraster2apsth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);   % adaptive PSTH
 end
 EventTimes = trialevents2relativetime(TE,g.TriggerEvent,g.ShowEvents);
 
@@ -225,8 +214,3 @@ end
 if strcmpi(g.PrintCellID,'on')
     fstamp(cellid,80,g.PrintCellIDPos);
 end
-
-% Link axes
-A = findobj(allchild(gcf),'Type','axes');
-Am = findobj(A,'YLim',[0 1]);
-linkaxes(setdiff(A,Am),'x');

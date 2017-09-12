@@ -36,7 +36,6 @@ else
     all_cellids = findallcells(g.dir);
 end
 old_cellids = listtag('cells');
-clear global CELLIDLIST ANALYSES TheMatrix   % refresh the globals
 
 if isempty(old_cellids)
     new_cellids = all_cellids;  % setdiff fails for empty set

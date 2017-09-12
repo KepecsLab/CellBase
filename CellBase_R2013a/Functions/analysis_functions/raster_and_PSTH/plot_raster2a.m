@@ -100,7 +100,7 @@ for iCOMP = 1:NumParts
     
     % Get trials to plot
     ind = intersect(COMPTRIALS{iCOMP},valid_trials);    % use only valid ones
-    if par.NumTrials2Plot < length(ind)
+    if par.NumTrials2Plot < NumTrials
         rndind = randperm(length(ind));    % permute trials only if not all of them are plotted
     else
         rndind = 1:length(ind);

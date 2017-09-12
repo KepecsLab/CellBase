@@ -46,7 +46,6 @@ dsr = regexprep(dsr,':','_');
 backup_name = fullfile(pth,[fnm '_' dsr ext]);
 copyfile(cb,backup_name)    % make backup before overwriting
 save(cb,'TheMatrix','ANALYSES','CELLIDLIST');
-clear global CELLIDLIST ANALYSES TheMatrix
 
 % Feedback
 if ischar(cellid)

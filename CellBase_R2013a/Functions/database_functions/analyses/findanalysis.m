@@ -19,10 +19,7 @@ function  [POS ANALnum] = findanalysis(xstr,varargin)
 %   Edit log: BH 3/23/11, 5/3/12
 
 % Get cellbase preferences
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+load(getpref('cellbase','fname'));
 
 % Input argument check
 try 

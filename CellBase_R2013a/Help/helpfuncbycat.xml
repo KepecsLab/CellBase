@@ -2,7 +2,6 @@
 <tocitem target="CellBase_functions.html">Functions 
   <tocitem target="CellBase_functions.html#1">Setup
 	<tocitem target="initcb.html"><name>initcb</name><purpose>Initialize CellBase</purpose></tocitem>
-	<tocitem target="mountcb.html"><name>mountcb</name><purpose>Mount CellBase</purpose></tocitem>
   </tocitem>
 
   <tocitem target="CellBase_functions.html#2">Databse functions
@@ -90,18 +89,15 @@
 	<tocitem target="createdoc.html"><name>createdoc</name><purpose>Create documentation html file for functions</purpose></tocitem>
   </tocitem>
 
-  <tocitem target="CellBase_functions.html#7">Data processing functions
+  <tocitem target="CellBase_functions.html#7">Data preprocessing functions
 	<tocitem target="solo2trialevents4_auditory_gonogo.html"><name>solo2trialevents4_auditory_gonogo</name><purpose>Create trial events structure</purpose></tocitem>
-	<tocitem target="solo2trialevents4_auditory_pavlovian.html"><name>solo2trialevents4_auditory_pavlovian</name><purpose>Create trial events structure</purpose></tocitem>
 	<tocitem target="MakeStimEvents2.html"><name>MakeStimEvents2</name><purpose>Create stimulus events structure</purpose></tocitem>
 	<tocitem target="MakeTrialEvents2_gonogo.html"><name>MakeTrialEvents2_gonogo</name><purpose>Synchronize trial events to recording times</purpose></tocitem>
 	<tocitem target="defineEventsEpochs_default.html"><name>defineEventsEpochs_default</name><purpose>Define events and epochs for spike extraction</purpose></tocitem>
 	<tocitem target="defineEventsEpochs_gonogo.html"><name>defineEventsEpochs_gonogo</name><purpose>Define events and epochs for spike extraction</purpose></tocitem>
-	<tocitem target="defineEventsEpochs_pavlovian.html"><name>defineEventsEpochs_pavlovian</name><purpose>Define events and epochs for spike extraction</purpose></tocitem>
 	<tocitem target="defineEventsEpochs_laserstim.html"><name>defineEventsEpochs_laserstim</name><purpose>Define events and epochs for spike extraction</purpose></tocitem>
 	<tocitem target="defineEventsEpochs_pulseon.html"><name>defineEventsEpochs_pulseon</name><purpose>Define events and epochs for spike extraction</purpose></tocitem>
 	<tocitem target="prealignSpikes.html"><name>prealignSpikes</name><purpose>Align spikes to events and calculates rates for each epoch</purpose></tocitem>
-	<tocitem target="dynamicSpikeWindow.html"><name>dynamicSpikeWindow</name><purpose>Restrict spike times to event windows</purpose></tocitem>
 	<tocitem target="trialevents2relativetime.html"><name>trialevents2relativetime</name><purpose>Calculate time values relative to reference event</purpose></tocitem>
 	<tocitem target="findSegs3.html"><name>findSegs3</name><purpose>Find segments of a session</purpose></tocitem>
 	<tocitem target="extractSegSpikes.html"><name>extractSegSpikes</name><purpose>Extract spikes between specific timestamps</purpose></tocitem>
@@ -156,7 +152,6 @@
 	<tocitem target="plot_raster_psth.html"><name>plot_raster_psth</name><purpose>Plot raster plots and PSTHs</purpose></tocitem>
 	<tocitem target="plot_timecourse.html"><name>plot_timecourse</name><purpose>Plot PSTH</purpose></tocitem>
 	<tocitem target="viewcell2b.html"><name>viewcell2b</name><purpose>Raster plot and PSTH</purpose></tocitem>
-	<tocitem target="viewlick.html"><name>viewlick</name><purpose>Lick raster and PSTH</purpose></tocitem>
 	<tocitem target="rasterplot.html"><name>rasterplot</name><purpose>Raster plot (fast)</purpose></tocitem>
 	<tocitem target="ultimate_psth.html"><name>ultimate_psth</name><purpose>Peri-stimulus time histogram</purpose></tocitem>
 	<tocitem target="psth_stats.html"><name>psth_stats</name><purpose>Statistics for firing rate change</purpose></tocitem>
@@ -169,24 +164,13 @@
 	<tocitem target="lightcluster.html"><name>lightcluster</name><purpose>Clustering of light-evoked spikes</purpose></tocitem>
 	<tocitem target="tagging.html"><name>tagging</name><purpose>Cluster quality and tagging index</purpose></tocitem>
 	<tocitem target="taggedprop.html"><name>taggedprop</name><purpose>Properties of putative tagged neurons</purpose></tocitem>
+
   </tocitem>
 
   <tocitem target="CellBase_functions.html#13">Analysis functions - spike correlations
 	<tocitem target="acg.html"><name>acg</name><purpose>Auto-correlations</purpose></tocitem>
 	<tocitem target="ccg.html"><name>ccg</name><purpose>Cross-correlations</purpose></tocitem>
   </tocitem>
-
-  <tocitem target="CellBase_functions.html#14">Analysis functions - anatomy
-	<tocitem target="reconstruction.html"><name>reconstruction</name><purpose>Anatomical reconstruction of electrode position</purpose></tocitem>
-  </tocitem>
-
-  <tocitem target="CellBase_functions.html#15">Analysis functions - behavior
-	<tocitem target="psych_gonogo.html"><name>psych_gonogo</name><purpose>Average performance and reaction time</purpose></tocitem>
-	<tocitem target="psych_gonogo2.html"><name>psych_gonogo2</name><purpose>Average performance and reaction time</purpose></tocitem>
-	<tocitem target="psych_gonogo_learningcurve.html"><name>psych_gonogo_learningcurve</name><purpose>Average learning curve</purpose></tocitem>
-  	<tocitem target="psychplot_gonogo.html"><name>psychplot_gonogo</name><purpose>Plot psychometric performance</purpose></tocitem>
-	<tocitem target="psychplot_pavlovian.html"><name>psychplot_pavlovian</name><purpose>Plot performance</purpose></tocitem>
-   </tocitem>
 
 
 </tocitem>

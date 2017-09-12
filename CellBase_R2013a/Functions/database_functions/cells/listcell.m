@@ -7,11 +7,8 @@ function  v = listcell(cellid)
 
 %   Edit log: BH 5/3/12
 
-% Load CellBase
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+% Load Cellbase
+load(getpref('cellbase','fname'));
 
 % Find cell(s)
 if ischar(cellid)

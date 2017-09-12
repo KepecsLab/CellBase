@@ -53,9 +53,9 @@ if ~ismatch(ts,son2)
     % note: obsolete due the introduction of TTL parsing
     son2 = clearttls(son2); % eliminate recorded TTL's within 0.5s from each other - broken TTL pulse
     if ~ismatch(ts,son2)
-        son2 = tryinterp(ts,son2); % interpolate missing TTL's or delete superfluous TTL's up to 10 erroneous TTl's
+        son2 = trytomatch(ts,son2);  % try to match time series by shifting
         if ~ismatch(ts,son2)
-            son2 = trytomatch(ts,son2);  % try to match time series by shifting
+            son2 = tryinterp(ts,son2); % interpolate missing TTL's or delete superfluous TTL's up to 10 erroneous TTl's
             if ~ismatch(ts,son2)  % TTL matching failure
                 error('MakeTrialEvents:TTLmatch','Matching TTLs failed.')
             else

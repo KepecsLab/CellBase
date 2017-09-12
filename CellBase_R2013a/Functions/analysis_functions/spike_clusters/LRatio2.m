@@ -28,8 +28,6 @@ g = prs.Results;
 % Channel validity
 if isempty(g.valid_channels)
     valid_channels = check_channel_validity(cellid);
-else
-    valid_channels = g.valid_channels;
 end
 
 % Parse cellID
@@ -42,7 +40,7 @@ TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert sp
 all_spikes = all_spikes * TIMEFACTOR;
 spk = loadcb(cellid,'Spikes');
 n = length(all_spikes);
-[jnk inx] = intersect(all_spikes,spk);
+[~, inx] = intersect(all_spikes,spk);
 if ~isequal(jnk,spk)   % internal check for spike times
     error('LRatio:SpikeTimeMismatch','Mismatch between saved spike times and Ntt time stamps.')
 end
@@ -69,7 +67,7 @@ for k = 1:length(g.feature_names)
     wf_prop = wf_prop.FeatureData;
     
     if ~isequal(size(wf_prop,2),sum(valid_channels))
-        wf_prop  = wf_prop(:,logical(valid_channels));   % estimated and original valid_channels don't match
+        wf_prop  = wf_prop(:,valid_channels);   % estimated and original valid_channels don't match
     end
     X = [X; wf_prop']; %#ok<AGROW>
 end

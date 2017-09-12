@@ -164,7 +164,6 @@ copyfile(cb,backup_name)    % make backup before overwriting
 
 % SAVE CELLBASE
 save(getpref('cellbase','fname'),'TheMatrix','ANALYSES','CELLIDLIST')
-clear global CELLIDLIST ANALYSES TheMatrix
 
 % -------------------------------------------------------------------------
 function  ts = timestamp

@@ -38,12 +38,13 @@ if findcellpos(cellid)
     return
 end
 global NEWCELLIDS
-% NEWCELLIDS = [NEWCELLIDS {cellid}];   % enables adding analysis (with addanalysis) that runs iscellid
+NEWCELLIDS = [NEWCELLIDS {cellid}];   % enables adding analysis (with addanalysis) that runs iscellid
 
 % Perform analyses
 NumCells = length(CELLIDLIST);
 NumAnal  = length(ANALYSES);
 NewCell  = NumCells + 1;
+CELLIDLIST{NewCell} = cellid;
 for i = 1: NumAnal
     
     funhandle = ANALYSES(i).funhandle;
@@ -69,7 +70,7 @@ for i = 1: NumAnal
                 end
             catch
 %                 property_values = {nan(length(columns),1)};
-                property_values = num2cell(nan(nargout(funhandle),1));
+                property_values = num2cell(nan(length(columns),1));
                 if size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))
                     charinx = cellfun(@ischar,TheMatrix(1,columns));   % for character type properties, initialize with empty matrix
                     property_values(charinx) = {''};
@@ -80,7 +81,7 @@ for i = 1: NumAnal
                 [property_values{1:nargout(funhandle)}] = feval(funhandle,cellid);
             catch
                 property_values = num2cell(nan(length(columns),1));
-                if iscell(TheMatrix) && size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))
+                if size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))
                     charinx = cellfun(@ischar,TheMatrix(1,columns));   % for character type properties, initialize with empty matrix
                     property_values(charinx) = {''};
                 end
@@ -110,7 +111,6 @@ if VERBOSE
     donestr = sprintf('ADDCELL done.\n Cellid ''%s'' added to the database with %d analyses executed, creating %d properti(es).\n',cellid,NumAnal,columns(end));
     disp(donestr);
 end
-CELLIDLIST{NewCell} = cellid;
 
 % Save cellbase
 assignin('base','TheMatrix',TheMatrix)

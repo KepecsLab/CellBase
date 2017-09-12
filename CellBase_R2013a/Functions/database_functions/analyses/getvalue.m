@@ -11,10 +11,7 @@ function  v = getvalue(property,varargin)
 %   Edit log: BH 8/25/2011
 
 % Load CellBase
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+load(getpref('cellbase','fname')); 
 
 % Check input arguments
 if ~ischar(property)
@@ -39,7 +36,7 @@ if nargin > 1
         posCELLS = cellfun(@(d)find(ismember(CELLIDLIST,d)),varargin(1));
     end
 else
-    posCELLS = 1:length(CELLIDLIST);
+    posCELLS=1:length(CELLIDLIST);
 end
 v = TheMatrix(posCELLS,ANALYSES(pos(1)).columns(pos(2)));
 

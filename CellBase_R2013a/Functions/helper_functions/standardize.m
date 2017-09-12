@@ -5,4 +5,4 @@ function sX = standardize(X)
 %
 %   See also ZSCORE.
 
-sX = (X - nanmean(X)) / nanstd(X);
+sX = (X - mean(X)) / std(X);

@@ -104,13 +104,13 @@ if ( fid == -1) || strcmp(questdlg(QuestionStr,...
     catch
         disp('No analysis added.')
     end
-%     if NUM_CELLS    % let's celebrate
+    if NUM_CELLS    % let's celebrate
         Data = imread('CellBase_icon.tif');
         welcomestr = sprintf('Your CellBase has been initialized with %d cells. \n Have fun!  \n\n\n\n',NUM_CELLS);
         msgbox(welcomestr,'Welcome to CellBase','custom',Data);
-%     else
-%         warndlg('Something went wrong.','InitCB');
-%     end
+    else
+        warndlg('Something went wrong.','InitCB');
+    end
 else
     fclose(fid);
     welcomestr = sprintf('\n %s already exists. Delete it if you need a rebuild.\n',fname);

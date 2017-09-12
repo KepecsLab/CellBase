@@ -23,7 +23,7 @@ function tagging(I,issave)
 dbstop if error
 
 % Input argument check
-error(nargchk(0,2,nargin))
+error(nargchk(1,2,nargin))
 if nargin < 2
     issave = false;
 end
@@ -32,14 +32,14 @@ skipclusterquality = true;
 % Directories
 global DATAPATH
 fs = filesep;
-resdir = [DATAPATH 'NB' fs 'tagging_newdata' fs];
-xlsname = [resdir fs 'tagging_newdata.xls'];   % write results to excel file
+resdir = [DATAPATH 'NB' fs 'tagging_new' fs];
+xlsname = [resdir fs 'tagging.xls'];   % write results to excel file
 
 % Load CellBase
 loadcb
 
 % Input argument check
-nmc = length(CELLIDLIST);  
+nmc = length(CELLIDLIST);    %#ok<USENS>
 if nargin < 1
     I = 1:nmc;
 else
@@ -55,11 +55,10 @@ else
 end
 
 % Call 'Lratio', 'nbisstim', 'spikeshapecorr'
-NumCells = length(I);
 feature_names1 = {'Amplitude','Energy'};
 feature_names2 = {'WavePC1','Energy'};
-for k = 1:NumCells
-    cellid = I{k};
+for k = I;
+    cellid = CELLIDLIST{k};
     disp([num2str(k) '   ' cellid])
     try
         
@@ -85,7 +84,7 @@ for k = 1:NumCells
             % Add 'PulseOn' event if missing
             ST = loadcb(cellid,'STIMSPIKES');
             if isequal(findcellstr(ST.events(:,1),'PulseOn'),0)
-                prealignSpikes(cellid,'FUNdefineEventsEpochs',...
+                prealignSpikes(CELLIDLIST(k),'FUNdefineEventsEpochs',...
                     @defineEventsEpochs_pulseon,'filetype','stim',...
                     'ifsave',1,'ifappend',1)
             end
@@ -118,7 +117,7 @@ for k = 1:NumCells
             D_KL_xls = formatforExcel(D_KL);
             R_xls = formatforExcel(R);
                         
-            xlswrite(xlsname,{cellid},'sheet1',['A' num2str(k)])
+            xlswrite(xlsname,CELLIDLIST(k),'sheet1',['A' num2str(k)])
             xlswrite(xlsname,Lr_amp_xls,'sheet1',['B' num2str(k)])
             xlswrite(xlsname,ID_amp_xls,'sheet1',['C' num2str(k)])
             xlswrite(xlsname,Lr_PC_xls,'sheet1',['D' num2str(k)])

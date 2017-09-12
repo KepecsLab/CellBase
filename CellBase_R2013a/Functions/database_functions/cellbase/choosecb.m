@@ -25,11 +25,3 @@ fld = setdiff(fld,'cellbases');
 for k = 1:length(fld)
     setpref('cellbase',fld{k},cellbases{crcb}(1).(fld{k}))
 end
-
-% Set globals
-global CELLIDLIST ANALYSES TheMatrix %#ok<NUSED>
-if ~isempty(CELLIDLIST)
-    fprintf('Updating global variables............')
-    loadcb
-    fprintf('\b.      Done \n')
-end

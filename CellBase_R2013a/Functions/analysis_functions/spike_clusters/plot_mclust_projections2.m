@@ -149,7 +149,7 @@ for k = 1:NumComb
         g.feature_names{scnd(1)} num2str(scnd(2))];
     HS.(namestr) = figure('Position',[624 126 1092 852]);
     hold on
-    axis([min(xdata) max(xdata)+1 min(ydata) max(ydata)+1])
+    axis([min(xdata) max(xdata) min(ydata) max(ydata)])
     xlabel([g.feature_names{fst(1)} ': ' num2str(fst(2))])
     ylabel([g.feature_names{scnd(1)} ': ' num2str(scnd(2))])
     

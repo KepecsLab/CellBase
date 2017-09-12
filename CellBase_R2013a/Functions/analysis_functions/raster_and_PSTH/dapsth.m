@@ -70,7 +70,6 @@ for k = 1:tno   % convolve trial-wise
         end
         wnlm = (1 - prob(spi)).^5 * 26 + 4;   % map half-window size from +-26 to +-4 (prob. 0 to prob. 1); 
             % exponent sharpens the transition
-        wnlm = max(wnlm,1);   % prevent empty window for dt < 0.001
         shf = 0.5;   % 'sharpness factor': scaler that sharpens the kernel for higher probabilities (0.5 - sharp)
         gsd = shf / prob(spi) - 1;   % SD of the Gaussian window
         gsd = max(gsd,0.1);   % normpdf function numerically fails for smaller SD values; with 0.1 it's already practically Dirac delta 

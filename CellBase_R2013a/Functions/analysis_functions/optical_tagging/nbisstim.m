@@ -44,7 +44,7 @@ TE = loadcb(cellid,'StimEvents');
 epoch_pos1 = findcellstr(ST.events(:,1),EventName1);
 epoch_pos2 = findcellstr(ST.events(:,1),EventName2);
 if epoch_pos1 == 0 || epoch_pos2 == 0
-    error('Event name not found');
+    error('Epoch name not found');
 end
 stimes1 = ST.event_stimes{epoch_pos1};
 stimes2 = ST.event_stimes{epoch_pos2};
