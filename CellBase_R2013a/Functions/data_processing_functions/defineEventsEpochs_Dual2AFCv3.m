@@ -36,9 +36,11 @@ events(i,:) = {'ResponseEnd',      'ResponseEnd',        'ResponseEnd',         
 
 
 % Variable events
+events(i,:) = {'StimulusAnticipation',    'PokeCenterStart',        'StimulusOnset',     [-6 6]};    i = i + 1;
 events(i,:) = {'StimulusSampling',    'StimulusOnset',        'StimulusOffset',     [-6 6]};    i = i + 1;
 events(i,:) = {'MovementTime',                'StimulusOffset',       'ResponseStart',     [-6 6]};    i = i + 1;
 events(i,:) = {'WaitingRewardTime',                 'ResponseStart',        'ResponseEnd',     [-6 6]};    i = i + 1;
+events(i,:)= {'FullTrial',    'PokeCenterStart',        'ResponseEnd',     [-6 6]};    i = i + 1;
 
 
 % Define epochs for rate calculations
@@ -63,6 +65,11 @@ epochs(i,:) = {'FullWaitingTime','WaitingRewardTime',[NaN NaN],'NaN'};i = i + 1;
 
 
 end
+
+
+
+
+
 
 
 
