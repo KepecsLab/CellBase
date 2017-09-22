@@ -8,7 +8,7 @@ function binraster = stimes2binraster(stimes,time,dt,ev_windows,window_margin)
 %
 %   See also VIEWCELL2B and PLOT_RASTER2A.
 
-%   Edit log: AK 7/1, BH 6/23/11, BH 3/11/12
+%   Edit log: AK 7/1, BH 6/23/11, BH 3/11/12 PM 07/25/17
 
 % Input arguments check
 NumTrials = length(stimes);
@@ -30,6 +30,7 @@ for iTRIAL = 1:NumTrials
     ok_spikes = all_spikes(all_spikes>time(1)&all_spikes<=time(end));
     ind_ok_spikes = round((ok_spikes-time(1))/dt) + 1;
     if ~isempty(ind_ok_spikes)
+%     if ok_spikes~=0
         binraster(iTRIAL,ind_ok_spikes) = 1;
     end
     if exist('ev_windows','var')
