@@ -1,4 +1,4 @@
-function [stim, F, Fse] =  tuning_curve(Freq,OdorValveID);
+function [stim, F, Fse] =  tuning_curve(Freq,OdorValveID)
 %
 %
 %

@@ -1,4 +1,4 @@
-function binraster = stimes2binraster(stimes,time,dt,ev_windows,window_margin)
+function binraster = stimes2binraster2(stimes,time,dt,ev_windows,window_margin)
 %STIMES2BINRASTER   Calculate binraster from spike times.
 %   BINRASTER = STIMES2BINRASTER(STIMES,TIME,DT,EV_WINDOWS,WINDOW_MARGIN)
 %   calculates binrasters using spike times (STIMES) and time vector (TIME)
@@ -8,10 +8,10 @@ function binraster = stimes2binraster(stimes,time,dt,ev_windows,window_margin)
 %
 %   See also VIEWCELL2B and PLOT_RASTER2A.
 
-%   Edit log: AK 7/1, BH 6/23/11, BH 3/11/12 PM 07/25/17
+%   Edit log: AK 7/1, BH 6/23/11, BH 3/11/12
 
 % Input arguments check
-NumTrials = length(stimes);
+NumTrials =1;
 if ~exist('window_margin','var')
    window_margin = [0 0];
 end
@@ -26,11 +26,10 @@ win_max = [1 length(time)];
 % Spikes raster matrix
 binraster = zeros(NumTrials,length(time));
 for iTRIAL = 1:NumTrials
-    all_spikes = stimes{iTRIAL};
+    all_spikes = stimes;
     ok_spikes = all_spikes(all_spikes>time(1)&all_spikes<=time(end));
     ind_ok_spikes = round((ok_spikes-time(1))/dt) + 1;
     if ~isempty(ind_ok_spikes)
-%     if ok_spikes~=0
         binraster(iTRIAL,ind_ok_spikes) = 1;
     end
     if exist('ev_windows','var')

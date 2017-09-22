@@ -71,7 +71,7 @@ for i = 1: NumAnal
             catch
 %                 property_values = {nan(length(columns),1)};
                 property_values = num2cell(nan(length(columns),1));
-                if size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))
+                if size(TheMatrix,1) > 1 && any(cellfun(@ischar,num2cell(TheMatrix(1,columns))))
                     charinx = cellfun(@ischar,TheMatrix(1,columns));   % for character type properties, initialize with empty matrix
                     property_values(charinx) = {''};
                 end

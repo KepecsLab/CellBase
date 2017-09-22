@@ -1,4 +1,4 @@
-function [psth psth_sd] = apsth(binraster,dt)
+function [psth_aconv] = apsth2(binraster,dt)
 %APSTH   Spike density function with adaptive Gaussian kernel.
 %	[PSTH_ACONV PSTH_SD] = APSTH(BINRASTER,DT) computes the spike density
 %	function with an adaptive Gaussian kernel optimized for local
@@ -28,47 +28,47 @@ ts = sort(allspks)';
 
 % % Calculate adaptive SDF with variable Gaussian Kernel #1 (slightly faster 
 % % but no convolved raster)
-% spno = length(ts);
-% agvd = zeros(1,tl);
-% tno_true = nansum(~isnan(binraster));
-% prob = nanmean(binraster) / (dt * 1000);
-% for t = 1:spno
-%     spi = ts(t);
-%     tspt = zeros(1,tl);
-%     tspt(spi) = 1;
-%     if prob(spi) > 1
-%         keyboard
-%     end
-%     wbh = gausswin(9,prob(spi)*50);   % kernel
-%     wbh = wbh / sum(wbh);
-%     agvd = agvd + filtfilt(wbh,1,tspt);   % convolution from both directions
-% end
-% psth_aconv = [agvd./tno_true] / dt * 1000;   % SDF
-% 
+spno = length(ts);
+agvd = zeros(1,tl);
+tno_true = nansum(~isnan(binraster));
+prob = nanmean(binraster) / (dt * 1000);
+for t = 1:spno
+    spi = ts(t);
+    tspt = zeros(1,tl);
+    tspt(spi) = 1;
+    if prob(1) > 1
+        keyboard
+    end
+    wbh = gausswin(9,prob(1)*50);   % kernel
+    wbh = wbh / sum(wbh);
+    agvd = agvd + filtfilt(wbh,1,tspt);   % convolution from both directions
+end
+psth_aconv = [agvd./tno_true] / dt * 1000;   % SDF
+
 % H = figure;  % Plot SDF
 % plot(time,psth_aconv,'k')
 % xlim([time(1) time(end)])
 
 % Calculate adaptive SDF with variable Gaussian Kernel #2
-agvd = zeros(tno,tl);
-prob = nanmean(binraster) / (dt * 1000)
-mltp = binraster;
-mltp(~isnan(mltp)) = 1;
-for k = 1:tno   % convolve trial-wise
-    spks = find(binraster(k,:)==1);
-    spno = length(spks);
-    for t = 1:spno
-        spi = spks(t);
-        tbinraster = zeros(1,tl);
-        tbinraster(spi) = 1;
-        if prob(spi) > 1 / (dt * 1000)
-            keyboard
-        end
-        wbh = gausswin(9,prob(spi)*50);
-        wbh = wbh / sum(wbh);
-        agvd(k,:) = agvd(k,:) + filtfilt(wbh,1,tbinraster);
-    end
-end
-psth = nanmean(agvd.*mltp) / dt;
-psth_sd = nanstd(agvd.*mltp/dt);
-psth_err = nanstd(agvd.*mltp/dt) / sqrt(tno);
+% agvd = zeros(tno,tl);
+% prob = nanmean(binraster) / (dt * 1000);
+% mltp = binraster;
+% mltp(~isnan(mltp)) = 1;
+% for k = 1:tno   % convolve trial-wise
+%     spks = find(binraster(k,:)==1);
+%     spno = length(spks);
+%     for t = 1:spno
+%         spi = spks(t);
+%         tbinraster = zeros(1,tl);
+%         tbinraster(spi) = 1;
+%         if prob(spi) > 1 / (dt * 1000)
+%             keyboard
+%         end
+%         wbh = gausswin(9,prob(spi)*50);
+%         wbh = wbh / sum(wbh);
+%         agvd(k,:) = agvd(k,:) + filtfilt(wbh,1,tbinraster);
+%     end
+% end
+% psth = nanmean(agvd.*mltp) / dt;
+% psth_sd = nanstd(agvd.*mltp/dt);
+% psth_err = nanstd(agvd.*mltp/dt) / sqrt(tno);

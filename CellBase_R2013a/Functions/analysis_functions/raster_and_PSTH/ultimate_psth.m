@@ -119,6 +119,7 @@ switch event_type
         try
             VE = loadcb(cellid,'TrialEvents');   % load events
             VS = loadcb(cellid,'EVENTSPIKES');   % load prealigned spikes
+           
         catch ME
             disp('There was no behavioral protocol for this session.')
             error(ME.message)
