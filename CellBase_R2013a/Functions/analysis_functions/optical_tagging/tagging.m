@@ -57,7 +57,7 @@ end
 % Call 'Lratio', 'nbisstim', 'spikeshapecorr'
 feature_names1 = {'Amplitude','Energy'};
 feature_names2 = {'WavePC1','Energy'};
-for k = I;
+for k = 1:length(I)
     cellid = CELLIDLIST{k};
     disp([num2str(k) '   ' cellid])
     try
@@ -85,7 +85,7 @@ for k = I;
             ST = loadcb(cellid,'STIMSPIKES');
             if isequal(findcellstr(ST.events(:,1),'PulseOn'),0)
                 prealignSpikes(CELLIDLIST(k),'FUNdefineEventsEpochs',...
-                    @defineEventsEpochs_pulseon,'filetype','stim',...
+                    @defineEventsEpochs_laserstim,'filetype','stim',...
                     'ifsave',1,'ifappend',1)
             end
             
@@ -94,6 +94,17 @@ for k = I;
             
             % Spike shape correlation
             R = spikeshapecorr(cellid);
+            
+            %TO
+            Insert{1,1}=cellid;
+            Insert{1,2}=Hindex;
+            insertdata(Insert,'type','prop','name','Hindex','overwrite',true)
+            Insert{1,1}=cellid;
+            Insert{1,2}=D_KL;
+            insertdata(Insert,'type','prop','name','D_KL','overwrite',true)
+            Insert{1,1}=cellid;
+            Insert{1,2}=R;
+            insertdata(Insert,'type','prop','name','R_WF','overwrite',true)            
         
         else
             Hindex = NaN;

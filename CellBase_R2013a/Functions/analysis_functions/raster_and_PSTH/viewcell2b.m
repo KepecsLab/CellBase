@@ -1,4 +1,4 @@
-function viewcell2b(cellid,varargin)
+function fhandle0 = viewcell2b(cellid,varargin)
 %VIEWCELL2B   Raster plot and PSTH.
 %   VIEWCELL2B(CELLID,'TRIGGERNAME',TRIGEVENT,'SORTEVENT',SEVENT,'EVENTTYPE
 %   ',EVTYPE) plots a light triggered or event triggered raster and PSTH

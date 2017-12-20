@@ -24,6 +24,12 @@ function HS = plot_mclust_projections2(cellid,varargin)
 %           plotting; if false, all spikes are included
 %       'plotlightspikes', true - if true, light-evoked spikes are 
 %           superimposed
+%       'fighandle', NaN - optional figure handle for feature plots
+%       'axhandle', NaN - optional axes handles for individual feature
+%           plots
+%       'plot', true - determines if features are plotted
+%       'plotbest', false - only plots best feature combination based on a
+%          simple metrix
 %
 %   HS = PLOT_MCLUST_PROJECTIONS2(CELLID,...) returns the handles of the
 %   figures in HS struct. The fields of HS are named according to the
@@ -41,7 +47,7 @@ function HS = plot_mclust_projections2(cellid,varargin)
 %   balazs.cshl@gmail.com
 %   08-May-2012
 
-%   Edit log: SPR 12/28/11; BH 5/8/12
+%   Edit log: SPR 12/28/11; BH 5/8/12; TO 12/2017
 
 % Input arguments
 prs = inputParser;
@@ -53,10 +59,17 @@ addParamValue(prs,'marker_size',2,@isnumeric)  % marker size for the plots
 addParamValue(prs,'usefastplot',true,@(s)islogical(s)|ismember(s,[0 1]))  % fast plotting (no zoom)
 addParamValue(prs,'stimonly',true,@(s)islogical(s)|ismember(s,[0 1]))  % restrict to period between first and last light pulse
 addParamValue(prs,'plotlightspikes',true,@(s)islogical(s)|ismember(s,[0 1]))  % plot light-evoked spikes
+addParamValue(prs,'fighandle',NaN,@isnumeric)  % figure handle for feature plots
+addParamValue(prs,'axhandle',NaN,@(s)isgraphics(s,'axes'))  % axes handles for individual feature plots
+addParamValue(prs,'plot',true,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
+addParamValue(prs,'plotbest',false,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
 parse(prs,cellid,varargin{:})
 g = prs.Results;
 if ischar(g.feature_names)
     g.feature_names = {g.feature_names};
+end
+if g.plotbest
+    g.plot=false;
 end
 
 % Load stim events to get Pulse onset times.
@@ -67,17 +80,25 @@ pon = ST.PulseOn(~isnan(ST.PulseOn));
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
 TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
-all_spikes = all_spikes * TIMEFACTOR;
-val_spk_i = [find(all_spikes >= pon(1),1,'first') ...
-    find(all_spikes <= pon(end),1,'last')]; % consider spikes only within the stimulation protocol to account for drift
+all_spikes = all_spikes * TIMEFACTOR * 10^-4;
+blocks = [find(diff(pon)>1600),length(pon)];
+if length(blocks)==1
+    val_spk=all_spikes >= pon(1) & all_spikes <= pon(blocks(end));
+else
+    val_spk=all_spikes >= pon(1) & all_spikes <= pon(blocks(1));
+for b = 1:length(blocks)-1
+    val_spk = val_spk | (all_spikes>=pon(blocks(b)+1) & all_spikes<=pon(blocks(b+1)));
+end
+end
+val_spk_i = find(val_spk); % consider spikes only within the stimulation protocol/blocks to account for drift
 nspk = length(all_spikes);
-spk = loadcb(cellid,'Spikes');
+spk = loadcb(cellid,'Spikes'); spk = spk*10^-4;
 [junk,junk2,tagged_cell_inx] = intersect(spk,all_spikes);  %#ok<*ASGLU> % get indices for the cell
 if ~isequal(junk,spk)  % check if all files have appropriate time stamps
     error('plot_mclust_projections:SpikeTimeMismatch','Mismatch between saved spike times and Ntt time stamps.')
 end
 if g.stimonly   % restrict to stimulation epoch
-    tagged_cell_inx = tagged_cell_inx(tagged_cell_inx>val_spk_i(1)&tagged_cell_inx<val_spk_i(2));
+    tagged_cell_inx = intersect(tagged_cell_inx,val_spk_i);
 end
 tagged_cell_i = zeros(nspk,1);
 tagged_cell_i(tagged_cell_inx) = 1;
@@ -89,12 +110,18 @@ tag_cell = strmatch(cellid,tetpartners);
 % Spikes from each cell have an index. Spikes from noise have index 0.
 cell_i = zeros(nspk,1);
 for iCell = 1:NumCell
-    spk = loadcb(tetpartners(iCell),'Spikes'); % load spike times.
+    spk = loadcb(tetpartners(iCell),'Spikes');spk=spk*10^-4; % load spike times.
     [junk,junk2,cell_inx] = intersect(spk,all_spikes); % get indices for the cell
     if g.stimonly   % restrict to stimulation epoch
-        cell_inx = cell_inx(cell_inx>val_spk_i(1)&cell_inx<val_spk_i(2));
+        cell_inx = intersect(cell_inx,val_spk_i);
     end
     cell_i(cell_inx) = iCell;
+end
+%restrict noise spikes to stimulation epoch
+if g.stimonly   % restrict to stimulation epoch
+    all_i = 1:nspk;
+    invalid_spk_i = setxor(all_i,val_spk_i);
+    cell_i(invalid_spk_i) = -1;
 end
 
 % Load feature data for tetrode.
@@ -134,29 +161,82 @@ if g.plotlightspikes
 end
 
 % Plot
+%plot features (only if g.plot=true)
+if g.plot
+    HS = plot_features(g,NumCell,cell_i,tagged_cell_i,evoked_cell_inx,FeatureData,'all');
+else
+    HS = plot_features(g,NumCell,cell_i,tagged_cell_i,evoked_cell_inx,FeatureData,'none');%get metric
+end
+
+if g.plotbest
+    if  ~isgraphics(g.axhandle(1),'axes')
+        ax=axes;
+    else
+        ax = g.axhandle(1);
+        axes(ax)
+    end
+    HS = plot_features(g,NumCell,cell_i,tagged_cell_i,evoked_cell_inx,FeatureData,HS.best_feature_idx);
+    
+end
+end
+    
+
+% -------------------------------------------------------------------------
+function HS = plot_features(g,NumCell,cell_i,tagged_cell_i,evoked_cell_inx,FeatureData,whichcmb)
 cmp = hsv(NumCell) / 4 + 0.75;
 pcmb = allcomb(1:size(FeatureData,1),1:size(FeatureData,3));
 cmb = flipud(combnk(pcmb(:,1)*10+pcmb(:,2),2));
 NumComb = size(cmb,1);
-for k = 1:NumComb
+plotc=g.plot|g.plotbest;
+if strcmpi(whichcmb,'all')
+    Comb = 1:NumComb;
+elseif strcmp(whichcmb,'none') || isnan(whichcmb)
+    Comb = 1:NumComb;
+    plotc=false;
+else
+   Comb = whichcmb;
+   NumComb = length(Comb);
+   g.axhandle(Comb) = g.axhandle(1:NumComb);
+end
+
+NCols = ceil(NumComb/3);
+NRows = ceil(NumComb/NCols);
+ax=zeros(1,NumComb);
+dist_metric=zeros(1,NumComb);
+%open figure
+if isnan(g.fighandle) && plotc
+    HS.feature_plot = figure('Units','normalized','outerposition',[0 0 1 1]);
+elseif plotc
+    HS.feature_plot=figure(g.fighandle);
+end
+k_i=0;
+for k = Comb
+    k_i=k_i+1;
     fst = [floor(cmb(k,1)/10) mod(cmb(k,1),10)];
     scnd = [floor(cmb(k,2)/10) mod(cmb(k,2),10)];
     xdata = squeeze(FeatureData(fst(1),cell_i==0,fst(2)));
     ydata = squeeze(FeatureData(scnd(1),cell_i==0,scnd(2)));
     
-    % Open figure
-    namestr = [g.feature_names{fst(1)} num2str(fst(2)) '_'...
+    % select plot
+    titlestr = [g.feature_names{fst(1)} num2str(fst(2)) '_'...
         g.feature_names{scnd(1)} num2str(scnd(2))];
-    HS.(namestr) = figure('Position',[624 126 1092 852]);
+    if plotc
+        if length(g.axhandle)<k || ~isgraphics(g.axhandle(k),'axes')
+            ax(k)=subplot(NRows,NCols,k_i);
+        else
+            ax(k) = g.axhandle(k);
+            axes(ax(k))
+        end
+    end
     hold on
     axis([min(xdata) max(xdata) min(ydata) max(ydata)])
     xlabel([g.feature_names{fst(1)} ': ' num2str(fst(2))])
     ylabel([g.feature_names{scnd(1)} ': ' num2str(scnd(2))])
     
     % Plot noise spikes
-    if g.usefastplot
+    if g.usefastplot && plotc
         fastplot(xdata,ydata,[0.8 0.8 0.8],g.marker,g.marker_size);
-    else
+    elseif plotc
         slowplot(xdata,ydata,[0.8 0.8 0.8],g.marker,g.marker_size);
     end
     
@@ -164,9 +244,9 @@ for k = 1:NumComb
     for iC = 1:NumCell
         xdatai = squeeze(FeatureData(fst(1),cell_i==iC,fst(2)));
         ydatai = squeeze(FeatureData(scnd(1),cell_i==iC,scnd(2)));
-        if g.usefastplot
+        if g.usefastplot && plotc
             fastplot(xdatai,ydatai,cmp(iC,:),g.marker,g.marker_size);
-        else
+        elseif plotc
             slowplot(xdatai,ydatai,cmp(iC,:),g.marker,g.marker_size);
         end
     end
@@ -174,25 +254,45 @@ for k = 1:NumComb
     % Plot tagged cluster
     xdatai = squeeze(FeatureData(fst(1),tagged_cell_i==1,fst(2)));
     ydatai = squeeze(FeatureData(scnd(1),tagged_cell_i==1,scnd(2)));
-    if g.usefastplot
+    if g.usefastplot && plotc
         fastplot(xdatai,ydatai,[255 204 0]/255,g.marker,g.marker_size);
-    else
+    elseif plotc
         slowplot(xdatai,ydatai,[255 204 0]/255,g.marker,g.marker_size);
     end
+    
+    %separability metric
+    c_noise = [xdata',ydata'];
+    c_noise = (cov(c_noise)^-1)*c_noise';
+    c_noise_m = median(c_noise,2);
+    c_tagged = [xdatai',ydatai'];
+    c_tagged = (cov(c_tagged)^-1)*c_tagged';
+    c_tagged_m = median(c_tagged,2);
+    dist_metric(k) =sum(abs(c_noise_m-c_tagged_m));
     
     % Plot light-evoked spikes
     if g.plotlightspikes
         xdatai = squeeze(FeatureData(fst(1),evoked_cell_inx,fst(2)));
         ydatai = squeeze(FeatureData(scnd(1),evoked_cell_inx,scnd(2)));
-        if g.usefastplot
+        if g.usefastplot && plotc
             fastplot(xdatai,ydatai,[0 153 255]/255,'.',g.marker_size+5);
-        else
+        elseif plotc
             slowplot(xdatai,ydatai,[0 153 255]/255,'.',g.marker_size+5);
         end
     end
 end
+HS.dist_metric = dist_metric;
+[~,best_i] = max(dist_metric);
+fst = [floor(cmb(best_i,1)/10) mod(cmb(best_i,1),10)];
+    scnd = [floor(cmb(best_i,2)/10) mod(cmb(best_i,2),10)];
+best_name = [g.feature_names{fst(1)} num2str(fst(2)) '_'...
+        g.feature_names{scnd(1)} num2str(scnd(2))];
+HS.best_feature = best_name;
+HS.best_feature_idx = best_i;
+if plotc && g.plot && length(ax)>=k && isgraphics(g.axhandle(k),'axes')
+    set(ax(best_i),'Color',[1,.95,.95]);
+end
+end
 
-% -------------------------------------------------------------------------
 function C = allcomb(A,B)
 
 % Convert to columns
@@ -202,6 +302,7 @@ B = B(:);
 % Combinations
 as = arrayfun(@(k)horzcat(repmat(A(k),length(B),1),B),1:length(A),'UniformOutput',false);
 C = cell2mat(as');
+end
 
 % -------------------------------------------------------------------------
 function h = fastplot(x,y,clr,mrk,mrks)
@@ -232,8 +333,10 @@ h = plot(x4,y4,'.','Color',clr,'Marker',mrk,'MarkerSize',mrks);
 
 % Restore axis units property
 set(gca,'Unit',old_units)
+end
 
 % -------------------------------------------------------------------------
 function h = slowplot(x,y,clr,mrk,mrks)
 
 h = plot(x,y,'.','Color',clr,'Marker',mrk,'MarkerSize',mrks);
+end

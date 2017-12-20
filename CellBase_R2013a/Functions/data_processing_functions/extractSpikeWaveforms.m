@@ -39,7 +39,7 @@ default_args={...
 Nttfile = cellid2fnames(cellid,'ntt');
 TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
 [all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
-[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR);
+[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR*10^-4);
 if ~isequal(junk,SpikeTimes)   % internal check for spike times
     error('extractSpikeWaveforms:SpikeTimeMismatch','Mismatch between extracted spike times and Ntt time stamps.')
 end

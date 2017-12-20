@@ -27,10 +27,15 @@ function out = plotwaveforms(cellid,varargin)
 %   Optional input parameter-value paris with default values:
 %       'spont', true - plot spontaneous waveform
 %       'evoked', true - plot light-evoked waveform
+%       'compare', true - plot comparison figure
 %       'maxnum', 2000 - maximum number of spikes to plot
 %       'correlation', false - return waveform correlation
 %       'stim_period', [] - start and end of stimulation period after each
 %           light pulse
+%       'fighandle', [NaN, NaN, NaN] - figure handles to use. NaN for new
+%            fig
+%       'axhandle', {} - cell with 1x4 ax handles for inidividual axes to
+%           use. empty for new axes.
 %
 %   Output (fields of HS struct):
 %       H_spont - figure handle for spontaneous spike waveform
@@ -48,16 +53,19 @@ function out = plotwaveforms(cellid,varargin)
 %   balazs.cshl@gmail.com
 %   07-May-2012
 
-%   Edit log: BH 5/7/12
+%   Edit log: BH 5/7/12, TO 12/2017
 
 % Input arguments
 prs = inputParser;
 addRequired(prs,'cellid',@iscellid)
 addParamValue(prs,'spont',true,@(s)islogical(s)|ismember(s,[0 1])) % plot spontaneous waveform
 addParamValue(prs,'evoked',true,@(s)islogical(s)|ismember(s,[0 1])) % plot light-evoked waveform
+addParamValue(prs,'compare',true,@(s)islogical(s)|ismember(s,[0 1])) % plot light-evoked waveform
 addParamValue(prs,'maxnum',2000,@isnumeric)   % maximal number of spikes to plot
 addParamValue(prs,'correlation',false,@(s)islogical(s)|ismember(s,[0 1])) % calculate waveform correlation
 addParamValue(prs,'stim_period',[],@isnumeric)   % start and end point for the interval of light-evoked spikes
+addParamValue(prs,'fighandle',nan(1,3),@isnumeric)   % plotting behavior
+addParamValue(prs,'axhandle',cell(1,3),@iscell)   % plotting behavior
 parse(prs,cellid,varargin{:})
 g = prs.Results;
 
@@ -112,8 +120,16 @@ end
 
 % Plot light-evoked waveforms
 if g.evoked
-    out.H_evoked = figure('Position',[624 126 1092 852]);
-    H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+    if ~isempty(g.fighandle) && ~isnan(g.fighandle(1))
+        out.H_evoked = figure(g.fighandle(1));
+    else
+        out.H_evoked = figure('Position',[624 126 1092 852]);
+    end
+    if ~isempty(g.axhandle) && all(isgraphics(g.axhandle{1},'axes')) && length(g.axhandle{1})==4
+        H=g.axhandle{1};
+    else
+        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+    end
     for sp = 1:4
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(weds(:,sp,:))))
@@ -123,8 +139,16 @@ end
 
 % Plot spontaneous waveforms
 if g.spont
-    out.H_spont = figure('Position',[624 126 1092 852]);
-    H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+    if length(g.fighandle)>1 && ~isnan(g.fighandle(2))
+        out.H_spont = figure(g.fighandle(2));
+    else
+        out.H_spont = figure('Position',[624 126 1092 852]);
+    end
+    if length(g.axhandle)>1 && all(isgraphics(g.axhandle{2},'axes')) && length(g.axhandle{2})==4
+        H = g.axhandle{2};
+    else
+        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+    end
     for sp = 1:4
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(wsds(:,sp,:))))
@@ -133,16 +157,29 @@ if g.spont
 end
 
 % Compare waveforms
-if g.evoked && g.spont
-    out.H_compare = figure('Position',[624 126 1092 852]);
-    H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+if (g.evoked && g.spont) || g.compare
+    if length(g.fighandle)>2 && ~isnan(g.fighandle(3))
+        out.H_compare = figure(g.fighandle(3));
+    else
+        out.H_compare = figure('Position',[624 126 1092 852]);
+    end
+    dotitle=true;
+    if length(g.axhandle)>2 && all(isgraphics(g.axhandle{3},'axes')) && length(g.axhandle{3})==4
+        H = g.axhandle{3};
+        dotitle=false;
+    else
+        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+    end
     for sp = 1:4
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(wsds(:,sp,:))),'Color',[0.9 0.9 0.9])
         plot(H(sp),transpose(mean_spont(sp,:)),'Color','k','LineWidth',6)
         plot(H(sp),transpose(mean_evoked(sp,:)),'Color',[0 153 255]/255,'LineWidth',2)
+        if sp ==1 && dotitle
+        	title('Compare spont. and light-evoked spike shape')
+        end
     end
-    title('Compare spont. and light-evoked spike shape')
+    
 end
 
 % Spike shape correlation

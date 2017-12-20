@@ -1,0 +1,9 @@
+/.ignore
+
+*.txt
+
+*.asv
+
+*~
+
+*.mex*

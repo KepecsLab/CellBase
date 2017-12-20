@@ -57,6 +57,7 @@ epochs(i,:) = {'EndWaiting',    'ResponseEnd',       [-0.75 0],       'WaitingRe
 epochs(i,:) = {'RewardRate',    'ResponseEnd',       [0 1],       'WaitingRewardTime'};    i = i + 1;
 epochs(i,:) = {'StimulusEndRate',    'StimulusOffset',       [-0.25 0.2],     'StimulusSamplingDuration'};    i = i + 1;
 epochs(i,:) = {'InitialResponse5',    'ResponseStart',       [0 2],     'MovementTime'};    i = i + 1;
+epochs(i,:) = {'EndWaiting2',    'ResponseEnd',       [-0.75 0],       'WaitingRewardTime'};    i = i + 1;
 
 % Variables epochs
 
