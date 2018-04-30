@@ -34,7 +34,9 @@ end
 CELLIDLIST(cellpos) = [];
 
 % Delete rows from 'TheMatrix;
+if ~isempty(TheMatrix)
  TheMatrix(cellpos,:) = [];
+end
 
 % Return changed variables to workspace & save all
 assignin('base','TheMatrix',TheMatrix);

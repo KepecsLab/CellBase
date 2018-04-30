@@ -36,10 +36,10 @@ events(i,:) = {'ResponseEnd',      'ResponseEnd',        'ResponseEnd',         
 
 
 % Variable events
-events(i,:) = {'StimulusAnticipation',    'PokeCenterStart',        'StimulusOnset',     [-6 6]};    i = i + 1;
 events(i,:) = {'StimulusSampling',    'StimulusOnset',        'StimulusOffset',     [-6 6]};    i = i + 1;
 events(i,:) = {'MovementTime',                'StimulusOffset',       'ResponseStart',     [-6 6]};    i = i + 1;
 events(i,:) = {'WaitingRewardTime',                 'ResponseStart',        'ResponseEnd',     [-6 6]};    i = i + 1;
+events(i,:) = {'StimulusAnticipation',    'PokeCenterStart',        'StimulusOnset',     [-6 6]};    i = i + 1;
 events(i,:)= {'FullTrial',    'PokeCenterStart',        'ResponseEnd',     [-6 6]};    i = i + 1;
 
 
@@ -57,13 +57,14 @@ epochs(i,:) = {'EndWaiting',    'ResponseEnd',       [-0.75 0],       'WaitingRe
 epochs(i,:) = {'RewardRate',    'ResponseEnd',       [0 1],       'WaitingRewardTime'};    i = i + 1;
 epochs(i,:) = {'StimulusEndRate',    'StimulusOffset',       [-0.25 0.2],     'StimulusSamplingDuration'};    i = i + 1;
 epochs(i,:) = {'InitialResponse5',    'ResponseStart',       [0 2],     'MovementTime'};    i = i + 1;
-epochs(i,:) = {'EndWaiting2',    'ResponseEnd',       [-0.75 0],       'WaitingRewardTime'};    i = i + 1;
 
 % Variables epochs
 
 epochs(i,:) = {'StimulusResponse','StimulusSampling',[NaN NaN],'NaN'};i = i + 1;
 epochs(i,:) = {'MovementResponse','MovementTime',[NaN NaN],'NaN'};i = i + 1;
 epochs(i,:) = {'FullWaitingTime','WaitingRewardTime',[NaN NaN],'NaN'};i = i + 1;
+epochs(i,:) = {'AnticipationResponse','StimulusAnticipation',[NaN NaN],'NaN'};i = i + 1;
+
 
 
 end
