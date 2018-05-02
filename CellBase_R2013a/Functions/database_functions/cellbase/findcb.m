@@ -9,7 +9,7 @@ function crcb = findcb(cb_name)
 %   Edit log: BH 5/30/11
 
 % Input argument check
-error(nargchk(0,1,nargin))
+narginchk(0,1)
 if nargin < 1
     cb_name = '';
 end

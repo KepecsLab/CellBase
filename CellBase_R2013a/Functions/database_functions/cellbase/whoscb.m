@@ -7,7 +7,7 @@ function names = whoscb
 %   Edit log: BH 5/31/11
 
 % Input argument check
-error(nargchk(0,0,nargin))
+narginchk(0,0)
 
 % List of CellBase names
 cellbases = getpref('cellbase','cellbases');

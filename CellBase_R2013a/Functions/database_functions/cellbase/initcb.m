@@ -12,7 +12,7 @@ function initcb(cb_name)
 %   Edit log: AK 3/04, 10/06; BH 3/18/11, 5/30/11, 4/26/12, 5/7/12, 8/20/13
 
 % Check input arguments
-error(nargchk(0,1,nargin))
+narginchk(0,1)
 if nargin < 1
     cb_name = '';
 else
