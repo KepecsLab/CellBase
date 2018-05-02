@@ -9,7 +9,7 @@ function import_preferences()
 % TO 05/2018
 
 str = 'No PREFERENCE variable found. Likely due to use of older cellbase version. Please choose if you want to use default parameters or import from getpref("cellbase"). ';
-str=strcat(str,'Preferences can be manipulated using getpref and setpref and are stored in your cellbase file.');
+str=strcat(str,'Preferences can be manipulated using getcbpref and setcbpref and are stored in your cellbase file.');
 
 A = questdlg(str,'convert_preferences','Default','Import','Default');
 

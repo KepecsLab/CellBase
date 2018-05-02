@@ -31,14 +31,15 @@ bld {
 
 <body bgcolor="#FFFFFF" text="#000001">
 <h1 align="left">getcbpref</h1>
-<align="left">Get CellBase-specific parameter.
+<align="left">Get CellBase-specific preference(s).
 <h2>Syntax</h2>
 <p>
+<tt>val = getcbpref()</tt></br>
 <tt>val = getcbpref(name)</tt></blockquote>
 </p>
 <h2>Description</h2>
-<p><tt>getcbpref</tt> gets CellBase-specific parameter with name <tt> name</tt> and returns the parameters value in <tt>val</tt>.
-Note that <tt>getcbpref</tt> is used for CellBase-specific parameters only, which are stored in your CellBase mat-file in the variable <tt>PREFERENCES</tt>. For global CellBase parameters use MATLAB function <tt>getpref('cellbase',name)</tt>. </p>
+<p><tt>getcbpref</tt> returns all CellBase-specific preferences in struct <tt> val</tt> or value of preference with name <tt> name</tt> in <tt>val</tt>.
+Note that <tt>getcbpref</tt> is used for CellBase-specific preferences only, which are stored in your CellBase mat-file in the variable <tt>PREFERENCES</tt>. For global CellBase preferences use MATLAB function <tt>getpref('cellbase',name)</tt>. </p>
 
 <h2>See Also</h2>
 <p>
