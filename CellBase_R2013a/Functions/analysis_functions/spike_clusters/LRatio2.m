@@ -36,7 +36,7 @@ end
 % Load Ntt file
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
-TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
 all_spikes = all_spikes * TIMEFACTOR;
 spk = loadcb(cellid,'Spikes');
 n = length(all_spikes);
@@ -49,7 +49,7 @@ cinx = setdiff(1:n,inx);
 % Feature matrix
 X = [];
 for k = 1:length(g.feature_names)
-    basename = [getpref('cellbase','cell_pattern') num2str(t)];
+    basename = [getcbpref('Spikes_cell_pattern') num2str(t)];
     propfn = [basename '_' g.feature_names{k}];   % name of feature file (e.g. TT1_Amplitude)
     sessionpath = cellid2fnames(cellid,'sess');
     propfn_path = [sessionpath filesep 'FD'];   % where the feature file can be found

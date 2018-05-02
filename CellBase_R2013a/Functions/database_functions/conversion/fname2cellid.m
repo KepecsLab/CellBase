@@ -28,7 +28,7 @@ function   cellid = fname2cellid(fname)
 cellbase_fname = getpref('cellbase','fname');
 cellbase_path  = getpref('cellbase','datapath');
 if ispref('cellbase','cell_pattern')
-    cell_pattern = getpref('cellbase','cell_pattern');
+    cell_pattern = getcbpref('Spikes_cell_pattern');
 else
     cell_pattern = 'Sc';
 end

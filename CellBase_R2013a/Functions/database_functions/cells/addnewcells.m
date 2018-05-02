@@ -26,7 +26,7 @@ parse(prs,varargin{:})
 g = prs.Results;
 
 % Get CellBase preferences
-clear global CELLIDLIST ANALYSES TheMatrix   % refresh the globals
+clear global CELLIDLIST ANALYSES TheMatrix PREFERENCES   % refresh the globals
 cellbase_datapath = getpref('cellbase','datapath');
 
 % Find all cells and sort the new ones

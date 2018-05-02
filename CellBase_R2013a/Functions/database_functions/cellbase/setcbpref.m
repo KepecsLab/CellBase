@@ -1,0 +1,31 @@
+function setcbpref(name,val)
+% SETCBPREF() sets current cellbase's preference value for preference NAME
+% to VAL.
+% Cellbase-specific preferences are stored in cellbase file
+% (getpref('cellbase','fname')). Note than cellbase-general preferences
+% (cellbase name, data folder, cellbase file) are manipulated with
+% getpref('cellbase')/setpref('cellbase',...).
+%
+% See also: getcbpref(name), default_preferences()
+%
+% TO 05/2018
+
+if any(strcmp({'datapath','name','fname','filesep','cellbases'},name)) %global settings
+    warning('Please use setpref to set global cellbase settings.');
+    setpref('cellbase',name,val);
+else %correct use for cellbase-specific parameters
+    if exist(fullfile(getpref('cellbase','fname')),'file')==2
+        CB = load(fullfile(getpref('cellbase','fname')));
+        fields = fieldnames(CB);
+        if ~isempty(fields)
+            CB.PREFERENCES.(name)=val;
+            save(fullfile(getpref('cellbase','fname')),'-struct','CB')
+        else %no preference file
+            import_preferences();
+            setcbpref(name,val);
+        end
+        
+    else %no cellbase
+        error('setcbpref: No Cellbase database found. Check cellbase filename.');
+    end
+end

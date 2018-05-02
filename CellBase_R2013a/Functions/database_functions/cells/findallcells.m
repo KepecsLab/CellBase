@@ -7,7 +7,7 @@ function allcellids = findallcells(varargin)
 %
 %   See also FINDCELLPOS.
 
-%   Edit log: AK  3/04; ZFM 7/05; BH 3/21/11, 4/23/13
+%   Edit log: AK  3/04; ZFM 7/05; BH 3/21/11, 4/23/13, TO 05/2018
 
 % Get cellbase preferences
 cellbase_datapath = getpref('cellbase','datapath');
@@ -40,11 +40,11 @@ for rdir = 1:length(ratdir)   % animal loop
         
         % Added options for specifying an cut directory below the session
         % directory
-        if ispref('cellbase','group')
-            cell_pattern = getpref('cellbase','cell_pattern');
+        if getcbpref('group')
+            cell_pattern = getcbpref('Spikes_cell_pattern');
             
             % Deal with hierarchy of cut directories
-            cut_dirs = getpref('cellbase','group');
+            cut_dirs = getcbpref('cellbase','group');
             if iscell(cut_dirs)
                 % there is more than one cut directory specified,
                 % return the first existing directory (ie cut directories are in order of

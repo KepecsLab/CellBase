@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>getcbpref</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+body {
+  background-color: white;
+  margin:1px;
+}
+h1 {
+  color: #990000; 
+  font-size: 30;
+  font-weight: normal;
+  margin-top: 12px;
+  margin-bottom: 0px;
+}
+h2 {
+  color: #990000;
+  font-size: 20;
+  margin-top: 24px;
+  margin-bottom: 0px;
+}
+pre.codeinput {
+  margin-left: 30px;
+}
+bld {
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000001">
+<h1 align="left">getcbpref</h1>
+<align="left">Get CellBase-specific parameter.
+<h2>Syntax</h2>
+<p>
+<tt>val = getcbpref(name)</tt></blockquote>
+</p>
+<h2>Description</h2>
+<p><tt>getcbpref</tt> gets CellBase-specific parameter with name <tt> name</tt> and returns the parameters value in <tt>val</tt>.
+Note that <tt>getcbpref</tt> is used for CellBase-specific parameters only, which are stored in your CellBase mat-file in the variable <tt>PREFERENCES</tt>. For global CellBase parameters use MATLAB function <tt>getpref('cellbase',name)</tt>. </p>
+
+<h2>See Also</h2>
+<p>
+<a href="setcbpref.html"><tt>setcbpref</tt></a>, <a href="default_preferences.html"><tt>default_preferences</tt></a>,<a href="initcb.html"><tt>initcb</tt></a>
+</p>
+
+</body>
+</html>
