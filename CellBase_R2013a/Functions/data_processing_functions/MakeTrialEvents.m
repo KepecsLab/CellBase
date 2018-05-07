@@ -13,14 +13,14 @@ parse(p,cellid, defTE, Events_TTL, Events_TS, varargin{:});
 
 if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellbase','session_filename')),'file') || p.Results.rw
     
-    tsNeur = Events_TS(Events_TTL==p.Results.TrialStart_State); tsNeur = tsNeur(:);
+    tsNeur = Events_TS(Events_TTL==p.Results.TrialStart_State);
     
     if isa(defTE, 'function_handle')
         [TE, tsBhv] = feval(defTE); % expects @defTE to output a struct of 
                                     % InterestingThings (a 1xnTrials vector of event times relative to trial start)
                                     % and tsBhv (trial start times from Bpod)
-    elseif isstruct(defTE)
-        tsBhv = p.Results.defTE.(p.Results.nameTrialStart)(:); % Should work for TE = Bpod data file
+    elseif isstruct(defTE)  % defTE is a scalar struct of 1xnTrials vectors; ideally should be a 1xnTrials struct array
+        tsBhv = p.Results.defTE.(p.Results.nameTrialStart); % Should work for TE = Bpod data file
         TE = rmfield(defTE,p.Results.nameTrialStart);
     end
     
@@ -40,7 +40,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
         end
     end
     
-    TE.TrialStartTimestamp = tsNeur;
+    TE.TrialStart = tsNeur;
     
     % Save synchronized 'TrialEvents' file
     save(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellbase','session_filename')),'-struct','TE')
@@ -50,6 +50,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
     
 end
     function [iMax, delta, rhos] = trim(lon,sho)
+        lon = lon(:); sho = sho(:);
         delta = numel(lon)-numel(sho);
         rhos = nan(delta+1,1);
         for i = 1:numel(rhos)
