@@ -26,7 +26,7 @@ parse(prs,varargin{:})
 g = prs.Results;
 
 % Get CellBase preferences
-clear global CELLIDLIST ANALYSES TheMatrix   % refresh the globals
+clear global CELLIDLIST ANALYSES TheMatrix PREFERENCES   % refresh the globals
 cellbase_datapath = getpref('cellbase','datapath');
 
 % Find all cells and sort the new ones
@@ -36,7 +36,6 @@ else
     all_cellids = findallcells(g.dir);
 end
 old_cellids = listtag('cells');
-clear global CELLIDLIST ANALYSES TheMatrix   % refresh the globals
 
 if isempty(old_cellids)
     new_cellids = all_cellids;  % setdiff fails for empty set

@@ -1,14 +1,14 @@
 function cellids = findcell(varargin)
-%FINDCELL   Locate cells in CellBase.
-%   FINDCELL returns the cell ID(s) in CellBase for a particular animal,
+%FINDCELL   Locate animals, sessions, or tetrodes in CellBase.
+%   FINDCELL returns the cell ID(s) in CellBase for a particular rat,
 %   session or tetrode.
 %
 %   Syntax:
-%   CELLIDS = FINDCELL('RAT',RATID)
-%   CELLIDS = FINDCELL('RAT',RATID,'SESSION',SESSIONID)
-%   CELLIDS = FINDCELL('RAT',RATID,'SESSION',SESSIONID,'TETRODE',TETRODE)
+%   cellids = findcell('rat',ratid)
+%   cellids = findcell('rat',ratid,'session',sessionid)
+%   cellids = findcell('rat',ratid,'session',sessionid,'tetrode',tetrode)
 %
-%   See also ADDNEWCELLS, ADDCELL, FINDCELLSTR and FINDALLCELLS.
+%   See also ADDNEWCELLS, ADCELL, FINDCELLSTR and FINDALLCELLS.
 
 %   Edit log: BH 10/13/11, 7/6/12
 
@@ -22,7 +22,7 @@ end
 nARG = nargin;
 iARG = 1;
 rat = '';
-session = '';
+session='';
 tet = -1;  % comparison of empty numeric is not defined
 LIST = '';
 while iARG <= nARG; 

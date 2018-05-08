@@ -29,7 +29,6 @@ bld {
 <br>
 <h2 align="left"><a name="1">Setup</a></h2>
 <a href="initcb.html"><name>initcb</name></a> - <purpose>Initialize CellBase</purpose><br />
-<a href="mountcb.html"><name>mountcb</name></a> - <purpose>Mount CellBase</purpose><br />
 <br>
 
 <h2 align="left"><a name="2">Database functions</a></h2>
@@ -44,6 +43,10 @@ bld {
 <a href="loadcb.html"><name>loadcb</name></a> - <purpose>Load the CellBase files</purpose><br />
 <a href="checknmcb.html"><name>checknmcb</name></a> - <purpose>Check whether a CellBase name is valid</purpose><br />
 <a href="checkcb.html"><name>checkcb</name></a> - <purpose>Check main CellBase files</purpose><br />
+<a href="getcbpref.html"><name>getcbpref</name></a> - <purpose>Get CellBase-specific preference.</purpose><br />
+<a href="setcbpref.html"><name>setcbpref</name></a> - <purpose>Set CellBase-specific preference.</purpose><br />
+<a href="default_preferences.html"><name>default_preferences</name></a> - <purpose>Get default CellBase-specific preferences.</purpose><br />
+<a href="import_preferences.html"><name>import_preferences</name></a> - <purpose>Import CellBase-specific preferences.</purpose><br />
 <a href="upgradecb.html"><name>upgradecb</name></a> - <purpose>Upgrade CellBase to new version</purpose><br />
 <br>
 
@@ -118,18 +121,15 @@ bld {
 <a href="createdoc.html"><name>createdoc</name></a> - <purpose>Create documentation html file for functions</purpose><br />
 <br>
 
-<h2 align="left"><a name="7">Data processing functions</a></h2>
+<h2 align="left"><a name="7">Data preprocessing functions</a></h2>
 <a href="solo2trialevents4_auditory_gonogo.html"><name>solo2trialevents4_auditory_gonogo</name></a> - <purpose>Create trial events structure</purpose><br />
-<a href="solo2trialevents4_auditory_pavlovian.html"><name>solo2trialevents4_auditory_pavlovian</name></a> - <purpose>Create trial events structure</purpose><br />
 <a href="MakeStimEvents2.html"><name>MakeStimEvents2</name></a> - <purpose>Create stimulus events structure</purpose><br />
 <a href="MakeTrialEvents2_gonogo.html"><name>MakeTrialEvents2_gonogo</name></a> - <purpose>Synchronize trial events to recording times</purpose><br />
 <a href="defineEventsEpochs_default.html"><name>defineEventsEpochs_default</name></a> - <purpose>Define events and epochs for spike extraction</purpose><br />
 <a href="defineEventsEpochs_gonogo.html"><name>defineEventsEpochs_gonogo</name></a> - <purpose>Define events and epochs for spike extraction</purpose><br />
-<a href="defineEventsEpochs_pavlovian.html"><name>defineEventsEpochs_pavlovian</name></a> - <purpose>Define events and epochs for spike extraction</purpose><br />
 <a href="defineEventsEpochs_laserstim.html"><name>defineEventsEpochs_laserstim</name></a> - <purpose>Define events and epochs for spike extraction</purpose><br />
 <a href="defineEventsEpochs_pulseon.html"><name>defineEventsEpochs_pulseon</name></a> - <purpose>Define events and epochs for spike extraction</purpose><br />
 <a href="prealignSpikes.html"><name>prealignSpikes</name></a> - <purpose>Align spikes to events and calculates rates for each epoch</purpose><br />
-<a href="dynamicSpikeWindow.html"><name>dynamicSpikeWindow</name></a> - <purpose>Restrict spike times to event windows</purpose><br />
 <a href="trialevents2relativetime.html"><name>trialevents2relativetime</name></a> - <purpose>Calculate time values relative to reference event</purpose><br />
 <a href="findSegs3.html"><name>findSegs3</name></a> - <purpose>Find segments of a session</purpose><br />
 <a href="extractSegSpikes.html"><name>extractSegSpikes</name></a> - <purpose>Extract spikes between specific timestamps</purpose><br />
@@ -184,7 +184,6 @@ bld {
 <a href="plot_raster_psth.html"><name>plot_raster_psth</name></a> - <purpose>Plot raster plots and PSTHs</purpose><br />
 <a href="plot_timecourse.html"><name>plot_timecourse</name></a> - <purpose>Plot PSTH</purpose><br />
 <a href="viewcell2b.html"><name>viewcell2b</name></a> - <purpose>Raster plot and PSTH</purpose><br />
-<a href="viewlick.html"><name>viewlick</name></a> - <purpose>Lick raster and PSTH</purpose><br />
 <a href="rasterplot.html"><name>rasterplot</name></a> - <purpose>Raster plot (fast)</purpose><br />
 <a href="ultimate_psth.html"><name>ultimate_psth</name></a> - <purpose>Peri-stimulus time histogram</purpose><br />
 <a href="psth_stats.html"><name>psth_stats</name></a> - <purpose>Statistics for firing rate change</purpose><br />
@@ -204,17 +203,6 @@ bld {
 <a href="ccg.html"><name>ccg</name></a> - <purpose>Cross-correlation</purpose><br />
 <br>
 
-<h2 align="left"><a name="14">Analysis functions - anatomy</a></h2>
-<a href="reconstruction.html"><name>reconstruction</name></a> - <purpose>Anatomical reconstruction of electrode position</purpose><br />
-<br>
-
-<h2 align="left"><a name="15">Analysis functions - behavior</a></h2>
-<a href="psych_gonogo.html"><name>psych_gonogo</name></a> - <purpose>Average performance and reaction time</purpose><br />
-<a href="psych_gonogo2.html"><name>psych_gonogo2</name></a> - <purpose>Average performance and reaction time</purpose><br />
-<a href="psych_gonogo_learningcurve.html"><name>psych_gonogo_learningcurve</name></a> - <purpose>Average learning curve</purpose><br />
-<a href="psychplot_gonogo.html"><name>psychplot_gonogo</name></a> - <purpose>Plot psychometric performance</purpose><br />
-<a href="psychplot_pavlovian.html"><name>psychplot_pavlovian</name></a> - <purpose>Plot performance</purpose><br />
-<br>
 
 </body>
 </html>

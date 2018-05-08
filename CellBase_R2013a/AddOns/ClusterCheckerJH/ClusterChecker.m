@@ -56,15 +56,6 @@ end
 MClust_TTfn=tname;
 for iClust=1:nClusters;
 CalculateFeatures(MClust_TTfn, featureList)
-
-% Fix channel validity
-tt = load([fullfile(MClust_FDdn, [MClust_TTfn '_' featureList{1}]) MClust_FDext],'-mat');
-fdd = tt.FeatureData;
-tmx = max(fdd);
-MClust_ChannelValidity(tmx==0) = 0;
-    
-
-
 CO_01_CheckCluster(iClust)
 % text(30,2000,[ratname '_' sessionname] ,'HorizontalAlignment', 'center','VerticalAlignment', 'top', 'fontsize', 20)
 fstamp ([ratname '_' sessionname]);

@@ -20,10 +20,7 @@ function matches = findcellpos(varargin)
 %   Edit log: BH 3/21/11, 5/3/12
 
 % Load CellBase
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+load(getpref('cellbase','fname'));
 
 % Locate cell ID
 if nargin == 1   % most frequent use, requires special handling

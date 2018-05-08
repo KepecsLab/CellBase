@@ -6,13 +6,10 @@ function  status = setvalue(cellid,property,value)
 %
 %   See also GETVALUE.
 
-%   Edit log: BH 4/16/2013
+%   Edit log: BH 4/16/2013, TO 5/2018
 
 % Load CellBase
-global CELLIDLIST ANALYSES TheMatrix
-if isempty(CELLIDLIST)
-    load(getpref('cellbase','fname'));
-end
+load(getpref('cellbase','fname')); 
 
 % Get the position of the searched property
 [pos pos0] = findanalysis(property);  %#ok<NASGU>
@@ -26,7 +23,7 @@ end
 cellpos = findcellpos(cellid);
 
 % Edit TheMatrix
-if iscell(TheMatrix(cellpos,pos)) && ~iscell(value)
+if iscell(TheMatrix(cellpos,pos)) && ~iscell(value) %#ok<NODEF>
     value = {value};   % convert to cell if necessary
 end
 TheMatrix(cellpos,pos) = value;
@@ -40,7 +37,7 @@ dsr = datestr(now);
 dsr = regexprep(dsr,':','_');
 backup_name = fullfile(pth,[fnm '_' dsr ext]);
 copyfile(cb,backup_name)    % make backup before overwriting
-save(cb,'TheMatrix','ANALYSES','CELLIDLIST')
+save(cb,'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES')
 
 % Feedback
 status = true;

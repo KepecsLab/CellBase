@@ -33,7 +33,7 @@ dbstop if error
 mode = 'restrict';   % include only those sessions that contain the input cell IDs
 error(nargchk(0,2,nargin))
 if nargin < 2
-    issave = false;
+    issave = true;
 end
 if nargin < 1 || isempty(cellids)
     loadcb   % load CellBase
@@ -53,7 +53,7 @@ end
 
 % Directories
 global DATAPATH
-resdir = fullfile(DATAPATH,'NB','learning_curve_newdata',filesep);
+resdir = fullfile(DATAPATH,'NB','learning_curve',filesep);
 
 % Animals
 mice = listtag('animal');
@@ -160,8 +160,6 @@ if issave
     saveas(H1,fnm)
     fnm = [resdir 'MEAN_LC.jpg'];
     saveas(H1,fnm)
-    fnm = [resdir 'MEAN_LC.mat'];
-    save(fnm,'aGoPerformance','aNoGoPerformance')
 end
 
 % Overlay individual curves for each mouse

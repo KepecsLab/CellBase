@@ -56,7 +56,7 @@ end
 
 % Directories
 global DATAPATH
-resdir = fullfile(DATAPATH,'HDB','average_performance_newdata',filesep);
+resdir = fullfile(DATAPATH,'NB','average_performance',filesep,'virus_vs_transgenic',filesep);
 
 % Animals
 mice = listtag('animal');
@@ -210,8 +210,6 @@ if issave
     saveas(H2,fnm)
     fnm = [resdir 'MEAN_RT.jpg'];
     saveas(H2,fnm)
-    fnm = [resdir 'PSY_RT_VARS.mat'];
-    save(fnm,'GoPerformance','NoGoPerformance','GoReactionTime','NoGoReactionTime')
 end
 
 % Overlay individual curves for each mouse

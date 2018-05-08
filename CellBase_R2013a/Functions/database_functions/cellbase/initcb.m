@@ -9,7 +9,8 @@ function initcb(cb_name)
 %
 %   See also LOADCB, CHOOSECB, DELETECB and ADDNEWCELLS.
 
-%   Edit log: AK 3/04, 10/06; BH 3/18/11, 5/30/11, 4/26/12, 5/7/12, 8/20/13
+%   Edit log: AK 3/04, 10/06; BH 3/18/11, 5/30/11, 4/26/12, 5/7/12,
+%   8/20/13, TO 5/2018
 
 % Check input arguments
 narginchk(0,1)
@@ -51,24 +52,23 @@ disp(['Data path is ' datapath]);
 disp(['File name is ' fname])
 disp(['CellBase name is ' cb_name])
 
+% cellbase-specific preferences
+
 % Timestamp conversion
 tsc = questdlg('I''m going convert timestamps to seconds in','Timestamp conversion',...
-    'CellBase','MClust','CellBase');
+    'CellBase (factor=10^-4)','MClust (factor=1)','CellBase (factor=10^-4)');
 switch tsc
-    case 'CellBase'
+    case 'CellBase (factor=10^-4)'
         timefactor = 1e-4;  % TT*.mat files will reflect the timestamps of the Ntt files;
                             % loadcb will convert them to seconds
-    case 'MClust'
+    case 'MClust (factor=1)'
         timefactor = 1;     % timestamps in TT*.mat files will already be converted to seconds
 end
 
 % Set other preferences (persistent and maintain their values between MATLAB sessions)
-setpref('cellbase','session_filename','TrialEvents.mat');
-setpref('cellbase','TrialEvents_filename','TrialEvents.mat');
-setpref('cellbase','StimEvents_filename','StimEvents.mat');
-setpref('cellbase','cell_pattern','TT');
-setpref('cellbase','filesep',filesep);
-setpref('cellbase','timefactor',timefactor);
+
+PREFERENCES = default_preferences();
+PREFERENCES.Spikes_timefactor=timefactor;
 
 % Store cellbases to allow multiple instances
 if ispref('cellbase','cellbases')
@@ -82,18 +82,19 @@ if isfield(gp,'cellbases')
 end
 cellbases{end+1} = gp;
 setpref('cellbase','cellbases',cellbases)
+setpref('cellbase','filesep',filesep);
 
 % Open main database file
 QuestionStr = sprintf('\n %s already exists. \n\n Do you want to delete it? \n',fname);
-fid = fopen(fname);
-if ( fid == -1) || strcmp(questdlg(QuestionStr,...
+
+if exist(fname,'file')~=2 || strcmp(questdlg(QuestionStr,...
         'InitCB','Yes','No','No'),'Yes') %file doesn't exist or to be deleted !   
     
     % Save empty CellBase
     TheMatrix = [];
     ANALYSES  = [];
     CELLIDLIST = [];
-    save(fname,'TheMatrix','ANALYSES','CELLIDLIST');
+    save(fname,'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES');
     
     % Convert TrialEvents & Sessions
     NUM_CELLS = addnewcells;
@@ -104,15 +105,14 @@ if ( fid == -1) || strcmp(questdlg(QuestionStr,...
     catch
         disp('No analysis added.')
     end
-%     if NUM_CELLS    % let's celebrate
+    if NUM_CELLS    % let's celebrate
         Data = imread('CellBase_icon.tif');
         welcomestr = sprintf('Your CellBase has been initialized with %d cells. \n Have fun!  \n\n\n\n',NUM_CELLS);
         msgbox(welcomestr,'Welcome to CellBase','custom',Data);
-%     else
-%         warndlg('Something went wrong.','InitCB');
-%     end
+    else
+        warndlg('Something went wrong.','InitCB');
+    end
 else
-    fclose(fid);
     welcomestr = sprintf('\n %s already exists. Delete it if you need a rebuild.\n',fname);
     msgbox(welcomestr,'Welcome to CellBase','warn');
 end

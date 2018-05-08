@@ -163,8 +163,7 @@ backup_name = fullfile(pth,[fnm '_' dsr ext]);  % time stamped backup
 copyfile(cb,backup_name)    % make backup before overwriting
 
 % SAVE CELLBASE
-save(getpref('cellbase','fname'),'TheMatrix','ANALYSES','CELLIDLIST')
-clear global CELLIDLIST ANALYSES TheMatrix
+save(getpref('cellbase','fname'),'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES')
 
 % -------------------------------------------------------------------------
 function  ts = timestamp

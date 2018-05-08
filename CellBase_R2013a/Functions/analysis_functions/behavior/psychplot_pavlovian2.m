@@ -158,7 +158,7 @@ if g.display
     bar(4.5,PerformanceR2,'BarWidth',0.5,'EdgeColor',rwcolor,'FaceColor','w','LineWidth',2)
     bar(5.5,PerformanceP2,'BarWidth',0.5,'EdgeColor',pncolor,'FaceColor','w','LineWidth',2)
     bar(6.5,PerformanceO2,'BarWidth',0.5,'EdgeColor','k','FaceColor','w','LineWidth',2)
-    set(gca,'XTick',[1 2 3 4.5 5.5 6.5],'XTickLabel',{'R1' 'P1' 'O1' 'R2' 'P2' 'O2'})
+    set(gca,'XTick',[1 2.5 4 5.5],'XTickLabel',{'R1' 'R2' 'P1' 'P2'})
     box off
     title('Performance')
     
@@ -171,7 +171,7 @@ if g.display
     bar(4.5,AnticipationR2,'BarWidth',0.5,'EdgeColor',rwcolor,'FaceColor','w','LineWidth',2)
     bar(5.5,AnticipationP2,'BarWidth',0.5,'EdgeColor',pncolor,'FaceColor','w','LineWidth',2)
     bar(6.5,AnticipationO2,'BarWidth',0.5,'EdgeColor','k','FaceColor','w','LineWidth',2)
-    set(gca,'XTick',[1 2 3 4.5 5.5 6.5],'XTickLabel',{'R1' 'P1' 'O1' 'R2' 'P2' 'O2'})
+    set(gca,'XTick',[1 2.5 4 5.5],'XTickLabel',{'R1' 'R2' 'P1' 'P2'})
     box off
     title('Anticipation')
     
@@ -184,7 +184,7 @@ if g.display
     bar(4.5,ReactionTimeR2,'BarWidth',0.5,'EdgeColor',rwcolor,'FaceColor','w','LineWidth',2)
     bar(5.5,ReactionTimeP2,'BarWidth',0.5,'EdgeColor',pncolor,'FaceColor','w','LineWidth',2)
     bar(6.5,ReactionTimeO2,'BarWidth',0.5,'EdgeColor','k','FaceColor','w','LineWidth',2)
-    set(gca,'XTick',[1 2 3 4.5 5.5 6.5],'XTickLabel',{'R1' 'P1' 'O1' 'R2' 'P2' 'O2'})
+    set(gca,'XTick',[1 2.5 4 5.5],'XTickLabel',{'R1' 'R2' 'P1' 'P2'})
     box off
     title('Reaction Time')
     maximize_figure(H)
@@ -254,10 +254,7 @@ set(gcf,'Renderer','OpenGL')
 
 figure
 errorshade(time,spsth(1,:),spsth_se(1,:),'LineWidth',2,...
-    'LineColor',clr{1},'ShadeColor',clr{1})
-errorshade(time,spsth(2,:),spsth_se(2,:),'LineWidth',2,...
-    'LineColor',clr{2},'ShadeColor',clr{2})
-hold on
+        'LineColor',clr{1},'ShadeColor',clr{1})
 
 % Save
 % fnm = [resdir cellidt '_' alignevent '_rasterPSTH.jpg'];   % save

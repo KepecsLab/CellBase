@@ -66,7 +66,7 @@ pon = ST.PulseOn(~isnan(ST.PulseOn));
 % Load spikes from Ntt file.
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
-TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
 all_spikes = all_spikes * TIMEFACTOR;
 val_spk_i = [find(all_spikes >= pon(1),1,'first') ...
     find(all_spikes <= pon(end),1,'last')]; % consider spikes only within the stimulation protocol to account for drift
@@ -101,7 +101,7 @@ end
 [r,s,t] = cellid2tags(cellid);
 for k = 1:length(g.feature_names)
     prop = [g.feature_names{k} '.fd'];
-    propfn = [getpref('cellbase','cell_pattern') num2str(t) '_' prop];
+    propfn = [getcbpref('Spikes_cell_pattern') num2str(t) '_' prop];
     sessionpath = cellid2fnames(cellid,'sess');
     propfn_path = [sessionpath filesep 'FD'];   % where the feature file can be found
     if ~isdir(propfn_path)
@@ -149,7 +149,7 @@ for k = 1:NumComb
         g.feature_names{scnd(1)} num2str(scnd(2))];
     HS.(namestr) = figure('Position',[624 126 1092 852]);
     hold on
-    axis([min(xdata) max(xdata)+1 min(ydata) max(ydata)+1])
+    axis([min(xdata) max(xdata) min(ydata) max(ydata)])
     xlabel([g.feature_names{fst(1)} ': ' num2str(fst(2))])
     ylabel([g.feature_names{scnd(1)} ': ' num2str(scnd(2))])
     

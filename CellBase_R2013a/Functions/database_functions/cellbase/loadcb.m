@@ -1,6 +1,6 @@
 function  varargout = loadcb(varargin)
 %LOADCB   Load the CellBase files.
-%   LOADCB loads CellBase (CELLIDLIST, ANALYSES, TheMatrix) into the caller
+%   LOADCB loads CellBase (CELLIDLIST, ANALYSES, TheMatrix, PREFERENCES) into the caller
 %   function's workspace.
 %
 %   OUT = LOADCB(CELLID,FILETYPE) loads the specified file (FILETYPE) of
@@ -10,7 +10,7 @@ function  varargout = loadcb(varargin)
 %
 %   See also INITCB and CELLID2FNAMES.
 
-% Edit log: AK 3/04, 11/06, 4/10; BH 7/6/12
+% Edit log: AK 3/04, 11/06, 4/10; BH 7/6/12, TO 5/2018
 
 % Without input arguments, load the entire database
 if nargin == 0
@@ -33,7 +33,7 @@ else
     
     % Filename to load
     fname = cellid2fnames(cellid,filetype);
-    TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+    TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
     
     if nargout == 1     % if we are loading into a variable
         if strncmpi(filetype,'Spikes',5)
@@ -44,7 +44,7 @@ else
             
             % Load waveform data (Ntt file)
             Nttfile = cellid2fnames(cellid,'ntt');
-            TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+            TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
             [all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
             [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR);
             if ~isequal(junk,SpikeTimes)   % internal check for spike times

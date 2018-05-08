@@ -34,12 +34,12 @@ bld {
 <align="left">Receiver-operator characteristic.
 <h2>Syntax</h2>
 <p><blockquote><tt>d = rocarea(x,y)</tt><br>
-<tt>[d p se] = rocarea(x,y,'bootstrap',n)</tt><br>
+<tt>[d p] = rocarea(x,y,'bootstrap',n)</tt><br>
 </blockquote></p>
 <h2>Description</h2>
 <p><tt>d = rocarea(x,y)</tt> calculates area under ROC curve <tt>(d)</tt> for the samples <tt>x
 </tt> and <tt>y</tt>.</p>
-<p><tt>[d p se] = rocarea(x,y,'bootstrap',n)</tt> calculates permutation test p-value and bootstrap standard error <tt>(n,
+<p><tt>[d p] = rocarea(x,y,'bootstrap',n)</tt> calculates permutation test p-value <tt>(n,
 </tt> number of bootstrap samples).</p>
 <p>Optional input parameter-value paits (with default values):</p>
 <p><blockquote><tt>'bootstrap', 0 </tt>- size of bootstrap sample; 0 corresponds to no bootstrap analysis</p>

@@ -60,7 +60,7 @@ end
 % Directories
 global DATAPATH
 fs = filesep;
-resdir = [DATAPATH 'NB' fs 'taggedprop_newdata' fs];
+resdir = [DATAPATH 'NB' fs 'taggedprop3_new' fs];
  
 % Load CellBase
 load(getpref('cellbase','fname'),'CELLIDLIST');
@@ -255,7 +255,6 @@ if issave
         'E_pulseon','L_pulseon','J_pulseon','B_pulseon','M_pulseon','A1','A2',...
         'E_burston','L_burston','J_burston','B_burston','M_burston',...
         'E_frequency','L_frequency','J_frequency','B_frequency','M_frequency',...
-        'Hindex_frequency','D_KL_frequency',...
         'lLr_amp','lID_amp','lLr_PC','lID_PC','Pref','Pref2')
     
     % Write figures to pdf

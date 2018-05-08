@@ -7,7 +7,7 @@ function delcell(cellid)
 %
 %   See also ADDCELL, INSERTDATA and DELANALYSIS.
 
-%   Edit log: BH 6/7/12
+%   Edit log: BH 6/7/12, TO 5/2018
 
 % Load CellBase
 load(getpref('cellbase','fname'));
@@ -45,8 +45,7 @@ dsr = datestr(now);
 dsr = regexprep(dsr,':','_');
 backup_name = fullfile(pth,[fnm '_' dsr ext]);
 copyfile(cb,backup_name)    % make backup before overwriting
-save(cb,'TheMatrix','ANALYSES','CELLIDLIST');
-clear global CELLIDLIST ANALYSES TheMatrix
+save(cb,'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES');
 
 % Feedback
 if ischar(cellid)

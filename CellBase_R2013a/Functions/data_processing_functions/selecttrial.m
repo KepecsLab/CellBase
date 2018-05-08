@@ -1,4 +1,4 @@
-function  trials = selecttrial(TE,selSTR,varargin)
+function  trials = selecttrial(te,selSTR,varargin)
 %SELECTTRIAL   Execute logical expression to filter trials.
 %   TRIALS = SELECTTRIAL(TE,SELSTR) returns the trial indices (for trial
 %   structure TE) satisfying the required criteria set up by SELSTR, which
@@ -62,8 +62,8 @@ end
 expression_to_execute = ctokens{1};
 
 % If CellID is given instead of events structure, load trial events
-if ischar(TE)
-   TE = load(cellid2fnames(TE,'TrialEvents2')); %#ok<NASGU>
+if ischar(te)
+   te = load(cellid2fnames(te,'TrialEvents2')); %#ok<NASGU>
 end
 
 % Execute expression
@@ -73,4 +73,4 @@ trials = eval(expression_to_execute);
 function outtoken = convert_token(intoken)
 
 % This complicated expression somewhat checks the syntax for validity
-outtoken = regexprep(intoken, '\s*(\S+)\s*([<>=~]*[=]*)\s*([-+]*\d*[.]*\d*[e]*\d*)\s*','find(TE.$1 $2  $3)');
+outtoken = regexprep(intoken, '\s*(\S+)\s*([<>=~]*[=]*)\s*([-+]*\d*[.]*\d*[e]*\d*)\s*','find(te.$1 $2  $3)');

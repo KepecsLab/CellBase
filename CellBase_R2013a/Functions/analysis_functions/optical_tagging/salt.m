@@ -8,11 +8,7 @@ function [p I] = salt(spt_baseline,spt_test,dt,wn)
 %       SPT_BASELINE - Discretized spike raster for stimulus-free baseline
 %           period. N x M binary matrix with N rows for trials and M 
 %           columns for spikes. Spike times have to be converted to a
-%           binary matrix with a temporal resolution provided in DT. The
-%           baseline segment has to excede the window size (WN) multiple
-%           times, as the length of the baseline segment divided by the
-%           window size determines the sample size of the null
-%           distribution (see below).
+%           binary matrix with a temporal resolution provided in DT.
 %       SPT_TEST - Discretized spike raster for test period, i.e. after
 %           stimulus. N x M binary matrix with N rows for trials and M 
 %           columns for spikes. Spike times have to be converted to a
@@ -44,13 +40,7 @@ function [p I] = salt(spt_baseline,spt_test,dt,wn)
 %   distributions. IEEE Transactions on Information Theory 49:1858-1860.
 %
 %   See also JSDIV.
-%
-%   Please cite:
-%
-%   Kvitsiani D*, Ranade S*, Hangya B, Taniguchi H, Huang JZ, Kepecs A (2013)
-%   Distinct behavioural and network correlates of two interneuron types in
-%   prefrontal cortex. Nature 498:363–6.
-%
+
 %   Balazs Hangya, Cold Spring Harbor Laboratory
 %   1 Bungtown Road, Cold Spring Harbor
 %   balazs.cshl@gmail.com
@@ -72,7 +62,7 @@ nm = floor(st/nmbn);   % size of the null dist. sample
 [lsi slsi] = deal(zeros(tno,nm));   % preallocate latency matrices
 [hlsi nhlsi] = deal(zeros(nmbn+1,nm));    % preallocate latency histograms
 next = 1;   % counter
-for t = 1:nmbn:nm*nmbn   % loop through baseline windows
+for t = 1:nmbn:st   % loop through baseline windows
     for k = 1:tno   % loop through trials
         cspt = spt_baseline(k,t:t+nmbn-1);   % current baseline window
         pki = find(cspt,1,'first');   % first spike in the window

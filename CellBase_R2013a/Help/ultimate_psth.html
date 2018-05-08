@@ -40,7 +40,7 @@ bld {
 </blockquote></p>
 <h2>Description</h2>
 <p><tt>[psth spsth spsth_se] = ultimate_psth(cellid,event_type,event,window,varargin)
-</tt> calculates peri-stimulus time histogram (PSTH) for the cell passed in <tt>cellid</tt>. Smoothed PSTH (<tt>spsth</tt>) and SE of smoothed PSTH (<tt>spsth_se</tt>) are also returned.</p>
+</tt> calculates peri-stimulus time histogram (PSTH) for the cell passed in <tt>cellid</tt>. Smoothed PSTH (<tt>spsth</tt>) and SE of smoothing (<tt>spsth_se</tt>) are also returned.</p>
 <p><tt>[psth spsth spsth_se tags] = ultimate_psth(cellid,event_type,event,window,varargin)
 </tt> returns partition tags (<tt>tags</tt>) corrsponding to PSTHs when trials are partitioned; see <tt>partition_trials</tt>.</p>
 <p><tt>[psth spsth spsth_se tags spt] = ultimate_psth(cellid,event_type,event,window,varargin)
@@ -50,9 +50,9 @@ bld {
 <p><tt>ultimate_psth</tt> is also capable of using two different events for the periods before and after 0, usefull for statistical testing with a baseline period aligned to a different event than the test period (see below and <tt>psth_stats</tt>).</p>
 <p>Mandatory input arguments:</p>
 <blockquote>
-<p><tt>cellid:</tt> defines the cell (see CellBase documentation) or session (for lick-PSTH)</p>
+<p><tt>cellid:</tt> defines the cell (see CellBase documentation)</p>
 <p><tt>event:</tt> the event to which the PSTH is aligned; if <tt>event</tt> is a cell array of two strings, the first event is used for the PSTH and binraster before 0 and the second event is used for the PSTH and binraster after 0; if <tt>event</tt> is a function handle, the function is called for <tt>cellid</tt> to define the aligning event (dynamic event definition)</p>
-<p><tt>event_type:</tt> the type of event, <tt>'stim'</tt>, <tt>'trial'</tt> or <tt>'lick'</tt> (for lick-PSTH)</p>
+<p><tt>event_type:</tt> the type of event, <tt>'stim'</tt> or <tt>'trial'</tt></p>
 <p><tt>window:</tt> window for calculation relative to the event in seconds</p>
 </blockquote>
 <p>Default behavior of <tt>ultimate_psth</tt> can be modified by using a set of paramter-value pairs as optional input parameters. The following parameters are implemented (with default values):</p>
@@ -63,8 +63,6 @@ bld {
 <p><tt>'event_filter', 'none'</tt> - filter light-stimulation trials; see <tt>filterTrials</tt> for implemented filter types</p>
 <p><tt>'filterinput',[]</tt> - some filters require additional input; see <tt>filterTrials</tt> for details</p>
 <p><tt>'maxtrialno', 5000</tt> - maximal number of trials included; if ther are more valid trials, they are randomly down-sampled</p>
-<p><tt>'first_event', []</tt> - event name used to exclude spikes before previous event </p>
-<p><tt>'last_event', []</tt> - event name used to exclude spikes after following event</p>
 <p><tt>'parts', 'all'</tt> - partitioning the set of trials; input to <tt>partition_trials</tt>, see details therein (default, no partitioning)</p>
 <p><tt>'isadaptive', 1</tt> - 0, classic PSTH algorithm is applied; 1, adaptive PSTH is calculated (see <tt>apsth</tt>); 2, <tt>'doubly adaptive'</tt> PSTH algorithm is used (see <tt>dapsth</tt>)</p>
 </p><tt>'baselinewin', [-0.25 0]</tt> - limits of baseline window for statistical testing (see <tt>psth_stats</tt>), time relative to 0 in 

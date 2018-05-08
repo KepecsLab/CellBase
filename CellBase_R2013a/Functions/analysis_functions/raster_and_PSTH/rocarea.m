@@ -1,10 +1,10 @@
-function [D, P, SE] = rocarea(x,y,varargin)
+function [D, P] = rocarea(x,y,varargin)
 %ROCAREA   Receiver-operator characteristic.
 %   D = ROCAREA(X,Y) calculates area under ROC curve (D) for the samples X
 %   and Y.
 %
-%   [D P SE] = ROCAREA(X,Y,'BOOTSTRAP',N) calculates permutation test
-%   p-value and bootstrap standard error (N, number of bootstrap samples).
+%   [D  P] = ROCAREA(X,Y,'BOOTSTRAP',N) calculates permutation test p-value
+%   (N, number of bootstrap samples).
 %
 %   Optional input parameter-value paits (with default values):
 %       'bootstrap', 0 - size of bootstrap sample; 0 corresponds to no
@@ -31,12 +31,6 @@ y = y(:);
 nbin = ceil(max(length(x)*1.2,length(y)*1.2));   % bin number
 mn = min([x; y]);
 mx = max([x; y]);
-if isequal(mn,mx);   % all numbers in x and y are the same: no discrimination
-    D = 0;
-    P = 1;
-    SE = 0;
-    return
-end
 bin_size = (mx - mn) / nbin;   % bin size
 bins = mn-bin_size:bin_size:mx+bin_size;
 Lx = length(x);
@@ -61,9 +55,6 @@ if g.bootstrap > 0
     if D > mean(Dboot)   % decide which side it should be on
         P = 1 - P;
     end
-    
-    % SE
-    SE = std(Dboot);   % bootstrap standard error
 end
 
 % Rescale

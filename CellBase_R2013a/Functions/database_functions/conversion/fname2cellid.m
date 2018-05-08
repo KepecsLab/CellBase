@@ -28,7 +28,7 @@ function   cellid = fname2cellid(fname)
 cellbase_fname = getpref('cellbase','fname');
 cellbase_path  = getpref('cellbase','datapath');
 if ispref('cellbase','cell_pattern')
-    cell_pattern = getpref('cellbase','cell_pattern');
+    cell_pattern = getcbpref('Spikes_cell_pattern');
 else
     cell_pattern = 'Sc';
 end
@@ -68,7 +68,15 @@ if isempty(ratname) || isempty(session) || isempty(tu)
 elseif ~isempty(pos_u) || ~isempty(pos_p)
     warning('FNAME2CELLID: Filename could not be parsed correctly.');
     cellid = 0;
-    return
+    return    
+elseif ~isempty(pos_u)   % there were underscores in the sessions
+    session = strrep(session,'_','.');   % replace them with .'s
+    setpref('cellbase','session_separator','_');  % note this as a preference
+elseif ~isempty(pos_p)
+    setpref('cellbase','session_separator','.');
+else
+    % there is no separator, which is OK
+    setpref('cellbase','session_separator','');
 end
 
 cellid = sprintf('%s_%s_%d.%d',ratname,session,tu(1),tu(2));

@@ -182,7 +182,7 @@ for iT = 2:ntrials
     % Trial Start (state 0)
     TE.TrialStart(countr) = saved_history.ProtocolsSection_parsed_events{iT}.states.state_0(1,2);
     
-    % Trial End (ending state 0) - NEED A FIX: store in relative times!!!
+    % Trial End (ending state 0)
     TE.TrialEnd(countr) = saved_history.ProtocolsSection_parsed_events{iT}.states.state_0(2,1);
     TE.ITIDistribution(countr) = saved.auditory_gonogo_pulsepal_ITIs(iT);
     TE.ITIBegins{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.iti(:,1);

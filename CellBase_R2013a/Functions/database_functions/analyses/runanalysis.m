@@ -63,7 +63,7 @@ for cellnum = 1:NumCells    % cellid loop
     
     % Execute analysis
     fullarglist = {char(CELLIDS{cellnum}) arglist{:}};  %#ok<CCAT>
-    [property_values{1:nargout(funhandle)}] = feval(funhandle,fullarglist{:});  
+    [property_values{1:nargout(funhandle)}] = feval(funhandle,fullarglist{:});  %#ok<AGROW>
     Result(cellnum,:) = property_values(opargs);
 end
 

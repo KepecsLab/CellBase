@@ -41,9 +41,6 @@ addRequired(prs,'cellids',@(s)iscell(s)|iscellstr(s)|ischar(s))
 addParamValue(prs,'issave',false,@islogical)   % control saving behavior
 parse(prs,cellids,varargin{:})
 g = prs.Results;
-if ischar(cellids)
-    cellids = {cellids};  % one cell ID
-end
 
 % Pass the control to the user in case of error
 dbstop if error
@@ -51,8 +48,8 @@ dbstop if error
 % Directories
 global DATAPATH
 fs = filesep;
-resdir = [DATAPATH 'NB\ACG\'];  % results directory
-fnmm = 'ACG_matrices_.mat';   % filename for saving the result matrices
+resdir = [DATAPATH 'NB\ACG\medium\'];  % results directory
+fnmm = 'ACG_matrices.mat';   % filename for saving the result matrices
 
 % Include only long enough segments
 longsegments = false;  % control whether to use this option
@@ -62,6 +59,20 @@ seglim = 300;
 sr = 1000;      % sampling rate
 wn = 500 * sr / 1000;    % 2 * 500 ms window
 res = 0.5;   % resolution for ACG in ms
+
+% Input argument check
+if nargin < 1
+    loadcb   % load CellBase
+    cellids = CELLIDLIST; 
+else
+    if isnumeric(cellids)
+        loadcb   % load CellBase
+        cellids = CELLIDLIST(cellids);
+    end
+end
+if ischar(cellids)
+    cellids = {cellids};  % one cell ID
+end
 
 % Cell loop for ACG
 wb = waitbar(0,'Please wait...','Name','Running ACG...');  % progress indicator
@@ -91,7 +102,7 @@ for iC = 1:numCells   % loop through the cells
         disp(ME.message)
         disp('Could not extract the segment.');
     end
-    
+
 %     ncc = loadcb(cell,'SPIKES');   % use all spikes
         
     if length(ncc) > limit_spikes(2);      % crop if too long to avoid out of memory

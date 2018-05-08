@@ -28,8 +28,6 @@ g = prs.Results;
 % Channel validity
 if isempty(g.valid_channels)
     valid_channels = check_channel_validity(cellid);
-else
-    valid_channels = g.valid_channels;
 end
 
 % Parse cellID
@@ -38,11 +36,11 @@ end
 % Load Ntt file
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
-TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
 all_spikes = all_spikes * TIMEFACTOR;
 spk = loadcb(cellid,'Spikes');
 n = length(all_spikes);
-[jnk inx] = intersect(all_spikes,spk);
+[~, inx] = intersect(all_spikes,spk);
 if ~isequal(jnk,spk)   % internal check for spike times
     error('LRatio:SpikeTimeMismatch','Mismatch between saved spike times and Ntt time stamps.')
 end
@@ -51,7 +49,7 @@ cinx = setdiff(1:n,inx);
 % Feature matrix
 X = [];
 for k = 1:length(g.feature_names)
-    basename = [getpref('cellbase','cell_pattern') num2str(t)];
+    basename = [getcbpref('Spikes_cell_pattern') num2str(t)];
     propfn = [basename '_' g.feature_names{k}];   % name of feature file (e.g. TT1_Amplitude)
     sessionpath = cellid2fnames(cellid,'sess');
     propfn_path = [sessionpath filesep 'FD'];   % where the feature file can be found
@@ -69,7 +67,7 @@ for k = 1:length(g.feature_names)
     wf_prop = wf_prop.FeatureData;
     
     if ~isequal(size(wf_prop,2),sum(valid_channels))
-        wf_prop  = wf_prop(:,logical(valid_channels));   % estimated and original valid_channels don't match
+        wf_prop  = wf_prop(:,valid_channels);   % estimated and original valid_channels don't match
     end
     X = [X; wf_prop']; %#ok<AGROW>
 end

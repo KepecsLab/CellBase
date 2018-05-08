@@ -26,25 +26,8 @@ function valid_trials = filterTrials(cellid,varargin)
 %   Implemented event filters for 'trial' events:
 %       'animalactive' - filters for minimal percentage of hits (40%=4 hits 
 %           over a 10 go-trial moving window)
-%       'selectGoRT' - GoRT is limited to a percentile range; 'filterinput'
+%       'selectGoRt' - GoRT is limited to a percentile range; 'filterinput'
 %           specifies the lower and upper percentile threshold
-%       'restrictGoRT' - GoRT is limited to a certain ranges; 'filterinput'
-%           specifies start and end of allowed intervals (2-by-N matrix)
-%       'selectNoGoRT' - NoGoRT is limited to a percentile range;
-%           'filterinput' specifies the lower and upper percentile 
-%           threshold
-%       'restrictNoGoRT' - NoGoRT is limited to a certain ranges;
-%           'filterinput' specifies start and end of allowed intervals
-%           (2-by-N matrix)
-%       'selectRT' - response time (hits or false alarms) is limited to a 
-%           percentile range; 'filterinput' specifies the lower and upper 
-%           percentile threshold
-%       'restrictGoITI' - ITI is limited to a certain ranges; 'filterinput'
-%           specifies start and end of allowed intervals (2-by-N matrix);
-%           only Hit trials are included
-%       'restrictNoGoITI' - ITI is limited to a certain ranges; 
-%           'filterinput' specifies start and end of allowed intervals
-%           (2-by-N matrix); only False Alarm trials are included
 %       
 %   'custom' filter:
 %       Set event_filter to 'custom' and use the 'filterinput' argument to
@@ -59,7 +42,7 @@ function valid_trials = filterTrials(cellid,varargin)
 
 % Input arguments
 prs = inputParser;
-addRequired(prs,'cellid',@(s)iscellid(s)|issessionid(s))
+addRequired(prs,'cellid',@iscellid)
 addParamValue(prs,'event','PulseOn',@ischar)   % reference event
 addParamValue(prs,'event_type','stim',@ischar)   % event type ('stim' or 'trial')
 addParamValue(prs,'event_filter','none',@(s)ischar(s)|iscellstr(s))   % event filter
@@ -80,7 +63,7 @@ switch event_type
             error(ME.message)
         end
         
-    case {'tria','lick'}
+    case 'tria'
         
         % Load trial events
         try
@@ -148,44 +131,6 @@ switch event_filter
         rts = rts(~isnan(rts));   % all RT values
         rtthres = prctile(rts,prcthres*100);   % RT threshold
         valid_trials = find(VE.GoRT>=rtthres(1)&VE.GoRT<=rtthres(2));   % RTs of the percentile interval
-    case 'restrictGoRT'
-        win = filterinput;   % percentile threshold
-        valid_trials = [];
-        for k = 1:size(win,2)
-            valid_trials = [valid_trials find(VE.GoRT>=win(1,k)&VE.GoRT<=win(2,k))];   %#ok<AGROW> % RTs in the window
-        end
-    case 'selectNoGoRT'
-        prcthres = filterinput;   % percentile threshold
-        rts = VE.NoGoRT;
-        rts = rts(~isnan(rts));   % all RT values
-        rtthres = prctile(rts,prcthres*100);   % RT threshold
-        valid_trials = find(VE.NoGoRT>=rtthres(1)&VE.NoGoRT<=rtthres(2));   % RTs of the percentile interval
-    case 'restrictNoGoRT'
-        win = filterinput;   % percentile threshold
-        valid_trials = [];
-        for k = 1:size(win,2)
-            valid_trials = [valid_trials find(VE.NoGoRT>=win(1,k)&VE.NoGoRT<=win(2,k))];   %#ok<AGROW> % RTs in the window
-        end
-    case 'selectRT'
-        prcthres = filterinput;   % percentile threshold
-        rts = VE.TotalReactionTime;
-        rts = rts(~isnan(rts));   % all RT values
-        rtthres = prctile(rts,prcthres*100);   % RT threshold
-        valid_trials = find(VE.TotalReactionTime>=rtthres(1)&VE.TotalReactionTime<=rtthres(2));   % RTs of the percentile interval
-    case 'restrictGoITI'
-        win = filterinput;   % percentile threshold
-        valid_trials = [];
-        for k = 1:size(win,2)
-            valid_trials = [valid_trials find(VE.ITIDistribution>=win(1,k)&...
-                VE.ITIDistribution<=win(2,k)&VE.Hit==1)];   %#ok<AGROW> % ITIs in the window
-        end
-    case 'restrictNoGoITI'
-        win = filterinput;   % percentile threshold
-        valid_trials = [];
-        for k = 1:size(win,2)
-            valid_trials = [valid_trials find(VE.ITIDistribution>=win(1,k)&...
-                VE.ITIDistribution<=win(2,k)&VE.FalseAlarm==1)];   %#ok<AGROW> % ITIs in the window
-        end
     case 'none'
         valid_trials = find(~isnan(VE.(event)));
     case 'custom'

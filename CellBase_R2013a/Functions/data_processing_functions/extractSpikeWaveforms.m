@@ -34,13 +34,10 @@ default_args={...
     'usemedian',       false;... % if output is smoothed, either mean or median is applied
     };
 [g, error] = parse_args(default_args,varargin{:});
-if nargin < 2 || isempty(SpikeTimes) || isequal(SpikeTimes,'all')
-    SpikeTimes = loadcb(cellid);   % waveform for all spikes
-end
 
 % Load waveform data (Ntt file)
 Nttfile = cellid2fnames(cellid,'ntt');
-TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
 [all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
 [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR);
 if ~isequal(junk,SpikeTimes)   % internal check for spike times

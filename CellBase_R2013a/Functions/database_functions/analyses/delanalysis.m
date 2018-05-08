@@ -9,7 +9,7 @@ function  delanalysis(funhandle)
 %
 %   See also ADDANALYSIS and FINDANALYSIS.
 
-%   Edit log: BH 6/21/12
+%   Edit log: BH 6/21/12, TO 5/2018
 
 % Load CellBase
 load(getpref('cellbase','fname'));
@@ -73,5 +73,4 @@ dsr = datestr(now);
 dsr = regexprep(dsr,':','_');
 backup_name = fullfile(pth,[fnm '_' dsr ext]);
 copyfile(cb,backup_name)    % make backup before overwriting
-save(getpref('cellbase','fname'),'TheMatrix','ANALYSES','CELLIDLIST') 
-clear global CELLIDLIST ANALYSES TheMatrix
+save(getpref('cellbase','fname'),'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES')   

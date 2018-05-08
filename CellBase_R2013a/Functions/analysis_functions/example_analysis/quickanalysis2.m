@@ -37,11 +37,11 @@ end
 
 % Animal, session
 if nargin < 2
-    sessionID = '150508a';
+    sessionID = '130104a';
 end
 if nargin < 1
-    animalID2 = 'nb074';
-    animalID = 'n074';
+    animalID2 = 'nb046';
+    animalID = 'n046';
 else
     animalID2 = ['nb0' num2str(animalNO)];
     animalID = ['n0' num2str(animalNO)];
@@ -54,11 +54,11 @@ dbstop if error
 
 % Directories
 global DATAPATH
-resdir = [DATAPATH whichcb '\_response_profiles\' animalID2 '\'];
+resdir = [DATAPATH 'NB\_response_profiles\' animalID2 '\'];
 if ~isdir(resdir)
     mkdir(resdir)
 end
-resdir2 = [DATAPATH whichcb '\_behavior\' animalID2 '\'];
+resdir2 = [DATAPATH 'NB\_behavior\' animalID2 '\'];
 if ~isdir(resdir2)
     mkdir(resdir2)
 end
@@ -70,13 +70,6 @@ end
 % Convert events file
 if isrec
     nlxcsc2mat2(fullpth,'Channels','Events')
-%     keyboard
-%     fout = checknlxconfig(fullpth);   % check cheetah config file
-%     if ~isnumeric(fout) && ~strcmp(animalID2,fout(1:5))
-%         error('Config file does not match animal ID.')
-%     elseif isequal(fout,-2)
-%         disp('Settings were imported from the previous Nlx sesession.')
-%     end
 end
 
 % Create trial events structure
@@ -88,8 +81,7 @@ if isbeh
         eval(evalstr)
     end
     if isrec
-%         MakeTrialEvents2_gonogo(fullpth)  % synchronize
-        MakeTrialEvents2_gonogo(fullpth,'StimNttl',32)  % synchronize
+        MakeTrialEvents2_gonogo(fullpth)  % synchronize
     end
 end
 
@@ -186,8 +178,7 @@ end
 if isrec && isstim
     
     % Create stimulus events
-%     MakeStimEvents2(fullpth,'BurstStartNttl',4)
-    MakeStimEvents2(fullpth,'BurstStartNttl',4,'PulseNttl',16,'PulseEventID',11)
+    MakeStimEvents2(fullpth,'BurstStartNttl',4)
     
     % Prealign spikes to stimulus events
     problem_stim_cellid = [];

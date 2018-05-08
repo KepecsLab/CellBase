@@ -40,7 +40,7 @@ addParamValue(prs,'lastresponsestop',false,@(s)islogical(s)|ismember(s,[0 1]))  
 addParamValue(prs,'display',true,@(s)islogical(s)|ismember(s,[0 1]))   % control ploting
 parse(prs,cbID,varargin{:})
 g = prs.Results;
-if (ischar(g.cbID) || (iscell(cbID) && length(g.cbID)==1)) && iscellid(g.cbID)   % cell ID was passed   % cell ID was passed
+if iscellid(g.cbID)   % cell ID was passed
     [animalID sessionID] = cellid2tags(g.cbID);
 else   % session ID was passed
     animalID = g.cbID{1,1};

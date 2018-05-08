@@ -9,7 +9,7 @@ function MakeTrialEvents2_gonogo(sessionpath,varargin)
 %	file becomes the primary store of behavioral data for a particular
 %	session; it is retrieved by LOADCB via CELLID2FNAMES. This default
 %	file name is one of the preference settings of CellBase - type 
-%   getpref('cellbase','session_filename');
+%   getcbpref('TrialEvents_filename');
 %
 %   MAKETRIALEVENTS2_GONOGO(SESSIONPATH,'StimNttl',TTL) specifies the TTL
 %   channel which serves as the basis for synchronization.
@@ -53,9 +53,9 @@ if ~ismatch(ts,son2)
     % note: obsolete due the introduction of TTL parsing
     son2 = clearttls(son2); % eliminate recorded TTL's within 0.5s from each other - broken TTL pulse
     if ~ismatch(ts,son2)
-        son2 = tryinterp(ts,son2); % interpolate missing TTL's or delete superfluous TTL's up to 10 erroneous TTl's
+        son2 = trytomatch(ts,son2);  % try to match time series by shifting
         if ~ismatch(ts,son2)
-            son2 = trytomatch(ts,son2);  % try to match time series by shifting
+            son2 = tryinterp(ts,son2); % interpolate missing TTL's or delete superfluous TTL's up to 10 erroneous TTl's
             if ~ismatch(ts,son2)  % TTL matching failure
                 error('MakeTrialEvents:TTLmatch','Matching TTLs failed.')
             else

@@ -83,12 +83,10 @@ addParamValue(prs,'isadaptive',1,@(s)islogical(s)|ismember(s,[0 1 2]))   % use a
 addParamValue(prs,'baselinewin',[-0.005 0],@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event for stat. testing, in seconds
 addParamValue(prs,'testwin',[0 0.01],@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event for stat. testing, in seconds
 addParamValue(prs,'relative_threshold',0.5,...
-    @(s)isnumeric(s)&isequal(length(s),1)&s>=-1&s<=1)  % relative threshold for peak detection, see ULTIMATE_PSTH; negative thresholds selects the full window
+    @(s)isnumeric(s)&isequal(length(s),1)&s>0&s<1)  % relative threshold for peak detection, see ULTIMATE_PSTH
 addParamValue(prs,'jitterdefinition','all',...
     @(s)ischar(s)|ismember(s,{'all','burst'}))   % controls the definition of 'jitter'
 addParamValue(prs,'display',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying rasters and PSTHs
-addParamValue(prs,'rasterwindow',[],...
-    @(s)isempty(s)|(isnumeric(s)&isequal(length(s),2)))  % time window for raster plot, in seconds
 parse(prs,cellid,varargin{:})
 g = prs.Results;
 dt = 0.0005;   % fixed parameter for now
@@ -138,23 +136,13 @@ if g.display
 %     pause(.05)
 %     jFrame = get(handle(H(1).H_raster),'JavaFrame');   % maximize figure
 %     jFrame.setMaximized(true);
-    if ~isempty(g.rasterwindow)   % restrict raster window
-        rasterinx = time >= g.rasterwindow(1) & time <=g.rasterwindow(2);
-        rasterplot(spt(:,rasterinx),time(rasterinx),gcf);  % plot raster
-    else
-        rasterplot(spt,time,gcf);  % plot raster
-    end
+    rasterplot(spt,time,gcf);  % plot raster
     colormap('bone')   % white on black
     set(gcf,'Color','k')
 %     set(gcf,'NumberTitle','off','MenuBar','none')
     pause(.05)
-    line([lim1 lim1],[1 tno],'LineWidth',1,'Color',[0.8 0 0])
-    line([lim2 lim2],[1 tno],'LineWidth',1,'Color',[0.8 0 0])
+    line([lim1 lim1],[1 tno],'LineWidth',3,'Color',[0.8 0 0])
+    line([lim2 lim2],[1 tno],'LineWidth',3,'Color',[0.8 0 0])
     pause(.05)
     set(gca,'XColor','w','box','off','TickDir','out')
-    set(gcf,'PaperPositionMode','auto')
-    set(gcf,'InvertHardcopy','off')
-    set(gca,'XColor','w','YColor','w')
-    xlabel('Time (s)','Color','w','FontSize',12)
-    ylabel('#Trials','Color','w','FontSize',12)
 end

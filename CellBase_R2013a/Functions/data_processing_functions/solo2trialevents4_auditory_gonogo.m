@@ -12,7 +12,7 @@ function TE = solo2trialevents4_auditory_gonogo(filepath,ifsave)
 
 %   Version4 release note: complies with new version of restart ITI.
 
-%   Edit log: BH 10/12/11, 9/16/13
+%   Edit log: BH 10/12/11
 
 % We want to save the result
 if nargin < 2
@@ -132,10 +132,8 @@ TE.Ratname = [TE.Ratname(2:end) NaN];  % remove first trial
 % Light stimulation on each trial
 TE.LightStimulation = saved.auditory_gonogo_LightStimList(1:ntrials);
 TE.LightStimulation = [TE.LightStimulation(2:end) NaN];  % remove first trial
-if isfield(saved,'auditory_gonogo_LightStimulation2')
-    TE.LightStimulation2 = saved.auditory_gonogo_LightStimulation2(1:ntrials);
-    TE.LightStimulation2 = [TE.LightStimulation2(2:end) NaN];  % remove first trial
-end
+TE.LightStimulation2 = saved.auditory_gonogo_LightStimulation2(1:ntrials);
+TE.LightStimulation2 = [TE.LightStimulation2(2:end) NaN];  % remove first trial
 
 % Define variables trialwise
 countr = 0;
@@ -188,11 +186,9 @@ for iT = 2:ntrials
     TE.ITIEnds{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.iti(:,2);
     TE.TotalITI(countr) = TE.ITIEnds{countr}(end) - TE.ITIBegins{countr}(1);
     TE.NumITIRepeats(countr) = length(TE.ITIBegins{countr});
-    if isfield(saved_history.ProtocolsSection_parsed_events{iT}.states,'nopokeiti')
-        TE.NoPokeITIBegins{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.nopokeiti(:,1);
-        TE.NoPokeITIEnds{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.nopokeiti(:,2);
-        TE.TotalNoPokeITI(countr) = TE.NoPokeITIEnds{countr}(end) - TE.NoPokeITIBegins{countr}(1);
-    end
+    TE.NoPokeITIBegins{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.nopokeiti(:,1);
+    TE.NoPokeITIEnds{countr} = saved_history.ProtocolsSection_parsed_events{iT}.states.nopokeiti(:,2);
+    TE.TotalNoPokeITI(countr) = TE.NoPokeITIEnds{countr}(end) - TE.NoPokeITIBegins{countr}(1);
     
     % Stimulus
     TE.SignalModality{countr} = saved.auditory_gonogo_SignalModality;
@@ -265,7 +261,6 @@ TE.BlockNum = blockid(1:ntrials);
 TE.BlockNum = [TE.BlockNum(2:end) NaN];  % remove first trial
 
 % Convert to relative time to TrialStart
-TE.TrialEnd = TE.TrialEnd - TE.TrialStart;
 TE.StimulusOn = TE.StimulusOn - TE.TrialStart;
 TE.StimulusOff = TE.StimulusOff - TE.TrialStart;
 TE.ResponseDelayStart = TE.ResponseDelayStart - TE.TrialStart;
