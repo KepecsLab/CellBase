@@ -42,6 +42,7 @@ default_args.PlotZeroLine = 'off';
 default_args.PlotZeroLineColor = [0 0 0];
 default_args.PrintCellID='off';
 default_args.NumPSTHPlots=NaN;
+default_args.stack_events_bottom=false;%use uistack to show events *below* spikes (slow!)
 [par,error] = parse_args(default_args,params);   % overwrite defaults with passed arg structure
 [par,error] = parse_args(par,varargin{:});
 
@@ -184,10 +185,14 @@ for iCOMP = 1:NumParts
                         p(iE) = patch([et-det; et-det; et+det; et+det],[nt+dnt; nt-dnt; nt-dnt; nt+dnt],'k');
                         try
                             set(p(iE),'FaceColor',par.ShowEventsColors{iE},'EdgeColor','none');
-                            uistack(p(iE),'bottom')
+                            if par.stack_events_bottom
+                                uistack(p(iE),'bottom')
+                            end
                         catch
                             set(p(iE),'FaceColor',[0.6 0.6 0.6],'EdgeColor','none','FaceAlpha',0.1);
-                            uistack(p(iE),'bottom')
+                            if par.stack_events_bottom
+                                uistack(p(iE),'bottom')
+                            end
                         end
                     end
                 else    % e.g. if showEvents is LickIn - BH
@@ -204,10 +209,14 @@ for iCOMP = 1:NumParts
                     p(iE) = patch([et2-det; et2-det; et2+det; et2+det],[nt2+dnt; nt2-dnt; nt2-dnt; nt2+dnt],'k');
                     try
                         set(p(iE),'FaceColor',par.ShowEventsColors{iE},'EdgeColor','none');
-                        uistack(p(iE),'bottom')
+                        if par.stack_events_bottom
+                            uistack(p(iE),'bottom')
+                        end
                     catch
                         set(p(iE),'FaceColor',[0.6 0.6 0.6],'EdgeColor','none','FaceAlpha',0.1);
-                        uistack(p(iE),'bottom')
+                        if par.stack_events_bottom
+                            uistack(p(iE),'bottom')
+                        end
                     end
                 end
             else    % deals with lick-aligned raster - BH
@@ -218,10 +227,14 @@ for iCOMP = 1:NumParts
 %                 l=line([et'; et'],[(nt-0.5); (nt+0.5)],'Color',par.ShowEventsColors{iE},'Linewidth',par.SpikeWidth*16);
                 try
                     set(p(iE),'FaceColor',par.ShowEventsColors{iE},'EdgeColor',par.ShowEventsColors{iE});
-                    uistack(p(iE),'bottom')
+                    if par.stack_events_bottom
+                        uistack(p(iE),'bottom')
+                    end
                 catch
                     set(p(iE),'FaceColor',[0.6 0.6 0.6],'EdgeColor','none','FaceAlpha',0.1);
-                    uistack(p(iE),'bottom')
+                    if par.stack_events_bottom
+                        uistack(p(iE),'bottom')
+                    end
                 end
             end
         end   % iE
