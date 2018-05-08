@@ -46,14 +46,14 @@ function  prealignSpikes(mycellids,varargin)
 % Input arguments
 prs = inputParser;
 addRequired(prs,'mycellids',@(s)iscell(s)|ischar(s))    % cell array of cell IDs
-addParamValue(prs,'ifsave',false,@(s)islogical(s)|ismember(s,[0 1])) % control saving
-addParamValue(prs,'ifappend',true,@(s)islogical(s)|ismember(s,[0 1])) % if true, append new events to preexisting file
-addParamValue(prs,'writing_behavior',[],@(s)isempty(s)|...
+addParameter(prs,'ifsave',false,@(s)islogical(s)|ismember(s,[0 1])) % control saving
+addParameter(prs,'ifappend',true,@(s)islogical(s)|ismember(s,[0 1])) % if true, append new events to preexisting file
+addParameter(prs,'writing_behavior',[],@(s)isempty(s)|...
     ismember(s,{'append','replace','overwrite'})) % if not empty, controls writing behavior
-addParamValue(prs,'FUNdefineEventsEpochs',@defineEventsEpochs_default)  % event/epoch definition file
-addParamValue(prs,'filetype','behav',@(s)ismember(s,{'event' 'behav' 'stim'})) % 'event' ('behav') or 'stim'; determines what type of events to prealigning to
-addParamValue(prs,'events',[],@(s)iscell(s)|isempty(s))  % events can be passed directly; definition file is not used
-addParamValue(prs,'epochs',[],@(s)iscell(s)|isempty(s))  % epochs can be passed directly; definition file is not used
+addParameter(prs,'FUNdefineEventsEpochs',@defineEventsEpochs_default)  % event/epoch definition file
+addParameter(prs,'filetype','behav',@(s)ismember(s,{'event' 'behav' 'stim'})) % 'event' ('behav') or 'stim'; determines what type of events to prealigning to
+addParameter(prs,'events',[],@(s)iscell(s)|isempty(s))  % events can be passed directly; definition file is not used
+addParameter(prs,'epochs',[],@(s)iscell(s)|isempty(s))  % epochs can be passed directly; definition file is not used
 parse(prs,mycellids,varargin{:})
 g = prs.Results;
 if isempty(g.writing_behavior)  % keep backwards compatibility with 'ifappend' input argument
