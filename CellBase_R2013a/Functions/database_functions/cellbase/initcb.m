@@ -13,7 +13,7 @@ function initcb(cb_name)
 %   8/20/13, TO 5/2018
 
 % Check input arguments
-error(nargchk(0,1,nargin))
+narginchk(0,1)
 if nargin < 1
     cb_name = '';
 else

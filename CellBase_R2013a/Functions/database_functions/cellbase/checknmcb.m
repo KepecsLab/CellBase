@@ -9,7 +9,7 @@ function cb_name = checknmcb(cb_name)
 %   Edit log: BH 5/30/11
 
 % Input argument check
-error(nargchk(1,1,nargin))
+narginchk(1,1)
 
 % If this is the first CellBase
 if ~ispref('cellbase','cellbases')
