@@ -10,7 +10,9 @@ function allcellids = findallcells(varargin)
 %   Edit log: AK  3/04; ZFM 7/05; BH 3/21/11, 4/23/13, TO 05/2018
 
 % Get cellbase preferences
-cellbase_datapath = getpref('cellbase','datapath');
+P = getcbpref();
+cellbase_datapath = P.datapath;
+cell_pattern = P.Spikes_cell_pattern;
 
 % Input argument check
 if nargin > 0
@@ -40,11 +42,9 @@ for rdir = 1:length(ratdir)   % animal loop
         
         % Added options for specifying an cut directory below the session
         % directory
-        if getcbpref('group')
-            cell_pattern = getcbpref('Spikes_cell_pattern');
-            
+        if isfield(P,'group')
             % Deal with hierarchy of cut directories
-            cut_dirs = getcbpref('cellbase','group');
+            cut_dirs = P.group;
             if iscell(cut_dirs)
                 % there is more than one cut directory specified,
                 % return the first existing directory (ie cut directories are in order of
@@ -64,16 +64,23 @@ for rdir = 1:length(ratdir)   % animal loop
             end
             
             % Now check for cells
-            cellfiles = listfiles(fullfile(fullsessiondir,cell_pattern));
+            cellfiles = listfiles(fullsessiondir,cell_pattern);
         else
             fullsessiondir = fullfile(ratpath,char(sessiondir(sdir)));
-            cellfiles = listfiles(fullsessiondir,'.mat');
+            cellfiles = listfiles(fullsessiondir,cell_pattern);
         end
         
         % Convert filenames to cell IDs
         for fnum = 1:length(cellfiles)   % filename loop
             fname = fullfile(fullsessiondir,char(cellfiles(fnum)));
-            cellid = fname2cellid(fname);
+            if k == 1 %set session separator as preference only once
+                 [cellid, session_separator] = fname2cellid(fname,P);
+                 if cellid~=0
+                    setcbpref('session_separator',session_separator);
+                 end
+            else
+                 cellid = fname2cellid(fname,P);
+            end
             if cellid ~= 0
                 allcellids{k} = cellid;
                 k = k+1;

@@ -1,11 +1,18 @@
-function   cellid = fname2cellid(fname)
+function   [cellid, session_separator] = fname2cellid(fname,varargin)
 %FNAME2CELLID    Convert filenames to cell IDs.
-%   CELLID = FNAME2CELLID(FILENAME) converts valid filenames into cellids
+%   CELLID = FNAME2CELLID(FNAME) converts valid filenames into cellids
 %   or returns empty if it fails.
+%
+%   CELLID = fname2cellid(FNAME,VARARGIN) uses VARARGIN{1} to look for
+%   cellbase preferences instead of retrieving them using
+%   getpref/getcbpref.
+%
+%   [CELLID, SESSION_SEPARATOR] = fname2cellid(...) additionally returns
+%                          dtermined session separator
 %
 %   Valid filenames
 %   (1) start with the default path or only include 'rat\session\unit.mat'
-%   (2) unit 1 of tetrode 1 is called Sc1_1.mat 
+%   (2) unit 1 of tetrode 1 is called TT1_1.mat 
 %   (3) session name can only contain '.' or '_' characters but not both
 %   (4) should be consistent across the database
 %
@@ -13,25 +20,42 @@ function   cellid = fname2cellid(fname)
 
 %   ZFM additions:
 %   - Uses the preference 'cell_pattern' to store a search term that selects
-%   files corresponding to units. The default is 'Sc*.mat'. E.g.
+%   files corresponding to units. The default is 'TT*.mat'. E.g.
 %
-%   setpref('cellbase','cell_pattern','Sc*.mat')
+%   setcbpref('cell_pattern','TT*.mat')
 %
 %   - Uses the preference 'group' to store an 'cut' subdirectory
 %   under the session directory. E.g.
 %
-%   setpref('cellbase','group','Mike');
+%   setcbpref('group','Mike');
 
-%   Edit log: BH 3/21/11
+% VARARGIN can either be empty or passing cellbase preference to avoid
+% redunant getpref/getcbpref calls (TO).
+
+%
+
+%   Edit log: BH 3/21/11, TO 05/2018
 
 % Get cellbase preferences
-cellbase_fname = getpref('cellbase','fname');
+if isempty(varargin) %have not been passed --> get them directly
 cellbase_path  = getpref('cellbase','datapath');
-if ispref('cellbase','cell_pattern')
-    cell_pattern = getcbpref('Spikes_cell_pattern');
-else
-    cell_pattern = 'Sc';
+cell_pattern = getcbpref('Spikes_cell_pattern');
+try
+    getcbpref('group')
+    group_param=true;
+catch
+    group_param=false;
 end
+else %prefs have been passed --> get them from varargin{1}
+    cellbase_path = varargin{1}.datapath;
+    cell_pattern = varargin{1}.Spikes_cell_pattern;
+    if isfield(varargin{1},'group')
+        group_param=true;
+    else
+        group_param=false;
+    end
+end
+session_separator=''; %default
 
 % Strip datpath from file
 fn = char(strrep(fname,cellbase_path,''));
@@ -43,7 +67,7 @@ fs = filesep;
 
 % Added options for specifying an analysis directory below the session
 % directory
-if ispref('cellbase','group')
+if group_param
     % Strip analysis path
     [ad_junk,remain] = strtok(remain,fs);
 end
@@ -70,13 +94,16 @@ elseif ~isempty(pos_u) && ~isempty(pos_p)
     cellid = 0;
     return    
 elseif ~isempty(pos_u)   % there were underscores in the sessions
-    session = strrep(session,'_','.');   % replace them with .'s
-    setpref('cellbase','session_separator','_');  % note this as a preference
+    session = strrep(session,'_','.');% replace them with .'s
+    session_separator = '_'; 
+%     setcbpref('session_separator','_');  % note this as a preference
 elseif ~isempty(pos_p)
-    setpref('cellbase','session_separator','.');
+    session_separator = '.'; 
+%     setcbpref('session_separator','.');
 else
     % there is no separator, which is OK
-    setpref('cellbase','session_separator','');
+    session_separator = ''; 
+%     setcbpref('session_separator','');
 end
 
 cellid = sprintf('%s_%s_%d.%d',ratname,session,tu(1),tu(2));
