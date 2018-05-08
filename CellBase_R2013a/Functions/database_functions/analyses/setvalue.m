@@ -6,7 +6,7 @@ function  status = setvalue(cellid,property,value)
 %
 %   See also GETVALUE.
 
-%   Edit log: BH 4/16/2013
+%   Edit log: BH 4/16/2013, TO 5/2018
 
 % Load CellBase
 load(getpref('cellbase','fname')); 
@@ -37,7 +37,7 @@ dsr = datestr(now);
 dsr = regexprep(dsr,':','_');
 backup_name = fullfile(pth,[fnm '_' dsr ext]);
 copyfile(cb,backup_name)    % make backup before overwriting
-save(cb,'TheMatrix','ANALYSES','CELLIDLIST')
+save(cb,'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES')
 
 % Feedback
 status = true;

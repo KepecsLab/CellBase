@@ -8,7 +8,7 @@ function plot_mclust_projections(cellid)
 % Only the first light evoked spike is selected for plotting. To account
 % for drift, only spikes during the stimulation protocol are selected for
 % plotting.
-% SPR 2011-12-28
+% SPR 2011-12-28, TO 5/2018
 
 if nargin < 1,
     help plot_mclust_projections
@@ -47,7 +47,7 @@ val_spk_i = [find(all_spikes >= pon(1),1,'first') find(all_spikes >= pon(end),1,
 prop = 'Energy.fd';
 % prop = 'Peak.fd';
 
-propfn = [getpref('cellbase','cell_pattern') num2str(t) '_' prop];
+propfn = [getcbpref('Spikes_cell_pattern') num2str(t) '_' prop];
 propfn_path = [cellid2fnames(cellid,'sess') filesep propfn];
 wf_prop = load(propfn_path,'-mat');
 wf_prop1 = wf_prop.FeatureData(:,1);

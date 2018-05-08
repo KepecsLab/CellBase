@@ -35,6 +35,9 @@ end
 cellbases{end+1} = gp;
 
 % Set preferences (persistent and maintain their values between MATLAB sessions)
-setpref('cellbase','timefactor',timefactor);
+% globale preferences
 setpref('cellbase','cellbases',cellbases);
 setpref('cellbase','name',cb_name);
+
+%cellbase specific preferences
+setcbpref('cellbase','timefactor',timefactor);

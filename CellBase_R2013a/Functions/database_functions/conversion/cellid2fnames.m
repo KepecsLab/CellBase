@@ -29,16 +29,16 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
 
-% Get CellBase preferences
+% get cellbase global preferences
 cellbase_datapath = getpref('cellbase','datapath');
-session_fname = getpref('cellbase','session_filename');
 sep = getpref('cellbase','session_separator');
-if ispref('cellbase','StimEvents_filename')
-	stim_fname = getpref('cellbase','StimEvents_filename');
-end
-cellbase_cell_pattern = getpref('cellbase','cell_pattern');
+
+% get cellbase specific preferences
+TrialEvents_fname = getcbpref('TrialEvents_fname');
+StimEvents_fname = getcbpref('StimEvents_fname');
+cellbase_cell_pattern = getcbpref('Spikes_cell_pattern');
 continuous_channel = 'CSC';
 
 % Get tags
@@ -53,17 +53,17 @@ session = strrep(session,'.',sep);    % if there were underscores then get them 
 % Create names
 if nargin < 2   % if filename was not specified
     fname_spikes = fullfile(cellbase_datapath,ratname,session,tetrodeunit);
-    fname_events = fullfile(cellbase_datapath,ratname,session,session_fname);
+    fname_events = fullfile(cellbase_datapath,ratname,session,TrialEvents_fname);
 else
     % not really spikes, but whatever you specified
     % create unit filename
     if strncmpi(filename,'TrialEvent',10)
-        fname_unit = session_fname;     %'TrialEvents2.mat';
+        fname_unit = TrialEvents_fname;     %'TrialEvents2.mat';
     elseif strncmpi(filename,'StimEvent',9)
-        fname_unit = stim_fname;
+        fname_unit = StimEvents_fname;
     elseif strncmpi(filename,'Session',3)
         fname_unit = '';
-    elseif strncmpi(filename,'Position',3),
+    elseif strncmpi(filename,'Position',3)
         fname_unit='POSITION';
     elseif strncmpi(filename,'Spikes',5)
         fname_unit = sprintf('%s%d_%d.mat',cellbase_cell_pattern,tetrode,unit);

@@ -13,7 +13,7 @@ function valid_channels = check_channel_validity(cellid)
 [r,s,t,u] = cellid2tags(cellid);
 
 % Load Energy
-propfn = [getpref('cellbase','cell_pattern') num2str(t) '_Energy'];
+propfn = [getcbpref('Spikes_cell_pattern') num2str(t) '_Energy'];
 propfn_path = [cellid2fnames(cellid,'sess') filesep 'FD'];
 if ~isdir(propfn_path)
     propfn_path = cellid2fnames(cellid,'sess');

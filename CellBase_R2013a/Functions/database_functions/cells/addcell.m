@@ -28,7 +28,7 @@ if iscellstr(cellid)
 end
 
 % Load cellbase
-clear global CELLIDLIST ANALYSES TheMatrix
+clear global CELLIDLIST ANALYSES TheMatrix PREFERENCES
 cellbase_fname = getpref('cellbase','fname');
 load(cellbase_fname);
 
@@ -115,5 +115,5 @@ end
 % Save cellbase
 assignin('base','TheMatrix',TheMatrix)
 assignin('base','CELLIDLIST',CELLIDLIST)
-save(cellbase_fname,'TheMatrix','ANALYSES','CELLIDLIST')
+save(cellbase_fname,'TheMatrix','ANALYSES','CELLIDLIST','PREFERENCES')
 OK = 1;

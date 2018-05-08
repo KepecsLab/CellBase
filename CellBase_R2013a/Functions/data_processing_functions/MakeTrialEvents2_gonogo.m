@@ -9,7 +9,7 @@ function MakeTrialEvents2_gonogo(sessionpath,varargin)
 %	file becomes the primary store of behavioral data for a particular
 %	session; it is retrieved by LOADCB via CELLID2FNAMES. This default
 %	file name is one of the preference settings of CellBase - type 
-%   getpref('cellbase','session_filename');
+%   getcbpref('TrialEvents_filename');
 %
 %   MAKETRIALEVENTS2_GONOGO(SESSIONPATH,'StimNttl',TTL) specifies the TTL
 %   channel which serves as the basis for synchronization.

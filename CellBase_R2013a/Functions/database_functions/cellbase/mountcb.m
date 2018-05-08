@@ -9,7 +9,7 @@ function mountcb(cb_name)
 %
 %   See also INITCB, LOADCB, CHOOSECB and DELETECB.
 
-%   Edit log: TL 10/21/2015
+%   Edit log: TL 10/21/2015, TO 5/2018
 
 % Check input arguments
 narginchk(0,1)
@@ -48,13 +48,7 @@ switch tsc
         timefactor = 1;     % timestamps in TT*.mat files will already be converted to seconds
 end
 
-% Set other preferences (persistent and maintain their values between MATLAB sessions)
-setpref('cellbase','session_filename','TrialEvents.mat');
-setpref('cellbase','TrialEvents_filename','TrialEvents.mat');
-setpref('cellbase','StimEvents_filename','StimEvents.mat');
-setpref('cellbase','cell_pattern','TT');
-setpref('cellbase','filesep',filesep);
-setpref('cellbase','timefactor',timefactor);
+
 
 % Store cellbases to allow multiple instances
 if ispref('cellbase','cellbases')
@@ -68,6 +62,10 @@ if isfield(gp,'cellbases')
 end
 cellbases{end+1} = gp;  % adds the new CellBase to 'cellbases' 
 setpref('cellbase','cellbases',cellbases)
+setpref('cellbase','filesep',filesep);
+
+%other preferences should be present in cellbase or will be queried when
+%required (TO 5/2018)
 
 % Feedback
 welcomestr = sprintf('New CellBase named %s was successfully mounted.\n',cb_name);
