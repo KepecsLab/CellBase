@@ -12,7 +12,7 @@ function val = getcbpref(varargin)
 %
 % Example
 %
-% val = getcppref('TrialEvents_fname')
+% val = getcbpref('TrialEvents_fname')
 %
 % See also: setcbpref(name,value), default_preferences()
 %
