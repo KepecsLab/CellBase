@@ -1,4 +1,5 @@
 function MakeTrialEvents(cellid, defTE, Events_TTL, Events_TS, varargin)
+%% Parse input
 p = inputParser;
 addRequired(p,'cellid',@(x) ischar(x));
 addRequired(p,'defTE',@(x) isstruct(x) || isa(x, 'function_handle'));
@@ -11,8 +12,12 @@ parse(p,cellid, defTE, Events_TTL, Events_TS, varargin{:});
 
 [subject,session] = cellid2tags(cellid);
 
+%% Check whether to write TrialEvents file
+%       do so if either TrialEvents.mat doesn't exist OR rw is true
+%       (default)
+
 if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellbase','session_filename')),'file') || p.Results.rw
-    
+
     tsNeur = Events_TS(Events_TTL==p.Results.TrialStart_State);
     
     if isa(defTE, 'function_handle')
@@ -24,6 +29,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
         TE = rmfield(defTE,p.Results.nameTrialStart);
     end
     
+    %% Check whether number of timestamps match between Bpod and recording system
     if numel(tsNeur) ~= numel(tsBhv)
         if numel(tsNeur) > numel(tsBhv)
             iShift = trim(tsNeur,tsBhv);
@@ -39,7 +45,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
             tsBhv = tsBhv(iShift:numel(tsNeur)+iShift-1);
         end
     end
-    
+    %% Write TE file
     TE.TrialStart = tsNeur;
     
     % Save synchronized 'TrialEvents' file
@@ -49,6 +55,8 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
     % end
     
 end
+
+%% Finds correct behavior and neuro timestamp alignment when different numbers of trials in each
     function [iMax, delta, rhos] = trim(lon,sho)
         lon = lon(:); sho = sho(:);
         delta = numel(lon)-numel(sho);
