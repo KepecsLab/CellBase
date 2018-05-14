@@ -29,7 +29,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
         TE = rmfield(defTE,p.Results.nameTrialStart);
     end
     
-    %% Check whether number of timestamps match between Bpod and recording system
+    %% Check whether number of trials match between Bpod and recording system
     if numel(tsNeur) ~= numel(tsBhv)
         if numel(tsNeur) > numel(tsBhv)
             iShift = trim(tsNeur,tsBhv);
