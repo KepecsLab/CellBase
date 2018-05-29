@@ -59,6 +59,9 @@ end
 % Directories
 cbpath = getpref('cellbase','datapath');
 resdir = fullfile(cbpath,'taggedprop');
+if ~isdir(resdir)
+    mkdir(resdir)
+end
  
 % Load CellBase
 load(getpref('cellbase','fname'),'CELLIDLIST');
