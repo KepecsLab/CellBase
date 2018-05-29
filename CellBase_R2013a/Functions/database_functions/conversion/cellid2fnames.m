@@ -5,6 +5,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   [FNAME_SPIKES, FNAME_EVENTS] = CELLID2FNAMES(CELLID,FILENAME) uses
 %   FILENAME input argument to genearte FNAME_SPIKES. Specials cases for
+% NOTE! FILENAME REALLY SPECIFIES FILETYPE (FS NOTE)
 %   FILENAME are handled differentially:
 %       'TrialEvent', behavioral session name ('TrialEvents2.mat') is returned
 %       'StimEvent', stimulation filename is returned
@@ -29,16 +30,16 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11
 
-% get cellbase global preferences
+% Get CellBase preferences
 cellbase_datapath = getpref('cellbase','datapath');
+session_fname = getpref('cellbase','session_filename');
 sep = getpref('cellbase','session_separator');
-
-% get cellbase specific preferences
-TrialEvents_fname = getcbpref('TrialEvents_fname');
-StimEvents_fname = getcbpref('StimEvents_fname');
-cellbase_cell_pattern = getcbpref('Spikes_cell_pattern');
+if ispref('cellbase','StimEvents_filename')
+	stim_fname = getpref('cellbase','StimEvents_filename');
+end
+cellbase_cell_pattern = getpref('cellbase','cell_pattern');
 continuous_channel = 'CSC';
 
 % Get tags
@@ -53,20 +54,20 @@ session = strrep(session,'.',sep);    % if there were underscores then get them 
 % Create names
 if nargin < 2   % if filename was not specified
     fname_spikes = fullfile(cellbase_datapath,ratname,session,tetrodeunit);
-    fname_events = fullfile(cellbase_datapath,ratname,session,TrialEvents_fname);
+    fname_events = fullfile(cellbase_datapath,ratname,session,session_fname);
 else
     % not really spikes, but whatever you specified
     % create unit filename
     if strncmpi(filename,'TrialEvent',10)
-        fname_unit = TrialEvents_fname;     %'TrialEvents2.mat';
+        fname_unit = session_fname;     %'TrialEvents2.mat';
     elseif strncmpi(filename,'StimEvent',9)
-        fname_unit = StimEvents_fname;
+        fname_unit = stim_fname;
     elseif strncmpi(filename,'Session',3)
         fname_unit = '';
-    elseif strncmpi(filename,'Position',3)
+    elseif strncmpi(filename,'Position',3),
         fname_unit='POSITION';
     elseif strncmpi(filename,'Spikes',5)
-        fname_unit = sprintf('%s%d_%d.mat',cellbase_cell_pattern,tetrode,unit);
+        fname_unit = sprintf('%s%d_%02d.mat',cellbase_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'tfile',5)
         fname_unit = sprintf('%s%d_%d.t',cellbase_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'Ntt',3)

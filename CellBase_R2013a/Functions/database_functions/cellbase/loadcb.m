@@ -1,6 +1,6 @@
 function  varargout = loadcb(varargin)
 %LOADCB   Load the CellBase files.
-%   LOADCB loads CellBase (CELLIDLIST, ANALYSES, TheMatrix, PREFERENCES) into the caller
+%   LOADCB loads CellBase (CELLIDLIST, ANALYSES, TheMatrix) into the caller
 %   function's workspace.
 %
 %   OUT = LOADCB(CELLID,FILETYPE) loads the specified file (FILETYPE) of
@@ -10,7 +10,7 @@ function  varargout = loadcb(varargin)
 %
 %   See also INITCB and CELLID2FNAMES.
 
-% Edit log: AK 3/04, 11/06, 4/10; BH 7/6/12, TO 5/2018
+% Edit log: AK 3/04, 11/06, 4/10; BH 7/6/12
 
 % Without input arguments, load the entire database
 if nargin == 0
@@ -33,18 +33,22 @@ else
     
     % Filename to load
     fname = cellid2fnames(cellid,filetype);
-    TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
+    TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
     
     if nargout == 1     % if we are loading into a variable
         if strncmpi(filetype,'Spikes',5)
             x = load(fname);
-            varargout{1} = x.TS*TIMEFACTOR;  % if we are loading spikes, then multiply with conversion factor
+            try
+                varargout{1} = x.tSpikes*TIMEFACTOR;  % if we are loading spikes, then multiply with conversion factor
+            catch
+                varargout{1} = x.TS*TIMEFACTOR;  % old version of MClust 
+            end
         elseif strncmpi(filetype,'Waveforms',4)
             SpikeTimes = loadcb(cellid,'Spikes');  % load stimulus spikes (prealigned)
             
             % Load waveform data (Ntt file)
             Nttfile = cellid2fnames(cellid,'ntt');
-            TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
+            TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
             [all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
             [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR);
             if ~isequal(junk,SpikeTimes)   % internal check for spike times
@@ -52,7 +56,15 @@ else
             end
             varargout{1} = all_waves(evoked_inx,:,:);   % selected waveforms
         else
-            varargout{1} = load(fname);
+            temp = load(fname);
+            fnames = fieldnames(temp);
+            % emulate 'struct' option in load given that 'struct' option is
+            % removed in 8.6.0.267246 (R2015b), FS MOD 9/2017
+            if length(fnames) > 1
+                varargout{1} = load(fname);
+            else
+                varargout{1} = temp.(fnames{1});
+            end
         end
     else     % otherwise load into the workspace
         if strncmpi(filetype,'Spikes',5) || strncmpi(filetype,'Waveforms',4)

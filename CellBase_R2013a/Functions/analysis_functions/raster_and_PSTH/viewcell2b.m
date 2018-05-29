@@ -46,8 +46,8 @@ default_args={...
     'TriggerName',          'PulseOn';...
     'SortEvent',            'PulseOn';...
     'eventtype',             'stim';... % 'behav'
-    'ShowEvents',           {{'PulseOn'}};...
-    'ShowEventsColors',     {{'r'}};...
+    'ShowEvents',           {'PulseOn'};...
+    'ShowEventsColors',     {'r'};...
     'Num2Plot',             'all';...
     'PlotDashedEvent',      '';...
     'PlotDashedCondition',  'min';...
@@ -59,7 +59,6 @@ default_args={...
     'PrintCellID',          'on';...
     'PrintCellIDPos',       'bottom-right';...
     'BurstPSTH'             'off';......  
-    'stack_events_bottom'   'false';...
     };
 [g,error] = parse_args(default_args,varargin{:});
 
@@ -83,7 +82,7 @@ switch g.eventtype
         TE = loadcb(cellid,'StimEvents');
         SP = loadcb(cellid,'STIMSPIKES');
     case {'event','behav'}
-        TE = loadcb(cellid,'TrialEvents');
+        TE = loadcb(cellid,'TrialEvents'); % 'struct' option removed in 8.6.0.267246 (R2015b)
         SP = loadcb(cellid,'EVENTSPIKES');
 end
 trigger_pos = findcellstr(SP.events(:,1),g.TriggerName);
@@ -165,7 +164,7 @@ if iscellstr(g.SortEvent)
     end
     sort_var = min(sort_var);
 elseif ~isempty(g.SortEvent)
-    if ~iscell(TE.(g.TriggerEvent))
+     if ~iscell(TE.(g.TriggerEvent))
         sort_var = TE.(g.SortEvent) - TE.(g.TriggerEvent);
     else
         gte = nan(1,NUMtrials);
@@ -185,8 +184,12 @@ YLabel = 'Rate (Hz)';
 %-----------------------------
 
 % Plot the raster
-fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,g,'Colors',{mycolors},'Colors2',{mycolors2},'NumTrials2Plot',g.Num2Plot);
-if isfield(g,'Legend'),
+fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,...
+    g,'Colors',mycolors,'Colors2',mycolors2,'NumTrials2Plot',g.Num2Plot);
+% fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,...
+%     varargin,'Colors',{mycolors},'Colors2',{mycolors2},'NumTrials2Plot',g.Num2Plot);
+
+if isfield(g,'Legend')
     mylabels = g.Legend;
 end
 
@@ -209,7 +212,7 @@ if g.PSTHPlot == 1
                 g.PlotDashedTime = nanmedian(SP.event_windows{trigger_pos}(2,valid_trials));
         end
     end
-    plot_timecourse(time,spsth,spsth_se,g,'FigureNum',fhandle0(end),'Colors',{mycolors},'LineStyle',{mylinestyle},'Legend',{mylabels},'XLabel',XLabel,'YLabel',YLabel);
+    plot_timecourse(time,spsth,spsth_se,g,'FigureNum',fhandle0(end),'Colors',mycolors,'LineStyle',mylinestyle,'Legend',mylabels,'XLabel',XLabel,'YLabel',YLabel);
     axis tight
 end
 if strcmpi(g.PrintCellID,'on')
