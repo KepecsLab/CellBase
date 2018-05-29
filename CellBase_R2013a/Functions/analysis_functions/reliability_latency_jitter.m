@@ -49,6 +49,8 @@ function [R L J B M lim1 lim2 spno H] = reliability_latency_jitter(cellid,vararg
 %           'all' - SD of spike times of all spikes
 %           'burst' - only first spikes are included in each trial
 %       'display', false - controls plotting
+%       'fighandle', [NaN,NaN] - define which figure to plot
+%       'axhandle',[NaN,NaN] - define which axis to plot
 %
 %   Examples:
 %   [E L J] = reliability_latency_jitter(cellid,'event','BurstOn');
@@ -67,7 +69,7 @@ function [R L J B M lim1 lim2 spno H] = reliability_latency_jitter(cellid,vararg
 %   balazs.cshl@gmail.com
 %   15-June-2013
 
-%   Edit log: BH 7/15/13
+%   Edit log: BH 7/15/13; TO 12/2017
 
 % Input arguments
 prs = inputParser;
@@ -77,16 +79,18 @@ addParamValue(prs,'event_type','stim',...
 addParamValue(prs,'event','PulseOn',@ischar)   % reference event
 addParamValue(prs,'event_filter','none',@ischar)   % event filter
 addParamValue(prs,'filterinput',[])   % some filters need additional input
-addParamValue(prs,'window',[-0.005 0.01],...
+addParamValue(prs,'window',[-0.05 0.01],...
     @(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event, in seconds
 addParamValue(prs,'isadaptive',1,@(s)islogical(s)|ismember(s,[0 1 2]))   % use adaptive PSTH algorithm
-addParamValue(prs,'baselinewin',[-0.005 0],@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event for stat. testing, in seconds
+addParamValue(prs,'baselinewin',[-0.05 0],@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event for stat. testing, in seconds
 addParamValue(prs,'testwin',[0 0.01],@(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event for stat. testing, in seconds
 addParamValue(prs,'relative_threshold',0.5,...
     @(s)isnumeric(s)&isequal(length(s),1)&s>0&s<1)  % relative threshold for peak detection, see ULTIMATE_PSTH
 addParamValue(prs,'jitterdefinition','all',...
     @(s)ischar(s)|ismember(s,{'all','burst'}))   % controls the definition of 'jitter'
 addParamValue(prs,'display',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying rasters and PSTHs
+addParamValue(prs,'fighandle',NaN,@isnumeric)   % control figure
+addParamValue(prs,'axhandle',NaN,@isnumeric)   % control axes
 parse(prs,cellid,varargin{:})
 g = prs.Results;
 dt = 0.0005;   % fixed parameter for now
@@ -100,12 +104,12 @@ valid_trials = filterTrials(cellid,'event_type',g.event_type,'event',g.event,...
 % [lim1 lim2 L at B M] = findstimperiod2(cellid,'event',g.event,...
 %     'valid_trials',valid_trials);   %#ok<ASGLU> % find stimulated period and peak time
 [~, ~, ~, ~, spt, stats] = ultimate_psth(cellid,g.event_type,g.event,g.window,...
-    'dt',dt,'display',g.display,'isadaptive',g.isadaptive,'maxtrialno',Inf,...
+    'dt',dt,'display',false,'isadaptive',g.isadaptive,'maxtrialno',Inf,...
     'event_filter',g.event_filter,'filterinput',g.filterinput,...
     'baselinewin',g.baselinewin,'testwin',g.testwin,'relative_threshold',g.relative_threshold,'margin',[-0.01 0.01]);
-if g.display
-    H(1).H_psth = gcf;   % figure handle for PSTH
-end
+% if g.display
+%         H(1).H_psth = gcf;   % figure handle for PSTH
+% end
 lim1 = stats.activation_start;  % window start for evoked spikes
 lim2 = stats.activation_end;   % window end for evoked spikes
 L = stats.activation_peak;   % LATENCY
@@ -132,17 +136,26 @@ J = std(relevokedtimes);   % JITTER
 if g.display
     time = g.window(1):dt:g.window(2);  % time stamps
     tno = size(spt,1);   % number of trials
-    H(1).H_raster = figure;
+    if ~isempty(g.fighandle) && ~isnan(g.fighandle(1))
+        H(1).H_raster = g.fighandle(1);
+    else
+        H(1).H_raster = figure;
+    end
 %     pause(.05)
 %     jFrame = get(handle(H(1).H_raster),'JavaFrame');   % maximize figure
 %     jFrame.setMaximized(true);
-    rasterplot(spt,time,gcf);  % plot raster
-    colormap('bone')   % white on black
-    set(gcf,'Color','k')
+    if ~isempty(g.axhandle) && ~isnan(g.axhandle(1))
+        A=g.axhandle(1);
+    else
+        A=H(1).H_raster;
+    end
+    rasterplot(spt,time,A);  % plot raster
+%     colormap('bone')   % white on black
+%     set(gcf,'Color','k')
 %     set(gcf,'NumberTitle','off','MenuBar','none')
     pause(.05)
-    line([lim1 lim1],[1 tno],'LineWidth',3,'Color',[0.8 0 0])
-    line([lim2 lim2],[1 tno],'LineWidth',3,'Color',[0.8 0 0])
+    line([lim1 lim1],[1 tno],'LineWidth',1,'Color',[0.8 0 0])
+    line([lim2 lim2],[1 tno],'LineWidth',1,'Color',[0.8 0 0])
     pause(.05)
-    set(gca,'XColor','w','box','off','TickDir','out')
+    set(gca,'box','off','TickDir','out')
 end

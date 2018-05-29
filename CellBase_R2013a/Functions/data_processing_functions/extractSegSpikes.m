@@ -26,6 +26,7 @@ addRequired(prs,'segs',@isnumeric)
 % Load spikes
 if iscellid(cellid)
     spk = loadcb(cellid);
+    spk = spk*getcbpref('Spikes_timefactor');
 else
     spk = cellid;   % overload extractSegSpikes: implement first argument as spike times
 end

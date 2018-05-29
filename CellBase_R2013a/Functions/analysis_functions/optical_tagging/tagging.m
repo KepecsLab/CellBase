@@ -57,8 +57,8 @@ end
 % Call 'Lratio', 'nbisstim', 'spikeshapecorr'
 feature_names1 = {'Amplitude','Energy'};
 feature_names2 = {'WavePC1','Energy'};
-for k = I;
-    cellid = CELLIDLIST{k};
+for k = 1:length(I)
+    cellid = I{k};
     disp([num2str(k) '   ' cellid])
     try
         
@@ -84,8 +84,8 @@ for k = I;
             % Add 'PulseOn' event if missing
             ST = loadcb(cellid,'STIMSPIKES');
             if isequal(findcellstr(ST.events(:,1),'PulseOn'),0)
-                prealignSpikes(CELLIDLIST(k),'FUNdefineEventsEpochs',...
-                    @defineEventsEpochs_pulseon,'filetype','stim',...
+                prealignSpikes(I(k),'FUNdefineEventsEpochs',...
+                    @defineEventsEpochs_laserstim,'filetype','stim',...
                     'ifsave',1,'ifappend',1)
             end
             
@@ -94,6 +94,17 @@ for k = I;
             
             % Spike shape correlation
             R = spikeshapecorr(cellid);
+            
+            %TO
+            Insert{1,1}=cellid;
+            Insert{1,2}=Hindex;
+            insertdata(Insert,'type','prop','name','Hindex','overwrite',true)
+            Insert{1,1}=cellid;
+            Insert{1,2}=D_KL;
+            insertdata(Insert,'type','prop','name','D_KL','overwrite',true)
+            Insert{1,1}=cellid;
+            Insert{1,2}=R;
+            insertdata(Insert,'type','prop','name','R_WF','overwrite',true)            
         
         else
             Hindex = NaN;
@@ -117,7 +128,7 @@ for k = I;
             D_KL_xls = formatforExcel(D_KL);
             R_xls = formatforExcel(R);
                         
-            xlswrite(xlsname,CELLIDLIST(k),'sheet1',['A' num2str(k)])
+            xlswrite(xlsname,I(k),'sheet1',['A' num2str(k)])
             xlswrite(xlsname,Lr_amp_xls,'sheet1',['B' num2str(k)])
             xlswrite(xlsname,ID_amp_xls,'sheet1',['C' num2str(k)])
             xlswrite(xlsname,Lr_PC_xls,'sheet1',['D' num2str(k)])

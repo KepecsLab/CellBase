@@ -28,7 +28,7 @@ end
 
 % Load spike times
 stimes = loadcb(cellid,'Spikes');
-% stimes = stimes * 1e-4;   % conversion factor into seconds
+stimes = stimes * getcbpref('Spikes_timefactor');   % conversion factor into seconds
 
 for iE = 1:NUMevents
     
