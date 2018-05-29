@@ -41,9 +41,9 @@ end
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
 TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
-all_spikes = all_spikes * TIMEFACTOR * 10^-4;
+all_spikes = all_spikes * 10^-4; %nlx ntt always in 10^-4 s
 spk = loadcb(cellid,'Spikes');
-spk = spk*10^-4;
+spk = spk*TIMEFACTOR; %TT mat file use conversion factor
 
 % Latency of stimulated spikes
 if isempty(g.stim_period)

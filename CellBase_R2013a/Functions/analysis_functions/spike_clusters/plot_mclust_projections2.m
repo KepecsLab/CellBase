@@ -59,8 +59,8 @@ addParamValue(prs,'marker_size',2,@isnumeric)  % marker size for the plots
 addParamValue(prs,'usefastplot',true,@(s)islogical(s)|ismember(s,[0 1]))  % fast plotting (no zoom)
 addParamValue(prs,'stimonly',true,@(s)islogical(s)|ismember(s,[0 1]))  % restrict to period between first and last light pulse
 addParamValue(prs,'plotlightspikes',true,@(s)islogical(s)|ismember(s,[0 1]))  % plot light-evoked spikes
-addParamValue(prs,'fighandle',NaN,@isnumeric)  % figure handle for feature plots
-addParamValue(prs,'axhandle',NaN,@(s)isgraphics(s,'axes'))  % axes handles for individual feature plots
+addParamValue(prs,'fighandle',NaN,@(s) isnumeric(s)|isgraphics(s,'figure'))  % figure handle for feature plots
+addParamValue(prs,'axhandle',NaN,@(s)isgraphics(s,'axes')|isnan(s))  % axes handles for individual feature plots
 addParamValue(prs,'plot',true,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
 addParamValue(prs,'plotbest',false,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
 parse(prs,cellid,varargin{:})
@@ -79,8 +79,7 @@ pon = ST.PulseOn(~isnan(ST.PulseOn));
 % Load spikes from Ntt file.
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
-TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
-all_spikes = all_spikes * TIMEFACTOR * 10^-4;
+all_spikes = all_spikes * 10^-4; %nlx ntt file time in 10^-4 s
 blocks = [find(diff(pon)>1600),length(pon)];
 if length(blocks)==1
     val_spk=all_spikes >= pon(1) & all_spikes <= pon(blocks(end));
@@ -92,7 +91,8 @@ end
 end
 val_spk_i = find(val_spk); % consider spikes only within the stimulation protocol/blocks to account for drift
 nspk = length(all_spikes);
-spk = loadcb(cellid,'Spikes'); spk = spk*10^-4;
+TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+spk = loadcb(cellid,'Spikes'); spk = spk*TIMEFACTOR;
 [junk,junk2,tagged_cell_inx] = intersect(spk,all_spikes);  %#ok<*ASGLU> % get indices for the cell
 if ~isequal(junk,spk)  % check if all files have appropriate time stamps
     error('plot_mclust_projections:SpikeTimeMismatch','Mismatch between saved spike times and Ntt time stamps.')
@@ -204,10 +204,12 @@ NRows = ceil(NumComb/NCols);
 ax=zeros(1,NumComb);
 dist_metric=zeros(1,NumComb);
 %open figure
-if isnan(g.fighandle) && plotc
-    HS.feature_plot = figure('Units','normalized','outerposition',[0 0 1 1]);
-elseif plotc
+if plotc && ~isnumeric(g.fighandle) && isgraphics(g.fighandle,'figure')
+    %valid fig handle --> plot all projections in figure
     HS.feature_plot=figure(g.fighandle);
+    plot_to_figs=false;
+else %no valid fig handle --> plot individual projections
+    plot_to_figs=true;
 end
 k_i=0;
 for k = Comb
@@ -221,11 +223,14 @@ for k = Comb
     titlestr = [g.feature_names{fst(1)} num2str(fst(2)) '_'...
         g.feature_names{scnd(1)} num2str(scnd(2))];
     if plotc
-        if length(g.axhandle)<k || ~isgraphics(g.axhandle(k),'axes')
+        if ~plot_to_figs && (length(g.axhandle)<k || ~isgraphics(g.axhandle(k),'axes'))
             ax(k)=subplot(NRows,NCols,k_i);
-        else
+        elseif ~plot_to_figs
             ax(k) = g.axhandle(k);
             axes(ax(k))
+        else %plot_to_figs
+            HS.feature_plot(k)=figure;
+            ax(k) = axes;
         end
     end
     hold on
@@ -288,7 +293,7 @@ best_name = [g.feature_names{fst(1)} num2str(fst(2)) '_'...
         g.feature_names{scnd(1)} num2str(scnd(2))];
 HS.best_feature = best_name;
 HS.best_feature_idx = best_i;
-if plotc && g.plot && length(ax)>=k && isgraphics(g.axhandle(k),'axes')
+if plotc && g.plot && length(ax)>=k && isgraphics(ax(k),'axes')
     set(ax(best_i),'Color',[1,.95,.95]);
 end
 end

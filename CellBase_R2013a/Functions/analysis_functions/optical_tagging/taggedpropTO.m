@@ -195,9 +195,9 @@ title('H index')
 % Plot light-evoked and spont. spikes
 HW = plotwaveforms(cellid,'correlation',true,'maxnum',5000,'fighandle',NaN,'axhandle',{});
 
-% Plot MClust projections
+% Plot MClust projections]
 HM = plot_mclust_projections2(cellid,'feature_names',{'Peak','Energy'},...
-    'stim_period',[A1 A2],'stimonly',true,'usefastplot',true,'plot',true,'fighandle',NaN,'axhandle',NaN,'plotbest',true);
+    'stim_period',[A1 A2],'stimonly',true,'usefastplot',true,'plot',true,'fighandle',NaN,'axhandle',NaN,'plotbest',false);
 
 % Distance from light-evoked noise
 [lID_amp lLr_amp Pref Pref2] = lightcluster(cellid,'feature_names',{'Peak','Energy'},...
@@ -220,7 +220,7 @@ uicontrol('Style','text','Unit','normalized','Position',...
 axis off
 
 % BurstOn and PulseOn PSTH
-HR = plot_raster_psth(cellid,'BurstOn',false,'PulseOn',true,'PulseFig',f,'PulseAx',ax);
+HR = plot_raster_psth(cellid,'BurstOn',false,'PulseOn',true,'PulseFig',NaN,'PulseAx',NaN);
 
 % Save
 if issave
@@ -250,8 +250,10 @@ if isstruct(H)  % H is either a struct with figure handles, or a single fig. han
     fls = fieldnames(H);
     for fs = 1:length(fls)
         h = H.(fls{fs});
-        if ishandle(h)
-            export_fig(h,'-append',pdfname);  % write to pdf
+        for i =1:length(h)
+            if ishandle(h(i))
+                export_fig(h(i),'-append',pdfname);  % write to pdf
+            end
         end
     end
 else

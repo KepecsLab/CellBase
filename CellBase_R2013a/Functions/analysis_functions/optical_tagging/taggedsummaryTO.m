@@ -148,7 +148,7 @@ SE = loadcb(cellid,'StimEvents');
 Hindex_pulseon = HPO;
 
 %Plot
-fighandle = figure('Position',[ 344,190,1207,767],'NumberTitle','off','MenuBar','none','Color',[1,1,1],'Name','Tagging summary');
+fighandle = figure('Position',[ 488.2000  165.8000  883.2000  596.0000],'NumberTitle','off','MenuBar','none','Color',[1,1,1],'Name','Tagging summary');
 
 % BurstOn and PulseOn PSTH
 psth_ax = subplot(4,4,[1,2,5,6]);
