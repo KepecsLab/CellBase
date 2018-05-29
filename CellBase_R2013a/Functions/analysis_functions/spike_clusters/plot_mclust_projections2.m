@@ -60,7 +60,7 @@ addParamValue(prs,'usefastplot',true,@(s)islogical(s)|ismember(s,[0 1]))  % fast
 addParamValue(prs,'stimonly',true,@(s)islogical(s)|ismember(s,[0 1]))  % restrict to period between first and last light pulse
 addParamValue(prs,'plotlightspikes',true,@(s)islogical(s)|ismember(s,[0 1]))  % plot light-evoked spikes
 addParamValue(prs,'fighandle',NaN,@(s) isnumeric(s)|isgraphics(s,'figure'))  % figure handle for feature plots
-addParamValue(prs,'axhandle',NaN,@(s)isgraphics(s,'axes')|isnan(s))  % axes handles for individual feature plots
+addParamValue(prs,'axhandle',NaN,@(s)isgraphics(s,'axes')|isnumeric(s))  % axes handles for individual feature plots
 addParamValue(prs,'plot',true,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
 addParamValue(prs,'plotbest',false,@(s)islogical(s)|ismember(s,[0 1]))  % axes handles for individual feature plots
 parse(prs,cellid,varargin{:})
@@ -208,7 +208,9 @@ if plotc && ~isnumeric(g.fighandle) && isgraphics(g.fighandle,'figure')
     %valid fig handle --> plot all projections in figure
     HS.feature_plot=figure(g.fighandle);
     plot_to_figs=false;
-else %no valid fig handle --> plot individual projections
+elseif plotc && any(~isnumeric(g.axhandle)) && any(isgraphics(g.axhandle,'axes') )
+    plot_to_figs=false;
+else%no valid fig or ax handle --> plot projections to individual figures
     plot_to_figs=true;
 end
 k_i=0;
