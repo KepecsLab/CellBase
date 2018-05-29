@@ -17,15 +17,15 @@ function [DM LrC valid_channels] = LRatio(cellid,feature_names,valid_channels)
 %   1 Bungtown Road, Cold Spring Harbor
 %   balazs.cshl@gmail.com
 
-% Channel validity
+%% Channel validity
 if nargin < 3
     valid_channels = check_channel_validity(cellid);
 end
 
-% Parse cellID
+%% Parse cellID
 [r,s,t,u] = cellid2tags(cellid);
 
-% Load Ntt file
+%% Load Ntt file
 Nttfn = cellid2fnames(cellid,'Ntt');
 all_spikes = LoadTT_NeuralynxNT(Nttfn);
 TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds

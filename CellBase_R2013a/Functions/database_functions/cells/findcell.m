@@ -27,7 +27,7 @@ tet = -1;  % comparison of empty numeric is not defined
 LIST = '';
 while iARG <= nARG; 
     switch lower(char(varargin{iARG}))
-        case 'rat'
+        case {'rat', 'animal', 'mouse'}
             if (iARG+1) <= nARG;
                 rat = lower(char(varargin{iARG+1}));
             else
@@ -53,7 +53,7 @@ while iARG <= nARG;
                 argerror;
             end 
             iARG = iARG+2;
-        case 'rats'
+        case {'rats', 'animals', 'mice'}
             LIST = 'rats';
             iARG = iARG + 1;
         case 'sessions'
