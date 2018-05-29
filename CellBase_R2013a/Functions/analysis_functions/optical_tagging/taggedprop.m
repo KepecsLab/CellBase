@@ -139,18 +139,18 @@ burst_types(isnan(burst_types)) = [];
 NumBurstTypes = length(burst_types);
 
 % Efficiency, latency and jitter for 'PulseOn'
-[E_pulseon L_pulseon J_pulseon B_pulseon M_pulseon A1 A2] = ...
+[E_pulseon, L_pulseon, J_pulseon, B_pulseon, M_pulseon, A1, A2] = ...
     reliability_latency_jitter(cellid,'event','PulseOn');
 
 % H-index for 'PulseOn'
 Hindex_pulseon = HPO;
 
 % Efficiency, latency and jitter for 'BurstOn'
-[E_burston L_burston J_burston B_burston M_burston] = ...
+[E_burston, L_burston, J_burston, B_burston, M_burston] = ...
     reliability_latency_jitter(cellid,'event','BurstOn');
 
 % H-index for 'BurstOn'
-[Hindex_burston D_KL_burston] = tagging_index(cellid,'event','BurstOn');  %#ok<NASGU> % H-index, D_KL
+[Hindex_burston, D_KL_burston] = tagging_index(cellid,'event','BurstOn');  %#ok<NASGU> % H-index, D_KL
 
 % Calculate the same tagging variables for bursts of different frequencies
 Hindex_frequency = nan(1,NumBurstTypes);
@@ -163,7 +163,7 @@ M_frequency = nan(1,NumBurstTypes);
 for bt = 1:NumBurstTypes
     
     fi = struct('BurstNPulse',burst_types(bt));
-    [Hindex_frequency(bt) D_KL_frequency(bt)] = ...
+    [Hindex_frequency(bt), D_KL_frequency(bt)] = ...
         tagging_index(cellid,'event_filter','BurstNPulse_maxPower','filterinput',fi);  % H-index, D_KL
     [E_frequency(bt) L_frequency(bt) J_frequency(bt) B_frequency(bt) M_frequency(bt)] = reliability_latency_jitter(cellid,...
         'event_filter','BurstNPulse_maxPower','filterinput',fi);  % efficiency, latency, jitter
