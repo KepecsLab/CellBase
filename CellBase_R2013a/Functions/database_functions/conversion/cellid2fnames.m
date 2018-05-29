@@ -13,6 +13,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %       'Spikes', 'cell_pattern' preference is used to generate .mat filename
 %       'tfile', 'cell_pattern' preference is used to generate .t filename
 %       'Ntt', .Ntt filename is returned
+%       'SGdat', .dat filename is returned.  (Extracted Trodes file.)
 %       'wv', 'cell_pattern' preference is used to return *wv.mat filename
 %       'quality', *ClusterQual.mat filename is returned
 %       'Waveform', waveform data filename is returned
@@ -29,7 +30,8 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO
+%   5/2018, EG 5/2018
 
 % get cellbase global preferences
 cellbase_datapath = getpref('cellbase','datapath');
@@ -71,6 +73,9 @@ else
         fname_unit = sprintf('%s%d_%d.t',cellbase_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'Ntt',3)
         fname_unit = sprintf('TT%d.ntt',tetrode);
+    elseif strncmpi(filename, 'SGdat', 2)
+        sessionDir = fullfile(cellbase_datapath,ratname,session);
+        fname_unit = listfiles(sessionDir, ['.spikes_nt' num2str(tetrode)])
     elseif strncmpi(filename,'wv',2)
         fname_unit = sprintf('%s%d_%d-wv.mat',cellbase_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'quality',4)
