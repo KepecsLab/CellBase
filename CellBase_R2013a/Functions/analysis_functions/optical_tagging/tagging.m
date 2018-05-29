@@ -117,7 +117,7 @@ for k = 1:length(I)
             % Save
             save([resdir 'TAGGING_' regexprep(cellid,'\.','_') '.mat'],...
                 'Lr_amp','ID_amp','Lr_PC','ID_PC','valid_channels',...
-                'Hindex','D_KL','R')
+                'Hindex','D_KL','R_WF')
             
             % Write to Excel
             Lr_amp_xls = formatforExcel(Lr_amp);   % convert special numbers to strings
@@ -143,4 +143,3 @@ for k = 1:length(I)
         disp(ME.message)
     end
 end
-% keyboard

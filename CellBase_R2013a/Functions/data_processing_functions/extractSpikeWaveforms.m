@@ -35,9 +35,15 @@ default_args={...
     };
 [g, error] = parse_args(default_args,varargin{:});
 
-% Load waveform data (Ntt file)
+%% Load waveform data
+% Ntt file
 Nttfile = cellid2fnames(cellid,'ntt');
-[all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
+[all_spikes, all_waves] = LoadTT_NeuralynxNT(Nttfile);
+
+% SG file
+SGfile = cellid2fnames(cellid, 'SGdat');
+[all_spikes, all_waves] = mClustTrodesLoadingEngine(SGfile);
+
 [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*10^-4); %nlx ntt file in 10^-4 s
 if ~isequal(junk,SpikeTimes)   % internal check for spike times
     error('extractSpikeWaveforms:SpikeTimeMismatch','Mismatch between extracted spike times and Ntt time stamps.')
@@ -49,7 +55,7 @@ aligned_wv = wvalign(sel_wv);
 
 % Apply filter on the tetrode channels
 if g.usemedian
-    avegageFcn = @nanmedian;    % define which function to use for averaging
+    averageFcn = @nanmedian;    % define which function to use for averaging
 else
     averageFcn = @nanmean;
 end
