@@ -1,5 +1,5 @@
-function [activation_start activation_end activation_peak activation_time...
-        baseline maxafter H] = findStimPeriod(cellid,varargin)
+function [activation_start, activation_end, activation_peak, activation_time,...
+        baseline, maxafter, H] = findStimPeriod(cellid,varargin)
 %FINDSTIMPERIOD   Find time period of stimulated spikes.
 %   [I1 I2] = FINDSTIMPERIOD(CELLID) seeks for an increase of firing rate
 %   after an event. First, the program calculates Spike Density Function by
@@ -38,15 +38,15 @@ function [activation_start activation_end activation_peak activation_time...
 % Default arguments
 prs = inputParser;
 addRequired(prs,'cellid',@iscellid)
-addParamValue(prs,'event_type','stim',...
+addParameter(prs,'event_type','stim',...
     @(s)ischar(s)&&(strncmp(s,'stim',4)||strncmp(s,'trial',4)))   % event type ('stim' or 'trial')
-addParamValue(prs,'event','PulseOn',@ischar)   % reference event
-addParamValue(prs,'valid_trials','all')   % valid trials - use all trials by default
-addParamValue(prs,'window',[-0.005 0.01],...
+addParameter(prs,'event','PulseOn',@ischar)   % reference event
+addParameter(prs,'valid_trials','all')   % valid trials - use all trials by default
+addParameter(prs,'window',[-0.005 0.01],...
     @(s)isnumeric(s)&isequal(length(s),2))  % time window relative to the event, in seconds
-addParamValue(prs,'dt',0.0005,@isnumeric)   % time resolution of the binraster, in seconds
-addParamValue(prs,'margin',[-0.01 0.01])  % margins for PSTH calculation to get rid of edge effect due to smoothing
-addParamValue(prs,'display',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying rasters and PSTHs
+addParameter(prs,'dt',0.0005,@isnumeric)   % time resolution of the binraster, in seconds
+addParameter(prs,'margin',[-0.01 0.01])  % margins for PSTH calculation to get rid of edge effect due to smoothing
+addParameter(prs,'display',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying rasters and PSTHs
 parse(prs,cellid,varargin{:})
 g = prs.Results;
 
@@ -91,11 +91,11 @@ dtt = g.dt * 1000;   % resolution of bin raster in ms
 wn = g.window * 1000;   % window boundaries in ms
 margin = g.margin * 1000;   % margin in ms
 if nargout < 7
-    [activation_start activation_end activation_peak activation_time...
-        baseline maxafter] = newpsth(spt,spt,dtt,wn,margin); %#ok<*ASGLU>
+    [activation_start, activation_end, activation_peak, activation_time,...
+        baseline, maxafter] = newpsth(spt,spt,dtt,wn,margin); %#ok<*ASGLU>
 else
-    [activation_start activation_end activation_peak activation_time...
-        baseline maxafter H] = newpsth(spt,spt,dtt,wn,margin);
+    [activation_start, activation_end, activation_peak, activation_time,...
+        baseline, maxafter, H] = newpsth(spt,spt,dtt,wn,margin);
     tt = regexprep(cellid,'_',' ');     % add title to the figure
     title(tt)
 end
@@ -105,8 +105,8 @@ activation_peak = activation_peak / 1000;
 activation_time = activation_time / 1000;
 
 % -------------------------------------------------------------------------
-function [activation_start activation_end activation_peak activation_time...
-    baseline_prob maxafter H] = newpsth(spt_baseline,spt_test,dt,win,margin)
+function [activation_start, activation_end, activation_peak, activation_time,...
+    baseline_prob, maxafter, H] = newpsth(spt_baseline,spt_test,dt,win,margin)
 
 % Control display (plot only if the plot handle is requested)
 if nargout < 7
@@ -116,19 +116,19 @@ else
 end
 
 % Trial number and epoch length
-[tno_baseline tl] = size(spt_baseline);
-[tno_test tl] = size(spt_test);
+[tno_baseline, tl] = size(spt_baseline);
+[tno_test, tl] = size(spt_test);
 
 % Pre-stimulus time window to consider for null hypothesis
 stm = abs(win(1)+margin(1)) / dt;
 
 % Merged spike train
 sptb = spt_baseline(:,1:stm);
-[x0 allspks_baseline] = find(sptb);
+[x0, allspks_baseline] = find(sptb);
 ts_baseline = sort(allspks_baseline)';
 
 sptt = spt_test(:,stm+1:end);
-[x0 allspks_test] = find(sptt);
+[x0, allspks_test] = find(sptt);
 ts_test = stm + sort(allspks_test)';
 ts = [ts_baseline ts_test];
 

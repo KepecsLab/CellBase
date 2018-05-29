@@ -4,7 +4,7 @@ function R = spikeshapecorr(cellid)
 %   the waveform of spontaneous and putative light-evoked spikes. It finds
 %   the latency of putative light-evoked spikes as peaks of firing rate
 %   after light pulses. The period for putative light-evoked spikes is
-%   defined by half-hight crossings around the peak (see FINDSTIMPERIOD for
+%   defined by half-height crossings around the peak (see FINDSTIMPERIOD for
 %   details). If there is no detectable activation, 1 and 6 ms are used,
 %   which include typical latencies of light-evoked spikes. Spontaneous
 %   spikes are extracted from 2 s periods before light bursts. Waveforms
