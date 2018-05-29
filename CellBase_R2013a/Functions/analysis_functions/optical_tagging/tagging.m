@@ -23,7 +23,7 @@ function tagging(I,issave)
 dbstop if error
 
 % Input argument check
-error(nargchk(1,2,nargin))
+narginchk(1,2)
 if nargin < 2
     issave = false;
 end
@@ -72,11 +72,11 @@ for k = 1:length(I)
         
         % Cluster quality
         if ~skipclusterquality
-            [ID_amp Lr_amp] = LRatio(cellid,feature_names1);
-            [ID_PC Lr_PC valid_channels] = LRatio(cellid,feature_names2); %#ok<NASGU>
+            [ID_amp, Lr_amp] = LRatio(cellid,feature_names1);
+            [ID_PC, Lr_PC, valid_channels] = LRatio(cellid,feature_names2); %#ok<NASGU>
         else   % if cluster quality was already calculated, it can be skipped
-            [ID_amp Lr_amp] = deal(NaN);
-            [ID_PC Lr_PC valid_channels] = deal(NaN); %#ok<NASGU>
+            [ID_amp, Lr_amp] = deal(NaN);
+            [ID_PC, Lr_PC, valid_channels] = deal(NaN); %#ok<NASGU>
         end
         
         if isstim
