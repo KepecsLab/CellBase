@@ -50,7 +50,7 @@ if g.BurstOn
     if ~isempty(g.BurstFig) && ~isnan(g.BurstFig(1))
         HS.H_BurstOn = figure(g.BurstFig(1));
     else
-        HS.H_BurstOn = figure('Position',[97 163 1533 815]);
+        HS.H_BurstOn = figure();
     end
     if ~isempty(g.BurstAx) && isgraphics(g.BurstAx(1),'axes')
         HS.HA_BurstOn = g.BurstAx(1);
