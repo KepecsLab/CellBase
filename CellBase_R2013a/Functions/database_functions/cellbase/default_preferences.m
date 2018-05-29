@@ -16,7 +16,7 @@ PREFERENCES = struct();
 %TrialEvents parameters
 PREFERENCES.TrialEvents_fname = 'TrialEvents.mat';
 PREFERENCES.TrialEvents_fun = fullfile(cb_path,'Templates','MakeTrialEvents.m');
-PREFERENCES.TrialEvents_defineEventEpochs = fullfile(cb_path,'Templates','defineEventEpochs.m');
+PREFERENCES.TrialEvents_defineEventsEpochs = fullfile(cb_path,'Templates','defineEventsEpochs.m');
 
 %StimEvents parameters
 PREFERENCES.StimEvents_fname = 'StimEvents.mat';
@@ -29,5 +29,8 @@ PREFERENCES.Spikes_create_fun = '';
 
 %Database parameters
 PREFERENCES.session_separator = '';
+
+%Recording file parameters
+PREFERENCES.LoadingEngineWrapper_fname = fullfile(cbpath, 'AddOns', 'LoadingEngines', 'Wrappers', 'loadingEngineWrapper_default.m');
 
 
