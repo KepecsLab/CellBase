@@ -7,7 +7,7 @@ function delcell(cellid)
 %
 %   See also ADDCELL, INSERTDATA and DELANALYSIS.
 
-%   Edit log: BH 6/7/12, TO 5/2018
+%   Edit log: BH 6/7/12
 
 % Load CellBase
 load(getpref('cellbase','fname'));
@@ -34,7 +34,9 @@ end
 CELLIDLIST(cellpos) = [];
 
 % Delete rows from 'TheMatrix;
-TheMatrix(cellpos,:) = [];
+if ~isempty(TheMatrix)
+ TheMatrix(cellpos,:) = [];
+end
 
 % Return changed variables to workspace & save all
 assignin('base','TheMatrix',TheMatrix);
