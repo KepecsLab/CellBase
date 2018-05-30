@@ -32,19 +32,25 @@ default_args={...
     'chans',           'all';...     % filter tetrode channels
     'smooth',          'none';...  % control whether to smooth; implemented only for average outputs
     'usemedian',       false;... % if output is smoothed, either mean or median is applied
+    'data_filetype',     'ntt'; % EG 05/2018 hacky fix
     };
 [g, error] = parse_args(default_args,varargin{:});
 
 %% Load waveform data
-% Ntt file
-Nttfile = cellid2fnames(cellid,'ntt');
-[all_spikes, all_waves] = LoadTT_NeuralynxNT(Nttfile);
+% EG fix with LoadTrode
+if strcmp(g.data_filetype, 'ntt')
+    % Ntt file
+    Nttfile = cellid2fnames(cellid,'ntt');
+    [all_spikes, all_waves] = LoadTT_NeuralynxNT(Nttfile);
+    all_spikes = all_spikes * 1e-4;
+elseif strcmp(g.data_filetype, 'SGdat')
+    % SG file
+    SGfile = cellid2fnames(cellid, 'SGdat');
+    [all_spikes, all_waves] = mClustTrodesLoadingEngine(SGfile);
+    SpikeTimes = unique(SpikeTimes);
+end
 
-% SG file
-SGfile = cellid2fnames(cellid, 'SGdat');
-[all_spikes, all_waves] = mClustTrodesLoadingEngine(SGfile);
-
-[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*10^-4); %nlx ntt file in 10^-4 s
+[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes);
 if ~isequal(junk,SpikeTimes)   % internal check for spike times
     error('extractSpikeWaveforms:SpikeTimeMismatch','Mismatch between extracted spike times and Ntt time stamps.')
 end

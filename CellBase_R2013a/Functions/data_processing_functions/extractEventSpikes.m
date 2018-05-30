@@ -27,8 +27,8 @@ if nargin < 3
 end
 
 % Load spike times
-stimes = loadcb(cellid,'Spikes');
-stimes = stimes * getcbpref('Spikes_timefactor');   % conversion factor into seconds
+stimes = loadcb(cellid,'Spikes'); % time conversion occurs in loadcb
+
 
 for iE = 1:NUMevents
     

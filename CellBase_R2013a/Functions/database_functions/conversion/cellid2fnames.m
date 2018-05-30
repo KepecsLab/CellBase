@@ -75,7 +75,8 @@ else
         fname_unit = sprintf('TT%d.ntt',tetrode);
     elseif strncmpi(filename, 'SGdat', 2)
         sessionDir = fullfile(cellbase_datapath,ratname,session);
-        fname_unit = listfiles(sessionDir, ['.spikes_nt' num2str(tetrode)])
+        fname_cell = listfiles(sessionDir, ['.spikes_nt' num2str(tetrode)]);
+        fname_unit = fname_cell{1};
     elseif strncmpi(filename,'wv',2)
         fname_unit = sprintf('%s%d_%d-wv.mat',cellbase_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'quality',4)
