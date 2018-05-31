@@ -55,7 +55,7 @@ valid_trials1 = find(~isnan(TE.(EventName1)));
 % inx = ~isnan(TE.(EventName2)) & TE.BurstNPulse==minfreq & TE.PulsePower==maxpow;
 % valid_trials2 = find(inx);
 valid_trials2 = find(~isnan(TE.(EventName2)));
-lm = 5000;    % downsaple if more pulses than 5000
+lm = 5000;    % downsample if more pulses than 5000
 if length(valid_trials2) > lm
     rp = randperm(length(valid_trials2));
     valid_trials2 = valid_trials2(sort(rp(1:lm)));

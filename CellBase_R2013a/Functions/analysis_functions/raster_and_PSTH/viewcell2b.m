@@ -5,7 +5,7 @@ function fhandle0=viewcell2b(cellid,varargin)
 %   for a given cell. TRIGEVENT is used as trigger and trials are sorted
 %   according to SEVENT. 'EVENTTYPE' can be 'STIM' or 'BEHAV'. Optional
 %   input argument pairs:
-%       'ShowEvets', events indicated on the raster plots
+%       'ShowEvents', events indicated on the raster plots
 %       'ShowEventsColors', specifies colors for the events shown
 %       'FigureNum', specifies the figure handle to plot on
 %       'window', window size for the plots
