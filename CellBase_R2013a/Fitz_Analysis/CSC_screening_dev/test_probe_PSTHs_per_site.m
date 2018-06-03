@@ -36,11 +36,22 @@ for channel = 1:nChannels
     
     if channel == 1
         data.data = zeros(numel(Samples), nChannels);
+        data2 = data.data;
     end
     passBand = [300 8000]; % Hz
     [b, a] = butter(5, passBand/32000 * 2);
     filtData = filtfilt(b,a,Samples);
-    data(:, channel) = filtData;
+    
+
+    
+    
+    data.data(:, channel) = filtData;
+    
+    % compare to JRCLUST method of using Savitzky-Golay differentiation
+    % filter
+    [b, g] = sgolay(1,9);
+    filtData = conv(Samples, -32000 * g(:,2), 'same');
+    data2(:, channel) = filtData;
     waitbar(channel/nChannels);
 end
 close(h);
