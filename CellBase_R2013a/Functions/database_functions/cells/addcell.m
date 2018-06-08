@@ -56,9 +56,11 @@ for i = 1: NumAnal
         property_name = char(ANALYSES(i).propnames);
 %         property_values = {input(sprintf('Enter value for %s ! ',property_name))};
         property_values = num2cell(nan(length(columns),1));
-        if size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))
-            charinx = cellfun(@ischar,TheMatrix(1,columns));   % for character type properties, initialize with empty matrix
-            property_values(charinx) = {''};
+        if iscell(TheMatrix) %TO fix
+            if size(TheMatrix,1) > 1 && any(cellfun(@ischar,TheMatrix(1,columns)))   
+                charinx = cellfun(@ischar,TheMatrix(1,columns));   % for character type properties, initialize with empty matrix
+                property_values(charinx) = {''};
+            end
         end
     else
         if ~isempty(varg)
