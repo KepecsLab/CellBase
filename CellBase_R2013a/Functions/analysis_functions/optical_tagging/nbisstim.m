@@ -161,6 +161,9 @@ nhlsi(:,next) = hlsi(:,next) / sum(hlsi(:,next));
 % imagesc(slsi)
 % figure      % plot ISI histograms
 % imagesc(hlsi(2:end,:))
+% figure, hold on
+% plot(cumsum(mean(nhlsi(:,1:end-1),2)))
+% plot(cumsum(nhlsi(:,end)))
 
 % Symmetric KL-divergence and JS-divergence
 kn = st / nmbn + 1;
