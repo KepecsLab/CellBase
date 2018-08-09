@@ -166,7 +166,7 @@ if iscellstr(g.SortEvent)
 elseif ~isempty(g.SortEvent)
      if ~iscell(TE.(g.TriggerEvent))
         sort_var = TE.(g.SortEvent) - TE.(g.TriggerEvent);
-    else
+     else
         gte = nan(1,NUMtrials);
         inx = ~cellfun(@isempty,TE.(g.TriggerEvent));
         gte(inx) = cell2mat(cellfun(@(s)s(1),TE.(g.TriggerEvent)(inx),'UniformOutput',false));

@@ -1,10 +1,10 @@
 function viewlick(cbID,varargin)
 %VIEWLICK   Lick raster and PSTH.
-%   VIEWLICK(CBID,'TRIGGERNAME',TRIGEVENT,'SORTEVENT',SEVENT,'EVENTTYPE
-%   ',EVTYPE) plots an event triggered lick raster and PSTH for a given
+%   VIEWLICK(CBID,'TriggerName',TRIGEVENT,'SortEvent',SEVENT,'eventtype',
+%   EVTYPE) plots an event triggered lick raster and PSTH for a given
 %   session (CBID: 1-by-2 cell containing animal ID and session ID).
 %   TRIGEVENT is used as trigger and trials are sorted according to SEVENT.
-%   'EVENTTYPE' can be 'STIM' or 'BEHAV'. Optional input argument pairs:
+%   'eventtype' can be 'STIM' or 'BEHAV'. Optional input argument pairs:
 %       'ShowEvets', events indicated on the raster plots
 %       'ShowEventsColors', specifies colors for the events shown
 %       'FigureNum', specifies the figure handle to plot on
@@ -39,8 +39,8 @@ default_args={...
     'TriggerName',          'PulseOn';...
     'SortEvent',            'PulseOn';...
     'eventtype',             'stim';... % 'behav'
-    'ShowEvents',           {{'PulseOn'}};...
-    'ShowEventsColors',     {{[0 0.8 0] [0.8 0.8 0] [0 0.8 0.8] [0.8 0 0.8] [0.8 0 0] [0 0 0.8]}};...
+    'ShowEvents',           {'PulseOn'};...
+    'ShowEventsColors',     {[0 0.8 0] [0.8 0.8 0] [0 0.8 0.8] [0.8 0 0.8] [0.8 0 0] [0 0 0.8]};...
     'Num2Plot',             'all';...
     'PlotDashedEvent',      '';...
     'PlotDashedCondition',  'min';...
@@ -51,21 +51,25 @@ default_args={...
     'Partitions',           'all';...
     'PrintCellID',          'on';...
     'PrintCellIDPos',       'bottom-right';...
-    'BurstPSTH'             'off';......  
+    'BurstPSTH'             'off';...
+    'LickInField',          'LickIn';...
     };
 [g,error] = parse_args(default_args,varargin{:});
 
 % Load trial events (unsynchronized)
 animalID = cbID{1,1};
 sessionID = cbID{1,2};
-cbdir = getpref('cellbase','datapath');
+pref = getcbpref;
+
+% emulate 'struct' option in load given that 'struct' option is
+% removed in 8.6.0.267246 (R2015b), FS MOD 9/2017
 switch g.eventtype
     case 'stim'
-        datapath = fullfile(cbdir,animalID,sessionID,'StimEvents.mat');
-        TE = load(datapath);
+        datapath = fullfile(pref.datapath,animalID,sessionID,pref.StimEvents_fname);
+        load(datapath);
     case {'event','behav'}
-        datapath = fullfile(cbdir,animalID,sessionID,'TE.mat');
-        TE = load(datapath);
+        datapath = fullfile(pref.datapath,animalID,sessionID,pref.TrialEvents_fname);
+        load(datapath);
 end
 
 %--------------------------------------------------------------------------
@@ -77,8 +81,8 @@ margin = g.sigma * 3;     % add an extra margin to the windows
 time = g.window(1)-margin:g.dt:g.window(2)+margin;   % time base array
 
 % Lick times
-NumTrials = length(TE.LickIn);
-stimes = arrayfun(@(s)TE.LickIn{s}-TE.(g.TriggerName)(s),1:NumTrials,'UniformOutput',false);
+NumTrials = length(TE.(g.LickInField));
+stimes = arrayfun(@(s)TE.(g.LickInField){s}-TE.(g.TriggerName)(s),1:NumTrials,'UniformOutput',false);
 
 % Event windows
 window_margin = g.window;
@@ -171,8 +175,9 @@ YLabel = 'Rate (Hz)';
 %-----------------------------
 
 % Plot the raster
-fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,g,'Colors',{mycolors},'Colors2',{mycolors2},'NumTrials2Plot',g.Num2Plot);
-if isfield(g,'Legend'),
+fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,g,...
+    'Colors',mycolors,'Colors2',mycolors2,'NumTrials2Plot',g.Num2Plot);
+if isfield(g,'Legend')
     mylabels = g.Legend;
 end
 
@@ -195,7 +200,8 @@ if g.PSTHPlot == 1
                 g.PlotDashedTime = nanmedian(ev_windows(2,valid_trials));
         end
     end
-    plot_timecourse(time,spsth,spsth_se,g,'FigureNum',fhandle0(end),'Colors',{mycolors},'LineStyle',{mylinestyle},'Legend',{mylabels},'XLabel',XLabel,'YLabel',YLabel);
+    plot_timecourse(time,spsth,spsth_se,g,'FigureNum',fhandle0(end),...
+        'Colors',mycolors,'LineStyle',mylinestyle,'Legend',mylabels,'XLabel',XLabel,'YLabel',YLabel);
     axis tight
 end
 if strcmpi(g.PrintCellID,'on')

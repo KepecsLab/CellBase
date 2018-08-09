@@ -64,7 +64,7 @@ function s = convertToStructure(ca) % ca = cell array, e.g. varargin
 
     % cell array (as supplied by functions that use parseargs) for example 
     % consists of rows of parameter value pairs, we need to make this an alternating vector    
-    if size(ca, 1) > 1; 
+    if size(ca, 1) > 1
         ca = ca';
         ca = reshape(ca, 1, numel(ca)); % now it's a row vector
     end
