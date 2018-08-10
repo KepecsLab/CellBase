@@ -8,7 +8,7 @@ function setcbpref(name,val)
 %
 % See also: getcbpref(name), default_preferences()
 %
-% TO 05/2018
+% TO 05/2018, FS 08/2018
 
 if any(strcmp({'datapath','name','fname','filesep','cellbases'},name)) %global preferences
     warning('Please use setpref to set global cellbase settings.');
@@ -18,7 +18,11 @@ else %correct use for cellbase-specific preferences
         CB = load(fullfile(getpref('cellbase','fname')));
         fields = fieldnames(CB);
         if ~isempty(fields)
-            CB.PREFERENCES.(name)=val;
+            if ischar(val) && (val(1) == '@') % it's to be a function handle % FS MOD
+                CB.PREFERENCES.(name)=str2func(val); 
+            else
+                CB.PREFERENCES.(name)=val;                 
+            end
             save(fullfile(getpref('cellbase','fname')),'-struct','CB')
         else %no preference file
             import_preferences();
