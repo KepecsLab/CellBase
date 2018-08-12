@@ -48,9 +48,9 @@ else
             
             % Load waveform data (Ntt file)
             Nttfile = cellid2fnames(cellid,'ntt');
-            TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
-            [all_spikes all_waves] = LoadTT_NeuralynxNT(Nttfile);
-            [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*TIMEFACTOR);
+            loadingEngine = getcbpref('TrodeLoadingEngine');
+            [all_spikes all_waves] = loadingEngine(Nttfile); % FS MOD, new convention is for trode loading engine to return spikes in units of seconds                        
+            [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes);
             if ~isequal(junk,SpikeTimes)   % internal check for spike times
                 error('loadcb:SpikeTimeMismatch','Mismatch between extracted spike times and Ntt time stamps.')
             end

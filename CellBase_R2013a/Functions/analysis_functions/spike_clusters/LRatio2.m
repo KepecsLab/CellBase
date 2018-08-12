@@ -35,9 +35,8 @@ end
 
 % Load Ntt file
 Nttfn = cellid2fnames(cellid,'Ntt');
-all_spikes = LoadTT_NeuralynxNT(Nttfn);
-TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
-all_spikes = all_spikes * TIMEFACTOR;
+loadingEngine = getcbpref('TrodeLoadingEngine');
+all_spikes = loadingEngine(Nttfile); % FS MOD, new convention is for trode loading engine to return spikes in units of seconds
 spk = loadcb(cellid,'Spikes');
 n = length(all_spikes);
 [~, inx] = intersect(all_spikes,spk);

@@ -111,10 +111,18 @@ end
 nvalid_pulses = sum(Pulses);
 SE = struct(...
     'TrialStart', zeros(1, nvalid_pulses),...
-    'Pulse', nan(1,nvalid_pulses)...
+    'Pulse', nan(1,nvalid_pulses),...
+    'PulseOn', nan(1, nvalid_pulses),...
+    'BurstOn', nan(1, nvalid_pulses)...    
     );
 
-SE.Pulse = Events_TimeStamps(Pulses);
+SE.Pulse = Events_TimeStamps(1, Pulses);
+SE.PulseOn = Events_TimeStamps(1, Pulses);
+% find first pulse in each set (subset of PulseOn)
+Bursts = [false diff(Events_TimeStamps(1, Pulses)) > 1]; % pulses preceded by a >1s inter-pulse interval
+SE.BurstOn(1, Bursts) = SE.PulseOn(1, Bursts);
+Bursts = [diff(Events_TimeStamps(Pulses)) > 1 false]; % pulses succeeded by a >1s inter-pulse interval
+SE.BurstOff(1, Bursts) = SE.PulseOn(1, Bursts);
 
 % SE = struct;
 % SE.ProtocolName = cell(1,nvalid_pulses); % e.g. LaserStimProtocol2

@@ -18,7 +18,7 @@ else %correct use for cellbase-specific preferences
         CB = load(fullfile(getpref('cellbase','fname')));
         fields = fieldnames(CB);
         if ~isempty(fields)
-            if ischar(val) && (val(1) == '@') % it's to be a function handle % FS MOD
+            if ~isempty(val) && ischar(val) && (val(1) == '@') % it's to be a function handle % FS MOD
                 CB.PREFERENCES.(name)=str2func(val); 
             else
                 CB.PREFERENCES.(name)=val;                 

@@ -41,7 +41,8 @@ partsBO='all';
 dt = 0.001;
 sigma = 0.001;
 PSTHstd = 'on';
-ShEvent = {{'PulseOn','BurstOff'}};
+% ShEvent = {'PulseOn','BurstOff'};
+ShEvent = {'PulseOn'}; % FS MOD, Kludge 
 ShEvColors = hsv(length(ShEvent{1}));
 ShEvColors = mat2cell(ShEvColors,ones(size(ShEvColors,1),1),3);
 
@@ -58,14 +59,14 @@ if g.BurstOn
         HS.HA_BurstOn = axes;
     end     
     set(gcf,'renderer','painters')   % temporaray change renderer because OpenGL locks the plot which result an error in legend layout handling
-    HS.HA_BurstOn = viewcell2b(cellid,'TriggerName','BurstOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',{ShEvColors},...
+    HS.HA_BurstOn = viewcell2b(cellid,'TriggerName','BurstOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',ShEvColors,...
         'FigureNum',HS.HA_BurstOn,'eventtype','stim','window',winBurst,'dt',dt,'sigma',sigma,'PSTHstd',PSTHstd,'Partitions',partsBO,...
         'EventMarkerWidth',0,'PlotZeroLine','off');
     HS.HA_BurstOn = [];
-    for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
-        axes(axh(i));
-        HS.HA_BurstOn{i} = gca;
-    end    
+%     for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
+%         axes(axh(i));
+%         HS.HA_BurstOn{i} = gca;
+%     end    
     pause(0.05)   % if reset the renderer two early, the same error occurs
     set(gcf,'renderer','opengl')   % reset renderer
 end
@@ -83,14 +84,14 @@ if g.PulseOn
         HS.HA_PulseOn = axes;
     end    
     set(gcf,'renderer','painters')   % temporaray change renderer because OpenGL locks the plot which result an error in legend layout handling
-    axh = viewcell2b(cellid,'TriggerName','PulseOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',{ShEvColors},...
+    axh = viewcell2b(cellid,'TriggerName','PulseOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',ShEvColors,...
         'FigureNum',HS.HA_PulseOn,'eventtype','stim','window',winPulse,'dt',dt,'sigma',sigma,'PSTHstd',PSTHstd,'Partitions',partsPO,...
         'EventMarkerWidth',0,'PlotZeroLine','off','Num2Plot',1000);
     HS.HA_PulseOn = [];
-    for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
-        axes(axh(i));
-        HS.HA_PulseOn{i} = gca;
-    end
+%     for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
+%         axes(axh(i));
+%         HS.HA_PulseOn{i} = gca;
+%     end
     pause(0.05)   % if reset the renderer two early, the same error occurs
     set(gcf,'renderer','opengl')   % reset renderer
 end

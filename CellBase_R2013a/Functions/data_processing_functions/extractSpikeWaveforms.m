@@ -38,8 +38,8 @@ default_args={...
 % Load waveform data (Ntt file)
 Nttfile = cellid2fnames(cellid,'ntt');
 loadingEngine = getcbpref('TrodeLoadingEngine');
-[all_spikes all_waves] = loadingEngine(Nttfile);
-[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes*10^-4); %nlx ntt file in 10^-4 s
+[all_spikes all_waves] = loadingEngine(Nttfile); % FS MOD, new convention is for trode loading engine to return spikes in units of seconds
+[junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes); 
 if ~isequal(junk,SpikeTimes)   % internal check for spike times
     error('extractSpikeWaveforms:SpikeTimeMismatch','Mismatch between extracted spike times and Ntt time stamps.')
 end

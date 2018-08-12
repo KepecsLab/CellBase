@@ -28,6 +28,9 @@ function [events,epochs] = defineEventsEpochs_laserstim
 %              EventLabel       EventTrigger1    EventTrigger2  Window
 i = 1;
 events(i,:) = {'Pulse',       'Pulse',      'Pulse',      [-0.1 0.1]};   i = i + 1;  % 10Hz stimulation
+events(i,:) = {'PulseOn',       'PulseOn',      'PulseOn',      [-0.1 0.1]};   i = i + 1;  % 10Hz stimulation
+events(i,:) = {'BurstOn',       'BurstOn',      'BurstOn',      [-2 3]};   i = i + 1;  % 10Hz stimulation
+events(i,:) = {'BurstOff',       'BurstOff',      'BurstOff',      [-4 1]};   i = i + 1;  % 10Hz stimulation
 % events(i,:) = {'PreBurstIBI',   'PrevBurstOff', 'BurstOn',      [0 0]};    i = i + 1;  
 % events(i,:) = {'BurstPeriod',   'BurstOn',      'BurstOff',     [0 0]};    i = i + 1;  
 % events(i,:) = {'NextBurstIBI',  'BurstOff',     'NextBurstOn',  [0 0]};    i = i + 1;  
@@ -42,7 +45,7 @@ events(i,:) = {'Pulse',       'Pulse',      'Pulse',      [-0.1 0.1]};   i = i +
 % Define epochs for rate calculations
 %               EpochLabel             ReferenceEvent  FixedWindow          RealWindow
 i = 1;
-epochs(i,:) = {'PulseEpoch',       'Pulse',      [-0.1 0.1],  'NaN'};   i = i + 1;
+epochs(i,:) = {'PulseEpoch',       'PulseOn',      [-0.1 0.1],  'NaN'};   i = i + 1;
 % epochs(i,:) = {'FixedLightResponse5',  'BurstOn',      [0.0 0.005],   'BurstPeriod'};   i = i + 1;
 % epochs(i,:) = {'FixedBaseline5a',      'BurstOn',      [-0.005 0.0],  'BurstOn'};       i = i + 1;
 % epochs(i,:) = {'FixedLightResponse5a', 'BurstOn',      [0.0 0.005],   'BurstOn'};       i = i + 1;

@@ -78,8 +78,8 @@ pon = ST.PulseOn(~isnan(ST.PulseOn));
 
 % Load spikes from Ntt file.
 Nttfn = cellid2fnames(cellid,'Ntt');
-all_spikes = LoadTT_NeuralynxNT(Nttfn);
-all_spikes = all_spikes * 10^-4; %nlx ntt file time in 10^-4 s
+loadingEngine = getcbpref('TrodeLoadingEngine');
+all_spikes = loadingEngine(Nttfn); % convention is for loading engine to return spike times in seconds
 blocks = [find(diff(pon)>1600),length(pon)];
 if length(blocks)==1
     val_spk=all_spikes >= pon(1) & all_spikes <= pon(blocks(end));
@@ -128,7 +128,7 @@ end
 [r,s,t] = cellid2tags(cellid);
 for k = 1:length(g.feature_names)
     prop = [g.feature_names{k} '.fd'];
-    propfn = [getcbpref('Spikes_cell_pattern') num2str(t) '_' prop];
+    propfn = [getcbpref('Spikes_cell_pattern') num2str(t) getcbpref('Spikes_feature_prefix') '_' prop];
     sessionpath = cellid2fnames(cellid,'sess');
     propfn_path = [sessionpath filesep 'FD'];   % where the feature file can be found
     if ~isdir(propfn_path)

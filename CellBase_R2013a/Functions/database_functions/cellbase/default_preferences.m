@@ -24,6 +24,7 @@ PREFERENCES.StimEvents_fun = fullfile(cb_path,'Templates','MakeStimEvents.m');
 
 %Spike times parameters
 PREFERENCES.Spikes_cell_pattern = 'TT';
+PREFERENCES.Spikes_feature_prefix = ''; % e.g. for MClust3.5 -> '', for MClust4.4 ->  '_feature' 
 PREFERENCES.Spikes_timefactor = 1;
 PREFERENCES.Spikes_create_fun = '';
 PREFERENCES.TrodeLoadingEngine = @TrodeLoadingEngine_NLX;

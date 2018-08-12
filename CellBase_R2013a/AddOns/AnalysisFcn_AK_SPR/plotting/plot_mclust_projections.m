@@ -33,8 +33,8 @@ mk_color = repmat(linspace(0.1,0.15,numcell+1)',1,3);
 
 Nttfn = cellid2fnames(cellid,'Ntt');
 % Load spikes from Ntt file.
-all_spikes = LoadTT_NeuralynxNT(Nttfn);
-all_spikes = all_spikes*1e-4;
+loadingEngine = getcbpref('TrodeLoadingEngine');
+all_spikes = loadingEngine(Nttfn); % convention is for loading engine to return spike times in seconds
 nspk = length(all_spikes);
 % consider spikes only within the stimulation protocol to account for
 % drift.

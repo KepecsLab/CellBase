@@ -60,7 +60,7 @@ feature_names2 = {'WavePC1','Energy'};
 for k = 1:length(I)
     cellid = I{k};
     disp([num2str(k) '   ' cellid])
-    try
+%     try
         
         % Determine whether there was a stimulation session
         if logical(exist(cellid2fnames(cellid,'StimEvents'),'file'))
@@ -138,9 +138,9 @@ for k = 1:length(I)
             xlswrite(xlsname,R_xls,'sheet1',['H' num2str(k)])
         end
         
-    catch ME
-        disp(['Something went wrong for cell ' num2str(k) '.'])
-        disp(ME.message)
-    end
+%     catch ME
+%         disp(['Something went wrong for cell ' num2str(k) '.'])
+%         disp(ME.message)
+%     end
 end
 % keyboard
