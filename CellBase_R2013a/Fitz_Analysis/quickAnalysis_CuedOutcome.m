@@ -67,7 +67,7 @@ dbstop if error
 if isrec
     nlxcsc2mat2(fullpth,'Channels','Events')
     if isbeh
-        TE = makeTE_CuedOutcome_Odor_Complete_Nlx;
+        TE = makeTE_CuedOutcome_Odor_Complete_Nlx(fullpth);
     end
 end
 

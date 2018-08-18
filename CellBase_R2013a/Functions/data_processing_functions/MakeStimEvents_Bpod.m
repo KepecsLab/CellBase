@@ -78,8 +78,8 @@ end
 %% FS MOD
 % if ~isempty(g.PulsePort)
     PortID = eventPortFromEventStrings(Events_EventStrings);
-    Pulses = PortID == g.PulsePort & Events_Nttls == g.PulseNttl;
-    TrialStart = PortID == g.PulsePort & Events_Nttls == g.PulseNttl;
+    Pulses = PortID == g.PulsePort & Events_Nttls == g.PulseNttl; % work with linear indices
+%     TrialStart = PortID == g.PulsePort & Events_Nttls == g.PulseNttl;
 %     Epon = intersect(find(PortID == g.PulsePort), Epon);
 %     Epoff = intersect(find(PortID == g.PulsePort), Epoff);   
 % end
@@ -113,7 +113,8 @@ SE = struct(...
     'TrialStart', zeros(1, nvalid_pulses),...
     'Pulse', nan(1,nvalid_pulses),...
     'PulseOn', nan(1, nvalid_pulses),...
-    'BurstOn', nan(1, nvalid_pulses)...    
+    'BurstOn', nan(1, nvalid_pulses),...    
+    'BurstOff', nan(1, nvalid_pulses)...        
     );
 
 SE.Pulse = Events_TimeStamps(1, Pulses);
@@ -121,6 +122,8 @@ SE.PulseOn = Events_TimeStamps(1, Pulses);
 % find first pulse in each set (subset of PulseOn)
 Bursts = [false diff(Events_TimeStamps(1, Pulses)) > 1]; % pulses preceded by a >1s inter-pulse interval
 SE.BurstOn(1, Bursts) = SE.PulseOn(1, Bursts);
+
+% now last pulse in each set
 Bursts = [diff(Events_TimeStamps(Pulses)) > 1 false]; % pulses succeeded by a >1s inter-pulse interval
 SE.BurstOff(1, Bursts) = SE.PulseOn(1, Bursts);
 

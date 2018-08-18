@@ -182,8 +182,9 @@ YLabel = 'Rate (Hz)';
 %-----------------------------
 % Raster + PSTH
 %-----------------------------
-
 % Plot the raster
+
+warning('''Colors'', and ''Colors2'' aren''t even parameters to plot_raster2a, fix this code in viewcell2b');
 fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,...
     g,'Colors',mycolors,'Colors2',mycolors2,'NumTrials2Plot',g.Num2Plot);
 % fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,...
