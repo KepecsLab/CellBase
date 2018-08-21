@@ -58,9 +58,9 @@ close(h);
 
 
 %% detect spikes, calculate SD per channel
-data.avg = mean(data.data);
+data.avg = mean(data.data); % FS note 8/2018, is data zero mean?
 data.std = std(data.data);
-data.thresh = data.std * -2;
+data.thresh = data.std * 2; %  FS note 8/2018, am I doing this right, do I need to subtract mean?
 
 data.spikeTimes = cell(nChannels, 1);
 for channel = 1:nChannels
