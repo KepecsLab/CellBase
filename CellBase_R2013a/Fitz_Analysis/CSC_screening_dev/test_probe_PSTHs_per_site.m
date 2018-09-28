@@ -3,6 +3,7 @@
 
 [fname, pname] = uiputfile('path', 'Choose CSC path...');
 filepath = pname;
+nlxcsc2mat2(filepath,'Channels','Events')
 
 load(fullfile(filepath, 'Events.mat')); 
 TrialStart_nlx = getBehaviorStartTimes(Events_Nttls, Events_EventStrings, Events_TimeStamps);
