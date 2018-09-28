@@ -5,6 +5,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   [FNAME_SPIKES, FNAME_EVENTS] = CELLID2FNAMES(CELLID,FILENAME) uses
 %   FILENAME input argument to genearte FNAME_SPIKES. Specials cases for
+% NOTE! FILENAME REALLY SPECIFIES FILETYPE (FS NOTE)
 %   FILENAME are handled differentially:
 %       'TrialEvent', behavioral session name ('TrialEvents2.mat') is returned
 %       'StimEvent', stimulation filename is returned
@@ -29,23 +30,23 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11
 
-% get cellbase global preferences
-cellbase_datapath = getpref('cellbase','datapath');
-sep = getpref('cellbase','session_separator');
-
-% get cellbase specific preferences
+% Get CellBase preferences
+cellbase_datapath = getcbpref('datapath');
 TrialEvents_fname = getcbpref('TrialEvents_fname');
-StimEvents_fname = getcbpref('StimEvents_fname');
-cellbase_cell_pattern = getcbpref('Spikes_cell_pattern');
+sep = getcbpref('session_separator');
+
+stim_fname = getcbpref('StimEvents_fname');
+
+Spikes_cell_pattern = getcbpref('Spikes_cell_pattern');
 continuous_channel = 'CSC';
 
 % Get tags
 [ratname,session,tetrode,unit] = cellid2tags(cellid);
 
 % Create unit filename
-tetrodeunit = sprintf('%s%d_%d.mat',cellbase_cell_pattern,tetrode,unit);
+tetrodeunit = sprintf('%s%d_%d.mat',Spikes_cell_pattern,tetrode,unit);
 
 % Create session directory name
 session = strrep(session,'.',sep);    % if there were underscores then get them back
@@ -60,21 +61,21 @@ else
     if strncmpi(filename,'TrialEvent',10)
         fname_unit = TrialEvents_fname;     %'TrialEvents2.mat';
     elseif strncmpi(filename,'StimEvent',9)
-        fname_unit = StimEvents_fname;
+        fname_unit = stim_fname;
     elseif strncmpi(filename,'Session',3)
         fname_unit = '';
-    elseif strncmpi(filename,'Position',3)
+    elseif strncmpi(filename,'Position',3),
         fname_unit='POSITION';
     elseif strncmpi(filename,'Spikes',5)
-        fname_unit = sprintf('%s%d_%d.mat',cellbase_cell_pattern,tetrode,unit);
+        fname_unit = sprintf('%s%d_%02d.mat',Spikes_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'tfile',5)
-        fname_unit = sprintf('%s%d_%d.t',cellbase_cell_pattern,tetrode,unit);
+        fname_unit = sprintf('%s%d_%d.t',Spikes_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'Ntt',3)
         fname_unit = sprintf('TT%d.ntt',tetrode);
     elseif strncmpi(filename,'wv',2)
-        fname_unit = sprintf('%s%d_%d-wv.mat',cellbase_cell_pattern,tetrode,unit);
+        fname_unit = sprintf('%s%d_%d-wv.mat',Spikes_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'quality',4)
-        fname_unit = sprintf('%s%d_%d-ClusterQual.mat',cellbase_cell_pattern,tetrode,unit);
+        fname_unit = sprintf('%s%d_%d-ClusterQual.mat',Spikes_cell_pattern,tetrode,unit);
     elseif strncmpi(filename,'Waveform',8)
         fname_unit = sprintf('WAVEFORMDATA%d_%d.mat',tetrode,unit);
     elseif strmatch(filename,'Events','exact')

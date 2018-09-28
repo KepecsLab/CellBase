@@ -14,7 +14,7 @@ cb_path=fileparts(fileparts(fileparts(fileparts(cb_path))));
 PREFERENCES = struct();
 
 %TrialEvents parameters
-PREFERENCES.TrialEvents_fname = 'TrialEvents.mat';
+PREFERENCES.TrialEvents_fname = 'TrialEvents.mat'; % FS MOD 9/2018,  session_filename now deprecated as it is redundant with TrialEvents_fname
 PREFERENCES.TrialEvents_fun = fullfile(cb_path,'Templates','MakeTrialEvents.m');
 PREFERENCES.TrialEvents_defineEventEpochs = fullfile(cb_path,'Templates','defineEventEpochs.m');
 
@@ -24,6 +24,7 @@ PREFERENCES.StimEvents_fun = fullfile(cb_path,'Templates','MakeStimEvents.m');
 
 %Spike times parameters
 PREFERENCES.Spikes_cell_pattern = 'TT';
+PREFERENCES.Spikes_feature_prefix = ''; % e.g. for MClust3.5 -> '', for MClust4.4 ->  '_feature' 
 PREFERENCES.Spikes_timefactor = 1;
 PREFERENCES.Spikes_create_fun = '';
 PREFERENCES.TrodeLoadingEngine = @TrodeLoadingEngine_NLX;
