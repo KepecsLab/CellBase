@@ -16,7 +16,7 @@ parse(p,cellid, defTE, Events_TTL, Events_TS, varargin{:});
 %       do so if either TrialEvents.mat doesn't exist OR rw is true
 %       (default)
 
-if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellbase','session_filename')),'file') || p.Results.rw
+if ~exist(fullfile(getcbpref('datapath'),subject,session,getcbpref('TrialEvents_fname')),'file') || p.Results.rw
 
     tsNeur = Events_TS(Events_TTL==p.Results.TrialStart_State);
     
@@ -49,7 +49,7 @@ if ~exist(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellb
     TE.TrialStart = tsNeur;
     
     % Save synchronized 'TrialEvents' file
-    save(fullfile(getpref('cellbase','datapath'),subject,session,getpref('cellbase','session_filename')),'-struct','TE')
+    save(fullfile(getcbpref('datapath'),subject,session,getcbpref('TrialEvents_fname')),'-struct','TE')
     % if ~isempty(AlignedRecEvents)
     %     save(fullfile(getpref('cellbase','datapath'),subject,session, 'AlignedRecEvents.mat'),'AlignedRecEvents')
     % end

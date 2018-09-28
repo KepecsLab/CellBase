@@ -14,7 +14,7 @@ cb_path=fileparts(fileparts(fileparts(fileparts(cb_path))));
 PREFERENCES = struct();
 
 %TrialEvents parameters
-PREFERENCES.TrialEvents_fname = 'TrialEvents.mat';
+PREFERENCES.TrialEvents_fname = 'TrialEvents.mat'; % FS MOD 9/2018,  session_filename now deprecated as it is redundant with TrialEvents_fname
 PREFERENCES.TrialEvents_fun = fullfile(cb_path,'Templates','MakeTrialEvents.m');
 PREFERENCES.TrialEvents_defineEventEpochs = fullfile(cb_path,'Templates','defineEventEpochs.m');
 
