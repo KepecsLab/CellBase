@@ -1,4 +1,4 @@
-function [X2 S] = smooth(X,str,wn)
+function [X2 S] = cbSmooth(X,str,wn)
 %SMOOTH   Smooth with a moving average.
 %   [O S] = SMOOTH(X,M,WN) performs smoothing on X by averaging in a
 %   sliding window of WN size. M describes the data type, i.e. 'linear' or 
