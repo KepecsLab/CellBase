@@ -30,7 +30,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
 
 % Get CellBase preferences
 
