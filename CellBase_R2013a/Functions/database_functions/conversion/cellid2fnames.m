@@ -33,11 +33,12 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
 
 % Get CellBase preferences
-
 cellbase_datapath = getcbpref('datapath');
 TrialEvents_fname = getcbpref('TrialEvents_fname');
 sep = getcbpref('session_separator');
+
 stim_fname = getcbpref('StimEvents_fname');
+
 Spikes_cell_pattern = getcbpref('Spikes_cell_pattern');
 continuous_channel = 'CSC';
 
@@ -53,12 +54,12 @@ session = strrep(session,'.',sep);    % if there were underscores then get them 
 % Create names
 if nargin < 2   % if filename was not specified
     fname_spikes = fullfile(cellbase_datapath,ratname,session,tetrodeunit);
-    fname_events = fullfile(cellbase_datapath,ratname,session,session_fname);
+    fname_events = fullfile(cellbase_datapath,ratname,session,TrialEvents_fname);
 else
     % not really spikes, but whatever you specified
     % create unit filename
     if strncmpi(filename,'TrialEvent',10)
-        fname_unit = TrialEvents_fname;
+        fname_unit = TrialEvents_fname;     %'TrialEvents2.mat';
     elseif strncmpi(filename,'StimEvent',9)
         fname_unit = stim_fname;
     elseif strncmpi(filename,'Session',3)

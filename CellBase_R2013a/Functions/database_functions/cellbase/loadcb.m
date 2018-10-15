@@ -33,7 +33,7 @@ else
     
     % Filename to load
     fname = cellid2fnames(cellid,filetype);
-    TIMEFACTOR = getpref('cellbase','timefactor');    % scaling factor to convert spike times into seconds
+    TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
     
     if nargout == 1     % if we are loading into a variable
         if strncmpi(filetype,'Spikes',5)
