@@ -30,7 +30,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %
 %   See also CELLID2TAGS.
     
-%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11
+%   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
 
 % Get CellBase preferences
 cellbase_datapath = getcbpref('datapath');
@@ -64,7 +64,7 @@ else
         fname_unit = stim_fname;
     elseif strncmpi(filename,'Session',3)
         fname_unit = '';
-    elseif strncmpi(filename,'Position',3),
+    elseif strncmpi(filename,'Position',3)
         fname_unit='POSITION';
     elseif strncmpi(filename,'Spikes',5)
         fname_unit = sprintf('%s%d_%02d.mat',Spikes_cell_pattern,tetrode,unit);
@@ -100,7 +100,7 @@ else
         else
             fname_unit = sprintf('%s%dc%d.mat',continuous_channel,tetrode,chan); %CSCx_x.mat
         end
-    elseif strncmpi(filename,'Evewaves',4),
+    elseif strncmpi(filename,'Evewaves',4)
         if nargin < 3   % you have to specify which LFP you want
             warning('cellid2fnames:inputargMissing','Specify LFP channel with a [1 X 2] vector using CSC filename convention')
             tetrode = 0;
@@ -110,7 +110,7 @@ else
             chan = CSC_chan(2);
         end
         fname_unit = sprintf('%s%dc%d.mat',filename,tetrode,chan);    % EVENTSPIKESxcx.mat
-    elseif strncmpi(filename,'stimwaves',6),
+    elseif strncmpi(filename,'stimwaves',6)
         if nargin < 3   % you have to specify which LFP you want
             warning('cellid2fnames:inputargMissing','Specify LFP channel with a [1 X 2] vector using CSC filename convention')
             tetrode = 0;
