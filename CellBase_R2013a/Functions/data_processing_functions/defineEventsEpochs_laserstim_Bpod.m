@@ -31,6 +31,8 @@ events(i,:) = {'Pulse',       'Pulse',      'Pulse',      [-0.1 0.1]};   i = i +
 events(i,:) = {'PulseOn',       'PulseOn',      'PulseOn',      [-0.1 0.1]};   i = i + 1;  % 10Hz stimulation
 events(i,:) = {'BurstOn',       'BurstOn',      'BurstOn',      [-2 3]};   i = i + 1;  % 10Hz stimulation
 events(i,:) = {'BurstOff',       'BurstOff',      'BurstOff',      [-4 1]};   i = i + 1;  % 10Hz stimulation
+events(i,:) = {'Burst_BL',      'BurstOn',      'BurstOn',      [-0.1 0]}; i = i + 1;
+
 % events(i,:) = {'PreBurstIBI',   'PrevBurstOff', 'BurstOn',      [0 0]};    i = i + 1;  
 % events(i,:) = {'BurstPeriod',   'BurstOn',      'BurstOff',     [0 0]};    i = i + 1;  
 % events(i,:) = {'NextBurstIBI',  'BurstOff',     'NextBurstOn',  [0 0]};    i = i + 1;  

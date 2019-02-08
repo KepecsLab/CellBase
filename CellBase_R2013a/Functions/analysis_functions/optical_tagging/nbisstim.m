@@ -65,7 +65,7 @@ end
 spt1 = stimes2binraster(stimes1(valid_trials1),time,dt);
 spt2 = stimes2binraster(stimes2(valid_trials2),time,dt);
 
-% Set input arguments for rater plot and PSTH
+% Set input arguments for raster plot and PSTH
 if dsply
     SEvent = 'BurstOff';
     FNum = 2;

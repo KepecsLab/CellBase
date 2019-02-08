@@ -33,7 +33,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 %   Edit log: ZFM 10/7/04, AK 11/06, AK 4/10, SPR 07/2010, BH 6/23/11, TO 5/2018
 
 % Get CellBase preferences
-cellbase_datapath = getcbpref('datapath');
+cellbase_datapath = getpref('cellbase', 'datapath');
 TrialEvents_fname = getcbpref('TrialEvents_fname');
 sep = getcbpref('session_separator');
 
