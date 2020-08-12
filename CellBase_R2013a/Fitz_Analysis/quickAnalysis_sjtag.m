@@ -78,7 +78,7 @@ end
 
 % Update CellBase
 if isrec
-%     addnewcells('dir',[animalID filesep sessionID]) % change this back
+    addnewcells('dir',[animalID filesep sessionID]) % change this back
     cellids = findcell('rat',animalID,'session',sessionID);
 %     cellids = {'sj201_200808a_6.1'};
     disp(cellids)
