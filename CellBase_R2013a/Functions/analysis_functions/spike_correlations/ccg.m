@@ -55,8 +55,13 @@ longsegments = false;  % control whether to use this option
 seglim = 300;
 
 % Determine time window
-sr = 1000;      % sampling rate
-wn = 1000 * sr / 1000;    % 2 * 1000 ms window
+% sr = 1000;      % sampling rate
+% wn = 1000 * sr / 1000;    % 2 * 1000 ms window
+
+% FS Kludge:
+sr = 100;      % sampling rate
+wn = 100 * sr / 100;    % 2 * 1000 ms window
+% end Kludge
 
 % Input argument check
 if nargin < 1
@@ -113,8 +118,10 @@ for iP = 1:numPairs   % loop through pairs of cells
     cell1 = PairOfCells{iP,1};
     cell2 = PairOfCells{iP,2};
     try
-        tseg = findSegs3(cell1,'segfilter','stimfb_excl_nb',...
-            'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments
+        tseg = findSegs3(cell1,'segfilter','prestim2',...
+            'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments        
+%         tseg = findSegs3(cell1,'segfilter','stimfb_excl_nb',...
+%             'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments
 %         tseg = findSegs3(cell1,'segfilter','prestim3');  % find time segments
 %         tseg = findSegs3(cell1,'segfilter','fb_incl_nb',...
 %             'feedback_duration',[-0.5 0.5],'margins',[0 0],'min_int',0);  % find time segments

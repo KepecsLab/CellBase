@@ -85,8 +85,10 @@ numCells = length(cellids);
 for iC = 1:numCells   % loop through the cells
     cell = cellids{iC};
     try
-        tseg = findSegs3(cell,'segfilter','stim_excl_nb',...
+        tseg = findSegs3(cell,'segfilter','prestim2',...
             'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments
+%         tseg = findSegs3(cell,'segfilter','stim_excl_nb',...
+%             'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments        
         ltseg = tseg(2,:) - tseg(1,:);  % length of the segments
         if longsegments   % later to be implemented as an input option
             seginx = find(ltseg==max(ltseg));
@@ -103,7 +105,7 @@ for iC = 1:numCells   % loop through the cells
         disp('Could not extract the segment.');
     end
 
-%     ncc = loadcb(cell,'SPIKES');   % use all spikes
+    ncc = loadcb(cell,'SPIKES');   % use all spikes
         
     if length(ncc) > limit_spikes(2);      % crop if too long to avoid out of memory
         ncc = ncc(1:limit_spikes(2));
@@ -111,7 +113,7 @@ for iC = 1:numCells   % loop through the cells
     
     if length(ncc) > limit_spikes(1)     % minimum criterion
         [H1 ccr lags] = acorr(ncc,wn,res);
-        sccr = smooth(ccr,'linear',21);    % smoothed ACR
+        sccr = cbSmooth(ccr,'linear',21);    % smoothed ACR
 %         nqf = 1 / res * 1000 / 2;   % Nyquist freq.
 %         flt = fir1(32,[4 10]/nqf,'bandpass');
 %         sccr2 = filtfilt(flt,1,sccr);   % high-pass filter > 1 Hz

@@ -168,13 +168,15 @@ if (g.evoked && g.spont) || g.compare
         H = g.axhandle{3};
         dotitle=false;
     else
-        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+        H = set_subplots(2,2,0.05,0.05,'XLim',[1 size(wsds,3)]);
     end
     for sp = 1:4
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(wsds(:,sp,:))),'Color',[0.9 0.9 0.9])
         plot(H(sp),transpose(mean_spont(sp,:)),'Color','k','LineWidth',6)
-        plot(H(sp),transpose(mean_evoked(sp,:)),'Color',[0 153 255]/255,'LineWidth',2)
+        if g.evoked
+            plot(H(sp),transpose(mean_evoked(sp,:)),'Color',[0 153 255]/255,'LineWidth',2)
+        end
         if sp ==1 && dotitle
         	title('Compare spont. and light-evoked spike shape')
         end
