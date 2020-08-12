@@ -80,7 +80,7 @@ end
 if isrec
     addnewcells('dir',[animalID filesep sessionID]) % change this back
     cellids = findcell('rat',animalID,'session',sessionID);
-%     cellids = {'sj201_200808a_6.1'};
+    cellids = {'sj201_200808a_6.1'};
     disp(cellids)
 end
 
@@ -160,14 +160,17 @@ end
         % get waveforms
         dummy1 = figure;
         dummy2 = figure;
-        H = ensureFigure([cellid '_wave_acg'], 1);
+        figName = [cellid '_wave']
+        H = ensureFigure(figName, 1);
         fighandle = [dummy1; dummy2; H];
 %         st = loadcb(cellid, 'Spikes'); % spiketimes
-        subplot(
         plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0 0.01], 'fighandle', repmat(H.Number, 3, 1));
         close(dummy1); close(dummy2);
-        saveas(H, fullfile(fullpth, [cellid '_wave_acg.jpg']));
-                       
+        saveas(H, fullfile(fullpth, [figName '.jpg']));
+        figName = [cellid '_acg'];        
+        H = acg(cellid);
+        set(H, 'Name', figName);
+        saveas(H, fullfile(fullpth, [figName '.jpg']));
     end
         
 % end

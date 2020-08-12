@@ -71,7 +71,7 @@ default_args = {...
 [tseg g] = feval(str2func(g.segfilter),g,cellid);
 
 % Filter according to margin and interval
-tseg = tseg + repmat(g.margins,length(tseg),1)';
+tseg = tseg + repmat(g.margins,size(tseg, 2),1)';
 tseg = tseg(:,~isnan(diff(tseg))&diff(tseg)>g.min_int&diff(tseg)<g.max_int);
 
 % -------------------------------------------------------------------------
@@ -152,6 +152,16 @@ catch
     disp([cellid ': There was no stim protocol for this session.'])
     prestim_segs = [];
 end
+% -------------------------------------------------------------------------
+function [major_segs g] = all_session(g, cellid)
+% Load events
+Ev = loadcb(cellid,'Events');
+
+% Session begin and end
+sess_begin = Ev.Events_TimeStamps(1);
+sess_end = Ev.Events_TimeStamps(end);
+
+major_segs = [sess_begin; sess_end];
 
 % -------------------------------------------------------------------------
 function [major_segs g] = spont(g,cellid)

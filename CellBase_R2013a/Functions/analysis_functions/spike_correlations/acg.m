@@ -1,4 +1,4 @@
-function acg(cellids,varargin)
+function H1 = acg(cellids,varargin)
 %ACG   Auto-correlation.
 %   ACG calculates auto-correlations. Window size is set to +-500 ms with a
 %   0.5 ms resolution. Maximum 50000 spikes are included to avoid memory
@@ -85,7 +85,7 @@ numCells = length(cellids);
 for iC = 1:numCells   % loop through the cells
     cell = cellids{iC};
     try
-        tseg = findSegs3(cell,'segfilter','prestim2',...
+        tseg = findSegs3(cell,'segfilter','all_session',...
             'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments
 %         tseg = findSegs3(cell,'segfilter','stim_excl_nb',...
 %             'light_activation_duration',[-5 5],'margins',[0 0]);  % find time segments        
