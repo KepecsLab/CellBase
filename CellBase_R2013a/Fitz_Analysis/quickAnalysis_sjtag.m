@@ -80,7 +80,7 @@ end
 if isrec
     addnewcells('dir',[animalID filesep sessionID]) % change this back
     cellids = findcell('rat',animalID,'session',sessionID);
-    cellids = {'sj201_200808a_6.1'};
+%     cellids = {'sj201_200808a_6.1'};
     disp(cellids)
 end
 
@@ -132,7 +132,6 @@ if isrec && isstim
     ShEvColors = hsv(length(ShEvent{1}));
     ShEvColors = mat2cell(ShEvColors,ones(size(ShEvColors,1),1),3);
     for iCell = 1:length(cellids)
-        continue;
         cellid = cellids(iCell);
         H = ensureFigure([cellids{iCell} '_laserStim'], 1);
         viewcell2b(cellid,'TriggerName',TrigEvent,'SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',ShEvColors,...
@@ -151,7 +150,7 @@ if isrec && isstim
     end
 end
 
-
+return;
 % Cluster quality
 % if isrec
     for iCell = 1:length(cellids)
@@ -164,13 +163,16 @@ end
         H = ensureFigure(figName, 1);
         fighandle = [dummy1; dummy2; H];
 %         st = loadcb(cellid, 'Spikes'); % spiketimes
-        plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0 0.01], 'fighandle', repmat(H.Number, 3, 1));
-        close(dummy1); close(dummy2);
-        saveas(H, fullfile(fullpth, [figName '.jpg']));
-        figName = [cellid '_acg'];        
-        H = acg(cellid);
-        set(H, 'Name', figName);
-        saveas(H, fullfile(fullpth, [figName '.jpg']));
+        try
+            plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0 0.01], 'fighandle', repmat(H.Number, 3, 1));
+            close(dummy1); close(dummy2);
+            saveas(H, fullfile(fullpth, [figName '.jpg']));
+            figName = [cellid '_acg'];        
+            H = acg(cellid);
+            set(H, 'Name', figName);
+            saveas(H, fullfile(fullpth, [figName '.jpg']));
+        catch
+        end
     end
         
 % end
