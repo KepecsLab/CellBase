@@ -33,7 +33,7 @@ function [fname_spikes,fname_events] = cellid2fnames(cellid,filename,CSC_chan)
 
 % get cellbase global preferences
 cellbase_datapath = getpref('cellbase','datapath');
-sep = getpref('cellbase','session_separator');
+sep = getcbpref('session_separator');
 
 % get cellbase specific preferences
 TrialEvents_fname = getcbpref('TrialEvents_fname');
