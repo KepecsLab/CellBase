@@ -25,7 +25,7 @@ function fhandle0=viewcell2b(cellid,varargin)
 %
 %   For example calls, see QUICKANALISYS2.
 %
-%   See also PREALIGNSPIKES, STIMES2BINRASTER, BINRASTER2PSTH,
+%   See also PREALIGNSPIKES, STIMES2BINRATE.LaseSTER, BINRASTER2PSTH,
 %   PLOT_RASTER2A.
 
 %   Edit log: BH 6/23/11, 2/10/12
@@ -56,16 +56,17 @@ default_args={...
     'DashedLineStyle',      ':';...
     'LastEvents',           '';...
     'Partitions',           'all';...
-    'PrintCellID',          'on';...
+    'PrintCellID',          1;...
     'PrintCellIDPos',       'bottom-right';...
     'BurstPSTH'             'off';......  
-    'stack_events_bottom'   'false';...
+    'stack_events_bottom'   0;...
+    'LimitPSTHtoSortEvent'   0;...%time only until sort event
     };
 [g,error] = parse_args(default_args,varargin{:});
 
 % Check if cellid is valid
 if validcellid(cellid,{'list'}) ~= 1
-    fprintf('%s is not valid.',cellid);
+    fprintf('%s is not valid (viewcell2b).',cellid);
     return
 end
 
@@ -148,13 +149,7 @@ else
     valid_trials = find(cellfun(@(s)~isempty(s),trigev));
 end
 
-% Calculate PSTH
-if ~g.isadaptive
-    [psth, spsth, spsth_se] = binraster2psth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);
-else
-    [psth, spsth, spsth_se] = binraster2apsth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials);   % adaptive PSTH
-end
-EventTimes = trialevents2relativetime(TE,g.TriggerEvent,g.ShowEvents);
+
 
 % Sort trials
 NUMevents = length(g.SortEvent);
@@ -183,6 +178,18 @@ YLabel = 'Rate (Hz)';
 %-----------------------------
 % Raster + PSTH
 %-----------------------------
+% Calculate PSTH
+if g.LimitPSTHtoSortEvent 
+    stop_time=sort_var-time(1); %align to start of binraster
+else
+    stop_time=[];
+end
+if ~g.isadaptive
+    [psth, spsth, spsth_se] = binraster2psth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials,stop_time);
+else
+    [psth, spsth, spsth_se] = binraster2apsth(binraster,g.dt,g.sigma,COMPTRIALS,valid_trials,stop_time);   % adaptive PSTH
+end
+EventTimes = trialevents2relativetime(TE,g.TriggerEvent,g.ShowEvents);
 
 % Plot the raster
 fhandle0 = plot_raster2a(stimes,time,valid_trials,COMPTRIALS,mylabels,EventTimes,window_margin,ev_windows,sort_var,g,'Colors',{mycolors},'Colors2',{mycolors2},'NumTrials2Plot',g.Num2Plot);
@@ -212,6 +219,6 @@ if g.PSTHPlot == 1
     plot_timecourse(time,spsth,spsth_se,g,'FigureNum',fhandle0(end),'Colors',{mycolors},'LineStyle',{mylinestyle},'Legend',{mylabels},'XLabel',XLabel,'YLabel',YLabel);
     axis tight
 end
-if strcmpi(g.PrintCellID,'on')
+if g.PrintCellID
     fstamp(cellid,80,g.PrintCellIDPos);
 end

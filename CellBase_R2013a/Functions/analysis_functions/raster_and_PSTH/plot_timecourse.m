@@ -88,6 +88,11 @@ for i = 1:size(PSTH,1)
     end
 end
 
+%zero line
+if par.PlotZeroLine
+    line([0,0],get(gca,'YLim'),'Color',par.PlotZeroLineColor)
+end
+
 % Labels
 l(1) = ylabel(par.YLabel);
 l(2) = xlabel(par.XLabel);
@@ -102,7 +107,7 @@ end
 
 % Legend
 if ~isempty(par.Legend)
-    l_leg = legend(par.Legend(NumPlots));
+    l_leg = legend(par.Legend(NumPlots),'Location','NorthEast');
     set(l_leg,'box','off','FontSize',8,'Color','none','Color','w');
 end
 set(gca,'XTickLabelMode','auto','XColor','k','YTickLabelMode','auto','YColor','k','YTickMode','auto');

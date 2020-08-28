@@ -42,6 +42,7 @@ default_args.PlotZeroLine = 'off';
 default_args.PlotZeroLineColor = [0 0 0];
 default_args.PrintCellID='off';
 default_args.NumPSTHPlots=NaN;
+default_args.Labels={''};
 default_args.stack_events_bottom=false;%use uistack to show events *below* spikes (slow!)
 [par,error] = parse_args(default_args,params);   % overwrite defaults with passed arg structure
 [par,error] = parse_args(par,varargin{:});
@@ -267,7 +268,7 @@ else
     set(ax(end),'XTickLabelMode','auto','XColor','k','FontName','Ariel','FontSize',12);
 end
 set(ax,'TickDir','out');
-set(yl,'FontName','Ariel','FontSize',10);
+set(yl,'FontName','Arial','FontSize',10);
 
 % Rearrange
 if ~isnan(par.NumTrials2Plot)
@@ -326,16 +327,23 @@ if par.RasterIDbarWidth ~= 0
     pb = zeros(1,NumParts);
     for iP = 1:NumParts
         pos = get(ax(iP),'Position');
-        axb(iP) = axes('Position',[pos(1)-par.RasterIDbarDX-DXC pos(2) DXC pos(4)]);
+        axb(iP) = axes('Position',[pos(1)-par.RasterIDbarDX-DXC/2 pos(2) DXC/2 pos(4)]);
         jP = NewIndex(iP);
         pb(iP) = patch([0 0 0.5 0.5],[1 0 0 1],par.Colors{jP});
-        if isfield(par,'Colors2')
-            set(pb(iP),'EdgeColor',par.Colors2{jP},'LineWidth',2);
-        else
+%         if isfield(par,'Colors2')
+%             set(pb(iP),'EdgeColor',par.Colors2{jP},'LineWidth',2);
+%         else
             set(pb(iP),'EdgeColor','none');
-        end
+%         end
         axis fill
         axis off
+        if isfield(par,'Labels') && length(par.Labels)>=iP && ~isempty(par.Labels{iP})
+            pos = get(axb(iP),'Position');
+            axes('Position',[pos(1)-par.RasterIDbarDX-DXC/2 pos(2) DXC pos(4)]);
+            t=text(0,0,par.Labels{iP},'Rotation',90);
+            axis off
+            axis fill
+        end
     end
 end
 

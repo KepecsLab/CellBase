@@ -66,24 +66,31 @@ for rdir = 1:length(ratdir)   % animal loop
             % Now check for cells
             cellfiles = listfiles(fullsessiondir,cell_pattern);
         else
-            fullsessiondir = fullfile(ratpath,char(sessiondir(sdir)));
+            fullsessiondir = fullfile(ratpath,char(sessiondir{sdir}));
             cellfiles = listfiles(fullsessiondir,cell_pattern);
         end
         
         % Convert filenames to cell IDs
         for fnum = 1:length(cellfiles)   % filename loop
+          
             fname = fullfile(fullsessiondir,char(cellfiles(fnum)));
-            if k == 1 %set session separator as preference only once
-                 [cellid, session_separator] = fname2cellid(fname,P);
-                 if cellid~=0
-                    setcbpref('session_separator',session_separator);
-                 end
-            else
-                 cellid = fname2cellid(fname,P);
-            end
-            if cellid ~= 0
-                allcellids{k} = cellid;
-                k = k+1;
+            if strcmp(fname(end-2:end),'mat')
+                cname = char(cellfiles(fnum));
+                i = strfind(cname,cell_pattern);
+                if i==1 %cell pattern has to be in beginning
+                    if k == 1 %set session separator as preference only once
+                        [cellid, session_separator] = fname2cellid(fname,P);
+                        if cellid~=0
+                            setcbpref('session_separator',session_separator);
+                        end
+                    else
+                        cellid = fname2cellid(fname,P);
+                    end
+                    if cellid ~= 0
+                        allcellids{k} = cellid;
+                        k = k+1;
+                    end
+                end
             end
         end   % end of filename loop
     end   % end of session loop

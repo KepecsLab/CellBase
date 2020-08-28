@@ -155,7 +155,7 @@ fighandle = figure('Position',[ 488.2000  165.8000  883.2000  596.0000],'NumberT
 
 % BurstOn and PulseOn PSTH
 psth_ax = subplot(4,4,[1,2,5,6]);
-psth_ax_back = plot_raster_psth(cellid,'BurstOn',false,'PulseOn',true,'PulseFig',fighandle.Number,'PulseAx',psth_ax);
+psth_ax_back = plot_raster_psth(cellid,'BurstOn',false,'PulseOn',true,'PulseFig',fighandle.Number,'PulseAx',psth_ax,'PrintCellID',true);
 psth_ax = psth_ax_back.HA_PulseOn{end}; %last one is for psth
 
 
@@ -205,7 +205,7 @@ leftwidth=0.2;
 rightwidth = 0.2;
 height=0.3;
 
-str_head = {'Cluster quality measures';};
+str_head = {'Cluster quality';};
 str_left = {'Latency: ';...
     'Jitter: ';...
     'Reliability: ';...

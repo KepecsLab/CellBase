@@ -199,8 +199,13 @@ title('H index')
 HW = plotwaveforms(cellid,'correlation',true,'maxnum',5000,'fighandle',NaN,'axhandle',{});
 
 % Plot MClust projections]
+if HPO>0.1
+    lightlim = [0.001,0.004];
+else
+    lightlim=[];%determined by peak
+end
 HM = plot_mclust_projections2(cellid,'feature_names',{'Peak','Energy'},...
-    'stim_period',[A1 A2],'stimonly',true,'usefastplot',true,'plot',true,'fighandle',NaN,'axhandle',NaN,'plotbest',false);
+    'stim_period',[A1 A2],'stimonly',true,'usefastplot',true,'plot',true,'fighandle',NaN,'axhandle',NaN,'plotbest',false,'stim_period',lightlim);
 
 % Distance from light-evoked noise
 [lID_amp lLr_amp Pref Pref2] = lightcluster(cellid,'feature_names',{'Peak','Energy'},...

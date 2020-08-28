@@ -86,11 +86,13 @@ if ~strcmp(ext,'.mat')
 end
 
 if isempty(ratname) || isempty(session) || isempty(tu)
-   warning('FNAME2CELLID: Filename could not be parsed correctly.') 
+    strr = sprintf('FNAME2CELLID: Filename %s could not be parsed correctly.',fname);
+   warning(strr) 
    cellid = 0;
    return
 elseif ~isempty(pos_u) || ~isempty(pos_p)
-    warning('FNAME2CELLID: Filename could not be parsed correctly.');
+    strr = sprintf('FNAME2CELLID: Filename %s could not be parsed correctly.',fname);
+    warning(strr);
     cellid = 0;
     return    
 elseif ~isempty(pos_u)   % there were underscores in the sessions

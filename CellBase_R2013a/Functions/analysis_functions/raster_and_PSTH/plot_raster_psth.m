@@ -26,6 +26,7 @@ addParamValue(prs,'BurstOn',true,@(s)islogical(s)|ismember(s,[0 1]))   % control
 addParamValue(prs,'PulseOn',false,@(s)islogical(s)|ismember(s,[0 1]))   % control displaying 'PulseOn' rasters and PSTHs
 addParamValue(prs,'BurstFig',NaN,@isnumeric)   % control plotting
 addParamValue(prs,'PulseFig',NaN,@isnumeric)   % control plotting
+addParamValue(prs,'PrintCellID',false,@islogical)   % control plotting
 addParamValue(prs,'BurstAx',NaN,@(s)isnumeric(s)|isgraphics(s,'axes'))   % control plotting
 addParamValue(prs,'PulseAx',NaN,@(s)isnumeric(s)|isgraphics(s,'axes'))   % control plotting
 parse(prs,cellid,varargin{:})
@@ -33,7 +34,7 @@ g = prs.Results;
 
 % Set input parameters for 'viewcell2b'
 SEvent = 'BurstOn';
-winBurst = [-0.2 2];
+winBurst = [-0.5 1];
 winPulse = [-0.025,0.05];
 partsPO = 'all';
 %partsBO = '#BurstNPulse';
@@ -58,9 +59,9 @@ if g.BurstOn
         HS.HA_BurstOn = axes;
     end     
     set(gcf,'renderer','painters')   % temporaray change renderer because OpenGL locks the plot which result an error in legend layout handling
-    HS.HA_BurstOn = viewcell2b(cellid,'TriggerName','BurstOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',{ShEvColors},...
+    axh = viewcell2b(cellid,'TriggerName','BurstOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',{ShEvColors},...
         'FigureNum',HS.HA_BurstOn,'eventtype','stim','window',winBurst,'dt',dt,'sigma',sigma,'PSTHstd',PSTHstd,'Partitions',partsBO,...
-        'EventMarkerWidth',0,'PlotZeroLine','off');
+        'EventMarkerWidth',0,'PlotZeroLine','off','PrintCellID',g.PrintCellID);
     HS.HA_BurstOn = [];
     for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
         axes(axh(i));
@@ -85,7 +86,7 @@ if g.PulseOn
     set(gcf,'renderer','painters')   % temporaray change renderer because OpenGL locks the plot which result an error in legend layout handling
     axh = viewcell2b(cellid,'TriggerName','PulseOn','SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',{ShEvColors},...
         'FigureNum',HS.HA_PulseOn,'eventtype','stim','window',winPulse,'dt',dt,'sigma',sigma,'PSTHstd',PSTHstd,'Partitions',partsPO,...
-        'EventMarkerWidth',0,'PlotZeroLine','off','Num2Plot',1000);
+        'EventMarkerWidth',0,'PlotZeroLine','off','Num2Plot',1000,'PrintCellID',g.PrintCellID);
     HS.HA_PulseOn = [];
     for i =1:length(axh) %hack to return axes objects (since M2014f everything is in objects, best work with that)
         axes(axh(i));

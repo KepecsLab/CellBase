@@ -78,8 +78,8 @@ pon = ST.PulseOn(~isnan(ST.PulseOn));
 
 % Load spikes from Ntt file.
 Nttfn = cellid2fnames(cellid,'Ntt');
-all_spikes = LoadTT_NeuralynxNT(Nttfn);
-all_spikes = all_spikes * 10^-4; %nlx ntt file time in 10^-4 s
+loadingEngine = getcbpref('TrodeLoadingEngine');
+[all_spikes,~] = feval(loadingEngine,Nttfn);
 blocks = [find(diff(pon)>1600),length(pon)];
 if length(blocks)==1
     val_spk=all_spikes >= pon(1) & all_spikes <= pon(blocks(end));
@@ -147,7 +147,7 @@ if g.plotlightspikes
         [lim1 lim2] = findStimPeriod(cellid);   % find putative stimulated period
         if isnan(lim1) || isnan(lim2)
             lim1 = 0.001;   % no activation detected
-            lim2 = 0.006;
+            lim2 = 0.004;
         end
     else
         lim1 = g.stim_period(1);

@@ -1,10 +1,10 @@
-function [D, P] = rocarea(x,y,varargin)
+function [D, P, SEM] = rocarea(x,y,varargin)
 %ROCAREA   Receiver-operator characteristic.
 %   D = ROCAREA(X,Y) calculates area under ROC curve (D) for the samples X
 %   and Y.
 %
-%   [D  P] = ROCAREA(X,Y,'BOOTSTRAP',N) calculates permutation test p-value
-%   (N, number of bootstrap samples).
+%   [D  P SEM] = ROCAREA(X,Y,'BOOTSTRAP',N) calculates permutation test p-value
+%   (N, number of bootstrap samples) and returns standard deviation of permutation test.
 %
 %   Optional input parameter-value paits (with default values):
 %       'bootstrap', 0 - size of bootstrap sample; 0 corresponds to no
@@ -13,7 +13,7 @@ function [D, P] = rocarea(x,y,varargin)
 %           'scale' - rescales results between -1 to 1
 %       'display', false - controls plotting of the ROC curve
 
-%   Edit log: AK 2/2002; AK 4/2005, BH 10/29/13
+%   Edit log: AK 2/2002; AK 4/2005, BH 10/29/13, TO 8/2018
 
 % Default arguments
 prs = inputParser;
@@ -55,6 +55,9 @@ if g.bootstrap > 0
     if D > mean(Dboot)   % decide which side it should be on
         P = 1 - P;
     end
+    
+    %sem
+    SEM = std(Dboot);
 end
 
 % Rescale

@@ -39,9 +39,9 @@ end
 
 % Load spikes from Ntt file.
 Nttfn = cellid2fnames(cellid,'Ntt');
-all_spikes = LoadTT_NeuralynxNT(Nttfn);
+loadingEngine = getcbpref('TrodeLoadingEngine');
+all_spikes = feval(loadingEngine,Nttfn);
 TIMEFACTOR = getcbpref('Spikes_timefactor');    % scaling factor to convert spike times into seconds
-all_spikes = all_spikes * 10^-4; %nlx ntt always in 10^-4 s
 spk = loadcb(cellid,'Spikes');
 spk = spk*TIMEFACTOR; %TT mat file use conversion factor
 

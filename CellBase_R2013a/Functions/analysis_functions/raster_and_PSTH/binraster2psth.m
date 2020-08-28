@@ -1,4 +1,4 @@
-function [psth, spsth, spsth_se] = binraster2psth(binraster,dt,sigma,COMP,valid_trials)
+function [psth, spsth, spsth_se] = binraster2psth(binraster,dt,sigma,COMP,valid_trials,stop_time)
 %BINRASTER2PSTH    PSTH from binned spike raster.
 %   [PSTH, SPSTH, SPSTH_SE] = BINRASTER2PSTH(BINRASTER,DT,SIGMA,COMP,VALID_TRIALS)
 %   calculates PSTH, smoothed PSTH (SPSTH) and standard error of smoothed
@@ -11,6 +11,17 @@ function [psth, spsth, spsth_se] = binraster2psth(binraster,dt,sigma,COMP,valid_
 %   See also SMOOTHED_PSTH, STIMES2BINRASTER and VIEWCELL2B.
 
 %   Edit log: AK 06/1, AK 07/1, BH 6/23/11, 7/5/12
+
+if nargin>5
+    if ~isempty(stop_time)
+    for i=1:size(binraster,1)
+        if ~isnan(stop_time(i))
+            idx_min=min([size(binraster,2),ceil(stop_time(i)/dt)]);
+            binraster(i,idx_min:end)=NaN;
+        end
+    end
+    end
+end
 
 % If valid_trials doesn't contain trial number then convert
 if isbinary(valid_trials) 
