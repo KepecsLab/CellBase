@@ -35,9 +35,16 @@ default_args={...
     };
 [g, error] = parse_args(default_args,varargin{:});
 
-% Load waveform data (Ntt file)
-Nttfile = cellid2fnames(cellid,'ntt');
+% Load waveform data (Ntt file, or other, depending upon loading engine)
 loadingEngine = getcbpref('TrodeLoadingEngine');
+
+switch char(loadingEngine)
+    case 'TrodeLoadingEngine_NLX'
+        Nttfile = cellid2fnames(cellid,'ntt');
+    case 'TrodeLoadingEngine_UMS2000'
+        Nttfile = cellid2fnames(cellid,'UMStt');
+end
+
 [all_spikes all_waves] = loadingEngine(Nttfile); % FS MOD, new convention is for trode loading engine to return spikes in units of seconds
 [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes); 
 if ~isequal(junk,SpikeTimes)   % internal check for spike times
@@ -85,29 +92,33 @@ end
 
 % -------------------------------------------------------------------------
 function aligned_wv = wvalign(wv)
+le = getcbpref('TrodeLoadingEngine');
+if ~strcmp(char(le), 'TrodeLoadingEngine_UMS2000') % already aligned if from UMS2000, FS MOD
+    % Find largest channel
 
-% Find largest channel
-mx = maxchannel(wv);     % mx: largest channel
+    mx = maxchannel(wv);     % mx: largest channel
 
-% Align spikes to peak
-n = size(wv,1);    % number of spikes
-aligned_wv = nan(n,4,96);   % extended waveforms
-for k = 1:n
-     [mval,minx] = max(wv(k,mx,:));
-     shift = 40 - minx;   % shift is decided based on the largest channel
-     aligned_wv(k,mx,shift:shift+31) = wv(k,mx,:);
-     for oc = setdiff(1:4,mx)   % align other channels with the same shift
-         aligned_wv(k,oc,shift:shift+31) = wv(k,oc,:);
-     end
+    % Align spikes to peak
+    [n, nt, ns] = size(wv);    % number of spikes, trode sites, samples
+    aligned_wv = nan(n,4,96);   % extended waveforms
+    for k = 1:n
+         [mval,minx] = max(wv(k,mx,:));
+         shift = 40 - minx;   % shift is decided based on the largest channel
+         aligned_wv(k,mx,shift:shift+31) = wv(k,mx,:);
+         for oc = setdiff(1:4,mx)   % align other channels with the same shift
+             aligned_wv(k,oc,shift:shift+31) = wv(k,oc,:);
+         end
+    end
+    aligned_wv = aligned_wv(:,:,32:63);     % transform back to original size
+else
+    aligned_wv = wv; % already aligned if from UMS2000, FS MOD
 end
-aligned_wv = aligned_wv(:,:,32:63);     % transform back to original size
-
 % -------------------------------------------------------------------------
 function smoothed_wv = wvsmooth(wv)
-
+[n, nt, ns] = size(wv);    % number of spikes, trode sites, samples
 % Smooth with spline
-x = 0:31;
-xx = 0:.1:31;
+x = 0:ns-1;
+xx = 0:.1:ns-1;
 smoothed_wv = spline(x,wv,xx);
 
 % -------------------------------------------------------------------------

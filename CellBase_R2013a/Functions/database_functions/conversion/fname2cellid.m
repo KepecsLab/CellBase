@@ -85,7 +85,7 @@ if ~strcmp(ext,'.mat')
     return
 end
 
-if isempty(ratname) || isempty(session) || isempty(tu)
+if isempty(ratname) || isempty(session) || length(tu) < 2 % isempty(tu) % FS MOD to handle TT%d_spikes.m files from UMS2000
    warning('FNAME2CELLID: Filename could not be parsed correctly.') 
    cellid = 0;
    return

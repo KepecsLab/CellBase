@@ -55,7 +55,13 @@ startRecording = Events_TimeStamps(startRecording);
 
 
 
-nValidSamples = Nlx2MatCSC(fullfile(s.filepath, 'CSC1.ncs'),[0 0 0 1 0],0,1);% get # total sample pieces (output is nSamplePieces x 512)
+[Timestamps_all_pre, Fs_nlx, nValidSamples] = Nlx2MatCSC(fullfile(s.filepath, 'CSC1.ncs'),[1 0 1 1 0],0,1);% get # total sample pieces (output is nSamplePieces x 512)
+if s.Fs ~= Fs_nlx
+    error('wrong sample rate');
+end
+Timestamps_all_pre = Timestamps_all_pre * 1e-6;
+Timestamps_all = repmat(Timestamps_all_pre, 512, 1);
+Timestamps_all = Timestamps_all + ((0:511)/s.Fs)';
 sampleCheck.nlx = sum(nValidSamples);
 nValidSamples = numel(nValidSamples);
 chunkSize = 1e5; % load spikes piecemeal so as not to overrun memory
@@ -112,6 +118,9 @@ close(h);
 
 sampleCheck.chunksSummed = sum(sampleCheck.perChunk);
 spikes.startRecording = startRecording;
+% get sample indices of spikes, use them query nlx spiketimes
+spikeIndices = round(spikes.unwrapped_times * spikes.params.Fs);
+spikes.nlx_times = Timestamps_all(spikeIndices);
 
 spikes = ss_align(spikes);
 spikes = ss_kmeans(spikes);

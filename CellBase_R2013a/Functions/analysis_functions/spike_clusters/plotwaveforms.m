@@ -118,6 +118,20 @@ if g.spont || g.correlation
     mean_spont = squeeze(nanmean(wave_spont,1));
 end
 
+% get waveform dimensions, FS MOD
+if g.spont
+    [n, nt, ns] = size(wave_spont);    
+elseif g.evoked
+    [n, nt, ns] = size(wave_evoked);
+else
+    error('need to extract something (evoked or spont)');
+end
+
+% also determine number of rows and columns for plots of waveforms across
+% all trode sites. FS MOD
+ncol = ceil(sqrt(nt));
+nrow = ceil(nt/ncol);
+        
 % Plot light-evoked waveforms
 if g.evoked
     if ~isempty(g.fighandle) && ~isnan(g.fighandle(1))
@@ -125,15 +139,16 @@ if g.evoked
     else
         out.H_evoked = figure('Position',[624 126 1092 852]);
     end
-    if ~isempty(g.axhandle) && all(isgraphics(g.axhandle{1},'axes')) && length(g.axhandle{1})==4
+    if ~isempty(g.axhandle) && all(isgraphics(g.axhandle{1},'axes')) && length(g.axhandle{1})==nt % nt formerly 4, FS MOD
         H=g.axhandle{1};
     else
-        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+        H = set_subplots(nrow,ncol,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
     end
-    for sp = 1:4
+    for sp = 1:nt
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(weds(:,sp,:))))
     end
+    sameYScale(H);
     title('Light-evoked spike shape')
 end
 
@@ -144,15 +159,16 @@ if g.spont
     else
         out.H_spont = figure('Position',[624 126 1092 852]);
     end
-    if length(g.axhandle)>1 && all(isgraphics(g.axhandle{2},'axes')) && length(g.axhandle{2})==4
+    if length(g.axhandle)>1 && all(isgraphics(g.axhandle{2},'axes')) && length(g.axhandle{2})==nt
         H = g.axhandle{2};
     else
-        H = set_subplots(2,2,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
+        H = set_subplots(nrow,ncol,0.05,0.05,'XTick',[],'XLim',[1 size(wsds,3)]);
     end
-    for sp = 1:4
+    for sp = 1:nt
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(wsds(:,sp,:))))
     end
+    sameYScale(H);
     title('Spontaneous spike shape')
 end
 
@@ -164,13 +180,13 @@ if (g.evoked && g.spont) || g.compare
         out.H_compare = figure('Position',[624 126 1092 852]);
     end
     dotitle=true;
-    if length(g.axhandle)>2 && all(isgraphics(g.axhandle{3},'axes')) && length(g.axhandle{3})==4
+    if length(g.axhandle)>2 && all(isgraphics(g.axhandle{3},'axes')) && length(g.axhandle{3})==nt
         H = g.axhandle{3};
         dotitle=false;
     else
-        H = set_subplots(2,2,0.05,0.05,'XLim',[1 size(wsds,3)]);
+        H = set_subplots(nrow,ncol,0.05,0.05,'XLim',[1 size(wsds,3)]);
     end
-    for sp = 1:4
+    for sp = 1:nt
         hold(H(sp),'on')
         plot(H(sp),transpose(squeeze(wsds(:,sp,:))),'Color',[0.9 0.9 0.9])
         plot(H(sp),transpose(mean_spont(sp,:)),'Color','k','LineWidth',6)
@@ -179,8 +195,9 @@ if (g.evoked && g.spont) || g.compare
         end
         if sp ==1 && dotitle
         	title('Compare spont. and light-evoked spike shape')
-        end
+        end        
     end
+    sameYScale(H);
     
 end
 
@@ -212,3 +229,14 @@ function mx = maxchannel(wv)
 mean_wv = squeeze(nanmean(wv,1));   % mean waveform
 amx = max(max(mean_wv));     % absolut maximum of mean waveforms
 [mx my] = find(mean_wv==amx,1,'first');     %#ok<NASGU> % mx: largest channel
+
+function sameYScale(ha) % FS MOD, from 
+% for a series of axes, set y axes limits to the lowest and highest common
+% values
+
+
+    ylims = get(ha, 'YLim');
+    ymin = min(cellfun(@(x) x(1), ylims)); 
+    ymax = max(cellfun(@(x) x(2), ylims));
+    
+    set(ha, 'YLim', [ymin ymax]);

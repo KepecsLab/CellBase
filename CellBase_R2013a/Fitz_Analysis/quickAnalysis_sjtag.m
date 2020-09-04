@@ -80,7 +80,7 @@ end
 if isrec
     addnewcells('dir',[animalID filesep sessionID]) % change this back
     cellids = findcell('rat',animalID,'session',sessionID);
-%     cellids = {'sj201_200808a_6.1'};
+%     cellids = {'sj201_200808a_8.3'}; % 9.91
     disp(cellids)
 end
 
@@ -90,12 +90,12 @@ if isbeh && isrec
     problem_behav_cellid = [];
     for iC = 1:length(cellids)
         cellid = cellids(iC);
-%         try
-%             prealignSpikes(cellid,'FUNdefineEventsEpochs',@defineEventsEpochs_CuedOutcome,'filetype','event','ifsave',1,'ifappend',0, 'writing_behavior', 'overwrite')
-%         catch
-%             disp('Error in prealignSpikes.');
-%             problem_behav_cellid = [problem_behav_cellid cellid];
-%         end
+        try
+            prealignSpikes(cellid,'FUNdefineEventsEpochs',@defineEventsEpochs_CuedOutcome,'filetype','event','ifsave',1,'ifappend',0, 'writing_behavior', 'overwrite')
+        catch
+            disp('Error in prealignSpikes.');
+            problem_behav_cellid = [problem_behav_cellid cellid];
+        end
     end
     
 
@@ -103,7 +103,7 @@ end
 
 % Light effects
 if isrec && isstim
-
+%     warning('skipping light effects');
     % Create stimulus events
     MakeStimEvents_Bpod(fullpth,'PulseNttl',128, 'PulsePort', 0); % FS
     
@@ -122,7 +122,7 @@ if isrec && isstim
     % View light-triggered raster and PSTH
     TrigEvent = 'Pulse';
     SEvent = 'Pulse';
-    win = [-0.5 0.5];
+    win = [-0.4 0.4];
     parts = 'all';
 %     parts = '#BurstNPulse';
     dt = 0.001;
@@ -131,7 +131,7 @@ if isrec && isstim
     ShEvent = {'Pulse'};
     ShEvColors = hsv(length(ShEvent{1}));
     ShEvColors = mat2cell(ShEvColors,ones(size(ShEvColors,1),1),3);
-    for iCell = 1:length(cellids)
+    for iCell = 2:length(cellids)
         cellid = cellids(iCell);
         H = ensureFigure([cellids{iCell} '_laserStim'], 1);
         viewcell2b(cellid,'TriggerName',TrigEvent,'SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',ShEvColors,...
@@ -150,20 +150,20 @@ if isrec && isstim
     end
 end
 
-return;
+
 % Cluster quality
-% if isrec
+if isrec
     for iCell = 1:length(cellids)
         cellid = cellids{iCell};
         
         % get waveforms
         dummy1 = figure;
         dummy2 = figure;
-        figName = [cellid '_wave']
+        figName = [cellid '_wave'];
         H = ensureFigure(figName, 1);
         fighandle = [dummy1; dummy2; H];
 %         st = loadcb(cellid, 'Spikes'); % spiketimes
-        try
+%         try
             plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0 0.01], 'fighandle', repmat(H.Number, 3, 1));
             close(dummy1); close(dummy2);
             saveas(H, fullfile(fullpth, [figName '.jpg']));
@@ -171,11 +171,11 @@ return;
             H = acg(cellid);
             set(H, 'Name', figName);
             saveas(H, fullfile(fullpth, [figName '.jpg']));
-        catch
-        end
+%         catch
+%         end
     end
         
-% end
+end
 
 % % Behavior
 % if isbeh
