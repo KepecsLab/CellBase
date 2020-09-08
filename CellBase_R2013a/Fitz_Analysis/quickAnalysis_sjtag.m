@@ -80,7 +80,7 @@ end
 if isrec
     addnewcells('dir',[animalID filesep sessionID]) % change this back
     cellids = findcell('rat',animalID,'session',sessionID);
-%     cellids = {'sj201_200808a_8.3'}; % 9.91
+%     cellids = {'sj201_200808b_3.1'}; % 9.91
     disp(cellids)
 end
 
@@ -122,7 +122,7 @@ if isrec && isstim
     % View light-triggered raster and PSTH
     TrigEvent = 'Pulse';
     SEvent = 'Pulse';
-    win = [-0.4 0.4];
+    win = [-.02 0.2];
     parts = 'all';
 %     parts = '#BurstNPulse';
     dt = 0.001;
@@ -131,12 +131,13 @@ if isrec && isstim
     ShEvent = {'Pulse'};
     ShEvColors = hsv(length(ShEvent{1}));
     ShEvColors = mat2cell(ShEvColors,ones(size(ShEvColors,1),1),3);
-    for iCell = 2:length(cellids)
+    SpikeWidth = 1;
+    for iCell = 1:length(cellids)
         cellid = cellids(iCell);
         H = ensureFigure([cellids{iCell} '_laserStim'], 1);
         viewcell2b(cellid,'TriggerName',TrigEvent,'SortEvent',SEvent,'ShowEvents',ShEvent,'ShowEventsColors',ShEvColors,...
             'FigureNum',H,'eventtype','stim','window',win,'dt',dt,'sigma',sigma,'PSTHstd',PSTHstd,'Partitions',parts,...
-            'EventMarkerWidth',0,'PlotZeroLine','off')
+            'EventMarkerWidth',0,'PlotZeroLine','off', 'SpikeWidth', SpikeWidth)
 %         maximize_figure(H)
         formatFigureCellbase;
         
@@ -164,13 +165,13 @@ if isrec
         fighandle = [dummy1; dummy2; H];
 %         st = loadcb(cellid, 'Spikes'); % spiketimes
 %         try
-            plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0 0.01], 'fighandle', repmat(H.Number, 3, 1));
+            plotwaveforms(cellid, 'evoked', true, 'spont', true, 'compare', true, 'stim_period', [0.001 0.006], 'fighandle', repmat(H.Number, 3, 1), 'maxnum', 200);
             close(dummy1); close(dummy2);
-            saveas(H, fullfile(fullpth, [figName '.jpg']));
+%             saveas(H, fullfile(fullpth, [figName '.jpg']));
             figName = [cellid '_acg'];        
-            H = acg(cellid);
-            set(H, 'Name', figName);
-            saveas(H, fullfile(fullpth, [figName '.jpg']));
+%             H = acg(cellid);
+%             set(H, 'Name', figName);
+%             saveas(H, fullfile(fullpth, [figName '.jpg']));
 %         catch
 %         end
     end

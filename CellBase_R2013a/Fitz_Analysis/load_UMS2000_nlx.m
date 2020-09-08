@@ -1,4 +1,4 @@
-function [spikes, sampleCheck] = UMS2000(varargin)
+function [spikes, sampleCheck] = load_UMS2000_nlx(varargin)
 
     defaults = {...
         'direction', 'up';...
@@ -80,7 +80,8 @@ spikes.nlx_settings = s; % special field
 
 h = waitbar(0, 'Detecting Spikes');  
 for counter = 1:nChunks
-    theseSamples = [(sampleRange(counter) + 1) min(sampleRange(counter + 1), nValidSamples)];
+%     theseSamples = [(sampleRange(counter) + 1) min(sampleRange(counter + 1), nValidSamples)];
+    theseSamples = [(sampleRange(counter)) min(sampleRange(counter + 1), nValidSamples)];
     sampleCheck.range(counter, :) = theseSamples;
     for ttcounter = 1:trodeSize
         cfilename = sprintf('CSC%d.ncs', channelOrder(s.trode(ttcounter)));
@@ -121,7 +122,6 @@ spikes.startRecording = startRecording;
 % get sample indices of spikes, use them query nlx spiketimes
 spikeIndices = round(spikes.unwrapped_times * spikes.params.Fs);
 spikes.nlx_times = Timestamps_all(spikeIndices);
-
 spikes = ss_align(spikes);
 spikes = ss_kmeans(spikes);
 spikes = ss_energy(spikes);
