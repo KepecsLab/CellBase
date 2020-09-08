@@ -47,8 +47,13 @@ else
             SpikeTimes = loadcb(cellid,'Spikes');  % load stimulus spikes (prealigned)
             
             % Load waveform data (Ntt file)
-            Nttfile = cellid2fnames(cellid,'ntt');
             loadingEngine = getcbpref('TrodeLoadingEngine');
+            switch char(loadingEngine)
+                case 'TrodeLoadingEngine_NLX'
+                    Nttfile = cellid2fnames(cellid,'ntt');
+                case 'TrodeLoadingEngine_UMS2000'
+                    Nttfile = cellid2fnames(cellid,'UMStt');
+            end            
             [all_spikes all_waves] = loadingEngine(Nttfile); % FS MOD, new convention is for trode loading engine to return spikes in units of seconds                        
             [junk junk2 evoked_inx] = intersect(SpikeTimes,all_spikes);
             if ~isequal(junk,SpikeTimes)   % internal check for spike times
