@@ -1,4 +1,4 @@
-function [H1 ccr lwr upr rccg] = somccg_conf_filter(ncc1,ncc2,wn,shuff_min,shuff_max,cutoff)
+function [H1 ccr lwr upr rccg] = somccg_conf_filter(ncc1,ncc2,wn,shuff_min,shuff_max,cutoff,isplot)
 %SOMCCG_CONF_FILTER   Crosscorrelation.
 %   SOMCCG_CONF_FILTER(VD1,VD2) calculates crosscorrelogram for
 %   discriminated units VD1 and VD2, using a +-50 ms time window.
@@ -30,7 +30,7 @@ function [H1 ccr lwr upr rccg] = somccg_conf_filter(ncc1,ncc2,wn,shuff_min,shuff
 %   See also SOMCCG, XCORR_WRAND_FILTER and XCORR.
 
 % Input argument check
-error(nargchk(2,6,nargin))
+error(nargchk(2,7,nargin))
 if nargin < 3
     wn = 50;    % window size in ms
 end
@@ -42,6 +42,9 @@ if nargin < 5
 end
 if nargin < 6
     cutoff = 4;     % default filter cutoff: 4 Hz
+end
+if nargin <7
+    isplot=true;%backwards compatibility
 end
 sr = 1000;
 shuff_min = shuff_min * sr / 1000;
@@ -63,22 +66,19 @@ zunit1 = zeros(1,round(max([nc1; nc2]))+5);
 zunit2 = zunit1;
 zunit1(round(nc1)) = 1;
 zunit2(round(nc2)) = 1;
-shf = round(rand(1,shuff_max)*num_shuff+shuff_min);
+shf = round(rand(1,num_shuff)*shuff_max+shuff_min);
+
 [ccr,lags,rccg] = xcorr_wrand_filter(sr,cutoff,zunit2,zunit1,wn2*sr,shf);     % 1->2; window: -wn ms - wn ms
+
 % ccr = ccr / length(nc2);     % norm. with the no. of ref. events to get transmission prob.
 if isequal(ncc1,ncc2)
     ccr(length(ccr)/2+0.5) = [];    % auto-correlation: drop middle bin
     rccg(:,end) = [];
 end
 
-% Plot
-H1 = figure;
-time = linspace(-wn,wn,length(ccr));
-bar(time,ccr,'FaceColor','black')
-set(gca,'XLim',[-wn wn])
 
-% Plot confidence interval
-hold on
+
+%  confidence interval
 [lc nc] = size(rccg);
 ptc = ceil(lc*0.0005);
 upr = zeros(1,nc);
@@ -88,5 +88,15 @@ for k = 1:nc
     upr(k) = sts(end-ptc);
     lwr(k) = sts(ptc);
 end
+
+% Plot
+if isplot
+H1 = figure;hold on;
+time = linspace(-wn,wn,length(ccr));
+bar(time,ccr,'FaceColor','black')
+set(gca,'XLim',[-wn wn])
 plot(time,upr,'Color',[0.7 0.7 0.7])
 plot(time,lwr,'Color',[0.7 0.7 0.7])
+else
+    H1=[];
+end
